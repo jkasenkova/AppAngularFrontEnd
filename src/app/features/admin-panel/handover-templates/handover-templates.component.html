@@ -1,0 +1,37 @@
+<div class="container">
+
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false"
+                   mat-align-tabs="start" class="child-tabs"
+                   [selectedIndex]="selectedIndex" (selectedTabChange)="onTabChanged($event);">
+
+        <mat-tab label="Handover Templates">
+            <div class="select-template">
+                <mat-form-field>
+                    <mat-label>Select a Template</mat-label>
+                    <mat-select (selectionChange)="onSelectTemplate($event)">
+                        <mat-option>None</mat-option>
+                        @for (template of templates; track template) {
+                            <mat-option [value]="template">{{template.templateName}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="button-row">
+                <button mat-stroked-button class="btnTemplate"
+                        (click)="openDialog('create')">
+                    New
+                </button>
+                @if (isSelectedTemplate && !isHandoverTemplate){
+                    <app-modal-popup></app-modal-popup>
+                    <button mat-stroked-button class="btnEditAddTemplate" (click)="openDialog('edit', template)">Edit</button>
+                    <button mat-stroked-button class="btnEditAddTemplate" (click)="openDialog('delete', template)">Delete</button>
+                }
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Topics"><app-template-topic></app-template-topic></mat-tab>
+    </mat-tab-group>
+    @if(template){
+        <app-template  [selectedTemplate]="selectedTemplate"></app-template>
+    }
+</div>

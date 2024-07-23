@@ -1,0 +1,159 @@
+.container {
+    padding-top: 20px;
+
+    .mat-tab-group {
+        margin-bottom: 48px;
+    }
+
+    .btnTemplate {
+        background-color: white !important;
+        color: #0096C8 !important;
+        border-color: #0096C8 !important;
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+    #templatePanel {
+        border: 1px solid #b4b4b4;
+        margin-top: 20px;
+        border-radius: 6px;
+
+        .panel-heading {
+            border-top-right-radius: 6px;
+            border-top-left-radius: 6px;
+            background-color: #fff;
+            color: #464646;
+            text-align: center;
+            padding: 5px;
+            border-bottom: #F0F0F0 solid 1.5px;
+
+            .clearfix {
+                padding: 8px 10px;
+            }
+
+            .panel-title {
+                position: initial;
+                display: inline-block;
+                width: fit-content;
+                text-align: center;
+                word-wrap: break-word;
+                font-family: Proxima-Nova-Regular;
+                font-weight: 700;
+                font-size: 16px;
+                color: inherit;
+            }
+        }
+
+        .report-panel {
+            border: 1px solid #b4b4b4;
+            border-radius: 6px;
+
+            #section {
+                .grey-panel {
+                    .navbar-blue {
+                        border-radius: 0;
+                        min-height: 30px;
+                        margin: 0;
+                        border-top: solid 4px #035A7A;
+                        background: white;
+
+                        span {
+                            margin: 5px 0 0 0;
+                            font-size: 13px;
+                            color: #035A7A;
+                            margin-left: 10px;
+                            padding-left: 0px;
+                            text-transform: uppercase;
+                            font-weight: 600;
+                            line-height: 1;
+                            white-space: nowrap;
+                            text-align: center;
+                        }
+
+                        .navbar-inline {
+                            display: inline-flex;
+
+                            .editSection {
+                                width: 15px;
+                                height: 15px;
+                                padding: 0;
+                                background-image: url("/assets/img/pencil_dark.svg");
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                cursor: pointer;
+                                opacity: 0.8;
+                            }
+
+                            .removeSection {
+                                width: 15px;
+                                height: 10px;
+                                padding: 0;
+                                background-image: url("/assets/img/close_dark.svg");
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                margin-top: 7px;
+                                cursor: pointer;
+                                margin-left: 0px;
+                                opacity: 0.8;
+                            }
+                        }
+                    }
+                }
+
+                .navbar-white {
+                    background-color: white;
+                    margin: 0;
+                    min-height: 53px;
+                    padding-top: 12px;
+                    display: block;
+
+                    .btn-plus {
+                        width: 85px;
+                        height: 26px;
+                        border-radius: 13px;
+                        border: solid 1.5px #0096C8;
+                        text-align: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                        padding-top: 4px;
+                        cursor: pointer;
+                        display: block;
+                        margin-right: auto;
+                        margin-left: auto;
+
+
+                        &:hover, &:focus {
+                            background-color: #0096C8;
+                            color: #fff;
+                        }
+
+                        &:disabled {
+                            cursor: not-allowed;
+                        }
+                    }
+
+                    .add-section {
+                        width: 95px;
+                        height: 26px;
+                        border-radius: 13px;
+                        border: solid 1.5px #0096C8;
+                        text-align: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                        padding-top: 4px;
+                        cursor: pointer;
+                        display: block;
+                        margin-right: auto;
+                        margin-left: auto;
+
+
+                        &:hover, &:focus {
+                            background-color: #0096C8;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
