@@ -1,0 +1,12 @@
+<div mat-dialog-title class="dialog-title">
+    <h1 mat-dialog-title class="modal-title">Delete Template</h1>
+    <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+    <button mat-button (click)="onSave()" [disabled]="templateForm.invalid" cdkFocusInitial>
+        Delete
+    </button>
+</div>
+<mat-dialog-content>
+    <p>Are you sure you want to delete this template?</p>
+</mat-dialog-content>

@@ -1,0 +1,24 @@
+<div clas="template-dialog">
+<div mat-dialog-title class="dialog-title">
+
+    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+        <h4>Create Template</h4>
+    
+        <button mat-icon-button  mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+        <button mat-button (click)="onSave()" [disabled]="templateForm.invalid" cdkFocusInitial>Save</button>
+    </div>
+</div>
+<mat-dialog-content>
+    <form [formGroup]="templateForm">
+        <mat-form-field>
+            <mat-label>Name:</mat-label>
+            <input matInput formControlName="templateName">
+            @if(templateForm.get('templateName').hasError('required')){
+                <mat-error>Name is required</mat-error>
+            }
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+</div>

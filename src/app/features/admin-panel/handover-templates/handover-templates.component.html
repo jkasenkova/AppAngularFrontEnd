@@ -6,9 +6,9 @@
 
         <mat-tab label="Handover Templates">
             <div class="select-template">
-                <mat-form-field>
-                    <mat-label>Select a Template</mat-label>
-                    <mat-select (selectionChange)="onSelectTemplate($event)">
+                <mat-form-field appearance="outline">
+                   <mat-label>Select a Template</mat-label>
+                    <mat-select (selectionChange)="onSelectTemplate($event)" placeholder="Placeholder">
                         <mat-option>None</mat-option>
                         @for (template of templates; track template) {
                             <mat-option [value]="template">{{template.templateName}}</mat-option>
@@ -18,13 +18,13 @@
             </div>
             <div class="button-row">
                 <button mat-stroked-button class="btnTemplate"
-                        (click)="openDialog('create')">
+                        (click)="createTemplateDialog()">
                     New
                 </button>
                 @if (isSelectedTemplate && !isHandoverTemplate){
                     <app-modal-popup></app-modal-popup>
-                    <button mat-stroked-button class="btnEditAddTemplate" (click)="openDialog('edit', template)">Edit</button>
-                    <button mat-stroked-button class="btnEditAddTemplate" (click)="openDialog('delete', template)">Delete</button>
+                    <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(template)">Edit</button>
+                    <button mat-stroked-button class="btnEditAddTemplate" (click)="deleteTemplateDialog(template.templateId)">Delete</button>
                 }
             </div>
         </mat-tab>

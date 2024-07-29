@@ -1,0 +1,20 @@
+<div mat-dialog-title class="dialog-title">
+    <h1 mat-dialog-title class="modal-title">Edit Template</h1>
+    <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+    <button mat-button (click)="onSave()" [disabled]="templateForm.invalid" cdkFocusInitial>
+        Save
+    </button>
+</div>
+<mat-dialog-content>
+    <form [formGroup]="templateForm">
+        <mat-form-field>
+            <mat-label>Name:</mat-label>
+            <input matInput formControlName="templateName">
+            @if(templateForm.get('templateName').hasError('required')){
+            <mat-error>Name is required</mat-error>
+            }
+        </mat-form-field>
+    </form>
+</mat-dialog-content>

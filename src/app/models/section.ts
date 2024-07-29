@@ -4,11 +4,12 @@ import { SortType } from "./sortType";
 import { TemplateTopic } from "./templateTopic";
 import { Observable } from "rxjs";
 import { Reference } from "./reference";
+import { Guid } from 'guid-typescript';
 
 export class Section {
   public sectionName!: string;
-  public sectionId?: string;
-  public templateId!: string;
+  public sectionId?: Guid;
+  public templateId!: Guid;
   public template?: Template;
   public iHandoverSection: boolean = false;
   public sectionType!: SectionType;

@@ -3,6 +3,7 @@ import { Inject, Injectable } from "@angular/core";
 import configurl from '../../assets/config/config.json'
 import { Section } from '../models/section';
 import { Observable } from "rxjs";
+import { Guid } from "guid-typescript";
 
 @Injectable({
     providedIn: 'root'
@@ -24,11 +25,11 @@ export class SectionService {
         this.http.put(this.url, section, this.httpHeaders).subscribe();
     }
 
-    deleteSection(sectionId: string): Observable<string> {
+    deleteSection(sectionId: Guid): Observable<string> {
         return this.http.delete<string>(this.url + '/' + sectionId);
     }
 
-    getSections(templateId: string): Observable<Section[]> {
+    getSections(templateId: Guid): Observable<Section[]> {
         return this.http.get<Section[]>(this.url + '/' + templateId);
     }
 }

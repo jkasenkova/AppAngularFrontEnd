@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, signal } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -8,11 +8,13 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { TemplateComponent } from "./template/template.component";
 import { TemplateTopicComponent } from "./topic/template-topic.component";
 import { MatButtonModule } from '@angular/material/button';
-import { ModalService } from "../../../services/modalService";
 import { MatDialog } from '@angular/material/dialog';
-import { TemplateDialogComponent } from "./template-dialog/template-dialog.component";
 import { SessionStorageService } from "../../../services/sessionStorageService";
-import { Observable, map } from "rxjs";
+import { map } from "rxjs";
+import { CreateTemplateDialogComponent } from "./template-dialog/create-template/create-template-dialog.component";
+import { Guid } from 'guid-typescript';
+import { EditTemplateDialogComponent } from "./template-dialog/edit-template/edit-template-dialog.component";
+import { DeleteTemplateDialogComponent } from "./template-dialog/delete-template/delete-template-dialog.component";
 
 @Component({
     selector: 'app-handover-templates',
@@ -43,11 +45,10 @@ export class HandoverTemplatesComponent implements OnInit {
     readonly dialog = inject(MatDialog);
     constructor(
         private templateService: TemplateService,
-        private modalService: ModalService,
         private sessionStorageService: SessionStorageService) { }
 
     ngOnInit(): void {
-        var templateId = this.sessionStorageService.getItem<string>('templateId');
+        var templateId = this.sessionStorageService.getItem<Guid>('templateId');
         this.selectedIndex = this.sessionStorageService.getItem<number>('template-tab');
 
         this.getTemplates();
@@ -59,7 +60,7 @@ export class HandoverTemplatesComponent implements OnInit {
     }
 
 
-    getTemplateById(id: string): void {
+    getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
             map(templates => templates.find(template => template.templateId === id))
         ).subscribe(template => this.template = template);
@@ -91,20 +92,42 @@ export class HandoverTemplatesComponent implements OnInit {
 
     //--------------Template Dialogs---------------------
 
-    openDialog(action: 'create' | 'edit' | 'delete', template?: Template): void {
-        const dialogRef = this.dialog.open(TemplateDialogComponent, {
-            data: { template, action }
+    createTemplateDialog(): void {
+        const dialogRef = this.dialog.open(CreateTemplateDialogComponent, { 
+                data: { templateName: '' },
+                panelClass: 'template-dialog'
+            }
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                
+            }
+        });
+    }
+
+    editTemplateDialog(template: Template): void {
+        const dialogRef = this.dialog.open(EditTemplateDialogComponent, {
+            data: { templateId: template.templateId, templateName: template.templateName },
+            panelClass: 'template-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                if (action === 'create') {
-                   
-                } else if (action === 'edit') {
-                   
-                } else if (action === 'delete') {
-                   
-                }
+
+            }
+        });
+    }
+
+    deleteTemplateDialog(templateId: Guid): void {
+        const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, {
+            data: { templateId: templateId },
+            panelClass: 'template-dialog'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+
             }
         });
     }

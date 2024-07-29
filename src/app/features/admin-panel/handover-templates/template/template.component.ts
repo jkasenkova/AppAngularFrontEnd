@@ -5,7 +5,10 @@ import { SectionService } from '../../../../services/sectionService';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { SectionDialogComponent } from '../section-dialog/section-dialog.component';
+import { Guid } from 'guid-typescript';
+import { CreateSectionDialogComponent } from '../section-dialog/create-section/create-section-dialog.component';
+import { EditSectionDialogComponent } from '../section-dialog/edit-section/edit-section-dialog.component';
+import { DeleteSectionDialogComponent } from '../section-dialog/delete-section/delete-section-dialog.component';
 
 
 @Component({
@@ -43,32 +46,37 @@ export class TemplateComponent implements OnInit {
 
     //---------Section Dialogs------------
 
-    openDialog(action: 'create' | 'edit' | 'delete', section?: Section): void {
-        const dialogRef = this.dialog.open(SectionDialogComponent, {
-            data: { section, action }
+    createSectionDialog(templateId: Guid): void {
+        const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
+            data: { templateId }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                if (action === 'create') {
-
-                } else if (action === 'edit') {
-
-                } else if (action === 'delete') {
-                    //templateId  = this.selectedTemplate
-                }
+              
             }
         });
     }
 
-    openCreateSectionDialog(action: 'create', template?: Template): void {
-        const dialogRef = this.dialog.open(SectionDialogComponent, {
-            data: { template, action }
+    editSectionDialog(sectionId: Guid): void {
+        const dialogRef = this.dialog.open(EditSectionDialogComponent, {
+            data: { sectionId }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                
+
+            }
+        });
+    }
+
+    deleteSectionDialog(sectionId: Guid): void {
+        const dialogRef = this.dialog.open(DeleteSectionDialogComponent, {
+            data: { sectionId }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
             }
         });
     }

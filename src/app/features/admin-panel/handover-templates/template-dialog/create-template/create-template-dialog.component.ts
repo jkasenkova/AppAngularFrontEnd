@@ -1,15 +1,18 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { SectionDialogModel } from "../../../../models/sectionDialogModel";
+import { TemplateDialogModel } from "../../models/templateDialogModel";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'template-dialog',
-    templateUrl: './section-dialog.component.html',
+    selector: 'create-template-dialog',
+    templateUrl: './create-template-dialog.component.html',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
+    encapsulation: ViewEncapsulation.None,
     imports: [
         MatFormFieldModule,
         MatInputModule,
@@ -19,20 +22,20 @@ import { SectionDialogModel } from "../../../../models/sectionDialogModel";
         MatDialogContent,
         MatDialogActions,
         MatDialogClose,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatIconModule
     ],
 })
-export class SectionDialogComponent {
-    sectionForm: FormGroup;
+export class CreateTemplateDialogComponent {
+    templateForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<SectionDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
+        public dialogRef: MatDialogRef<CreateTemplateDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
     ) {
-        this.sectionForm = this.fb.group({
-            sectionId: [data.sectionId],
-            sectionName: [data.sectionName, Validators.required]
+        this.templateForm = this.fb.group({
+            templateName: ['', Validators.required]
         });
     }
 
@@ -41,8 +44,8 @@ export class SectionDialogComponent {
     }
 
     onSave(): void {
-        if (this.sectionForm.valid) {
-            this.dialogRef.close(this.sectionForm.value);
+        if (this.templateForm.valid) {
+            this.dialogRef.close(this.templateForm.value);
         }
     }
 }

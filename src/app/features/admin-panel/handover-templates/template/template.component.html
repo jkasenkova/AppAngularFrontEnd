@@ -12,8 +12,8 @@
                                 <div class="navbar-inline">
                                     <span class="label">{{section.sectionName}}</span>
                                     @if(!section.iHandoverSection){
-                                    <span class="editSection" (click)="openDialog('edit', section)"></span>
-                                    <span class="removeSection" (click)="openDialog('delete', section)"></span>
+                                    <span class="editSection" (click)="editSectionDialog(section.sectionId)"></span>
+                                    <span class="removeSection" (click)="deleteSectionDialog(section.sectionId)"></span>
                                     }
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                         <div class="navbar navbar-blue"></div>
                     </div>
                     <div class="navbar navbar-white">
-                        <div type="button" class="add-section center-block" (click)="openCreateSectionDialog('create', selectedTemplate)">Add Section</div>
+                        <div type="button" class="add-section center-block" (click)="createSectionDialog(selectedTemplate.templateId)">Add Section</div>
                     </div>
                 </div>
             </div>

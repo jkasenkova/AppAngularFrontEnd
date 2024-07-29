@@ -4,11 +4,11 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { TemplateDialogModel } from "./templateDialogModel";
+import { SectionDialogModel } from "../../models/sectionDialogModel";
 
 @Component({
     selector: 'template-dialog',
-    templateUrl: './template-dialog.component.html',
+    templateUrl: './edit-section-dialog.component.html',
     standalone: true,
     imports: [
         MatFormFieldModule,
@@ -22,17 +22,17 @@ import { TemplateDialogModel } from "./templateDialogModel";
         ReactiveFormsModule
     ],
 })
-export class TemplateDialogComponent {
-    templateForm: FormGroup;
+export class EditSectionDialogComponent {
+    sectionForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<TemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        public dialogRef: MatDialogRef<EditSectionDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
-        this.templateForm = this.fb.group({
-            templateId: [data.templateId],
-            templateName: [data.templateName, Validators.required]
+        this.sectionForm = this.fb.group({
+            sectionId: [data.sectionId],
+            sectionName: [data.sectionName, Validators.required]
         });
     }
 
@@ -41,9 +41,8 @@ export class TemplateDialogComponent {
     }
 
     onSave(): void {
-        debugger;
-        if (this.templateForm.valid) {
-            this.dialogRef.close(this.templateForm.value);
+        if (this.sectionForm.valid) {
+            this.dialogRef.close(this.sectionForm.value);
         }
     }
 }

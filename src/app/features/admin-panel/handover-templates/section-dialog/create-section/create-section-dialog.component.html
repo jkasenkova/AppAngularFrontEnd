@@ -1,4 +1,4 @@
-<h4 mat-dialog-title>{{ data.action }} Section</h4>
+<h4 mat-dialog-title>Crete Section</h4>
 <mat-dialog-content>
     <form [formGroup]="sectionForm">
         <mat-form-field>
@@ -10,14 +10,9 @@
         </mat-form-field>
     </form>
 </mat-dialog-content>
-@if(data.action === 'delete') {
-    <div mat-dialog-content>
-        <p>Are you sure you want to delete this section?</p>
-    </div>
-}
 <mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Close</button>
     <button mat-button (click)="onSave()" [disabled]="sectionForm.invalid" cdkFocusInitial>
-        {{ data.action === 'delete' ? 'Delete' : 'Save' }}
+        Create
     </button>
 </mat-dialog-actions>

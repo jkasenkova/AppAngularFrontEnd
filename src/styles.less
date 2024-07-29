@@ -6,13 +6,19 @@
 html, body {
     height: 100%;
 }
+
 body {
   margin: 0;
   background-color: rgba(180, 180, 180, .4) !important;
   position: relative;
-  font-family: "Proxima-Nova-Regular";
+  font-family: "Proxima-Nova-Regular" !important;
 }
 
-.mat-mdc-tab-body-wrapper {
-    padding-top: 10px;
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: white !important;
 }
