@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -10,7 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
     selector: 'edit-template-dialog',
     templateUrl: './edit-template-dialog.component.html',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
+    encapsulation: ViewEncapsulation.None,
     imports: [
         MatFormFieldModule,
         MatInputModule,

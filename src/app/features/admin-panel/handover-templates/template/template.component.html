@@ -12,8 +12,8 @@
                                 <div class="navbar-inline">
                                     <span class="label">{{section.sectionName}}</span>
                                     @if(!section.iHandoverSection){
-                                    <span class="editSection" (click)="editSectionDialog(section.sectionId)"></span>
-                                    <span class="removeSection" (click)="deleteSectionDialog(section.sectionId)"></span>
+                                    <span class="editSection" (click)="editSectionDialog(section)"></span>
+                                    <span class="removeSection" (click)="deleteSectionDialog(section)"></span>
                                     }
                                 </div>
                             </div>
