@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, ChangeDetectionStrategy } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -28,6 +28,7 @@ import { DeleteTemplateDialogComponent } from "./template-dialog/delete-template
         MatFormFieldModule
     ],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'handover-templates.component.html',
     styleUrls: ['handover-templates.component.less'],
     schemas: [
@@ -43,11 +44,30 @@ export class HandoverTemplatesComponent implements OnInit {
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
     readonly dialog = inject(MatDialog);
+
+    templateListTemp: Template[] = [
+        {
+            templateId: Guid.create(),
+            templateName: "Template 1",
+            isHandoverTemplate: false,
+            sections: []
+        },
+        {
+            templateId: Guid.create(),
+            templateName: "Template 2",
+            isHandoverTemplate: false,
+            sections: []
+        },
+    ];
+
     constructor(
         private templateService: TemplateService,
         private sessionStorageService: SessionStorageService) { }
 
     ngOnInit(): void {
+
+        this.templates = this.templateListTemp;
+
         var templateId = this.sessionStorageService.getItem<Guid>('templateId');
         this.selectedIndex = this.sessionStorageService.getItem<number>('template-tab');
 
@@ -119,9 +139,9 @@ export class HandoverTemplatesComponent implements OnInit {
         });
     }
 
-    deleteTemplateDialog(templateId: Guid): void {
+    deleteTemplateDialog(template: Template): void {
         const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, {
-            data: { templateId: templateId },
+            data: { templateId: template.templateId, templateName: template.templateName },
             panelClass: 'template-dialog'
         });
 
