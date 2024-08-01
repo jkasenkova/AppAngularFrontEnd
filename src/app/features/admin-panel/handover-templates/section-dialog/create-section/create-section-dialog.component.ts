@@ -1,15 +1,18 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { SectionDialogModel } from "../../models/sectionDialogModel";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'template-dialog',
     templateUrl: './create-section-dialog.component.html',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
+    encapsulation: ViewEncapsulation.None,
     imports: [
         MatFormFieldModule,
         MatInputModule,
@@ -19,7 +22,8 @@ import { SectionDialogModel } from "../../models/sectionDialogModel";
         MatDialogContent,
         MatDialogActions,
         MatDialogClose,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatIconModule
     ],
 })
 export class CreateSectionDialogComponent {
@@ -31,7 +35,7 @@ export class CreateSectionDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
         this.sectionForm = this.fb.group({
-            sectionName: [data.sectionName, Validators.required]
+            sectionName: ['', Validators.required]
         });
     }
 

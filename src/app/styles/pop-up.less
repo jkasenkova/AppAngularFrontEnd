@@ -1,19 +1,79 @@
-.template-dialog {
-    color: #fff;
+.template-dialog, .section-dialog {
+    color: #464646;
     padding: 16px 20px 20px;
     border: none;
+    letter-spacing: normal;
 
     .mat-mdc-dialog-title{
-        display: flex;
+        display: inline-block;
         color: #464646;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 700;
-        font-family: Proxima-Nova-Regular;
+        letter-spacing: normal;
+        line-height: normal;
+    }
+
+    .mat-mdc-button-persistent-ripple::before {
+        background-color: white !important;
+    }
+
+    .mat-mdc-button::before {
+        background-color: white !important;
+    }
+
+    .mat-mdc-button:hover{
+        opacity: 0.5;
+    }
+
+    .save-btn{
+        color:#464646;
+        background-color: white;
+        font-size: 14px;
         letter-spacing: normal;
     }
 
-    .mat-mdc-button-base+.mat-mdc-button-base{
-        margin-left: 0px;
-        padding-left: 0px;
+    .save-btn:hover{
+        color:#0096C8;
+        background-color: white;
+        font-size: 14px;
+        letter-spacing: normal;
+    }
+
+    .mat-mdc-form-field-focus-overlay, .mdc-text-field--filled:not(.mdc-text-field--disabled) { 
+        background-color: white !important; 
+    } 
+ 
+    h4{
+        padding-left: 15px;
+        color: #464646;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: normal;
+    }
+
+    p{
+        padding-left: 15px;
+        color: #464646;
+        font-size: 16px;
+        letter-spacing: normal;
+    }
+
+    .mat-mdc-dialog-actions{
+        padding: 10px !important;
+        gap: 10rem;
+        margin-bottom: .4rem;
+
+        .mat-mdc-button-base{
+            margin: 0px !important;
+            padding: 0px !important;
+            background-color: white !important; 
+        }
+    }
+
+    .mdc-button{
+        justify-content: right;
+        min-width: 40px;
+        padding: 0px;
+        gap: 10px;
     }
 }

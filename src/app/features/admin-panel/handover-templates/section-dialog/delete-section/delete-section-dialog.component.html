@@ -1,12 +1,15 @@
-<h4 mat-dialog-title>Delete Section</h4>
-
-<div mat-dialog-content>
-    <p>Are you sure you want to delete this section?</p>
+<div clas="section-dialog">
+    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+        <h4>Delete Section</h4>
+        <div class="dialog-actions">
+            <button mat-button mat-dialog-close (click)="onSave()" class="save-btn"
+            [disabled]="sectionForm.invalid">Delete</button>
+            <button mat-button mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+        <mat-dialog-content>
+            <p>Are you sure you want to delete {{data.sectionName}} ?</p>
+        </mat-dialog-content>
 </div>
-
-<mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Close</button>
-    <button mat-button (click)="onSave()" [disabled]="sectionForm.invalid" cdkFocusInitial>
-        Delete
-    </button>
-</mat-dialog-actions>

@@ -48,7 +48,7 @@ export class TemplateComponent implements OnInit {
 
     createSectionDialog(templateId: Guid): void {
         const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
-            data: { templateId }
+            data: { templateId: templateId, sectionName: '' }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -58,9 +58,9 @@ export class TemplateComponent implements OnInit {
         });
     }
 
-    editSectionDialog(sectionId: Guid): void {
+    editSectionDialog(section: Section): void {
         const dialogRef = this.dialog.open(EditSectionDialogComponent, {
-            data: { sectionId }
+            data: { sectionId: section.sectionId, sectionName: section.sectionName }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -70,9 +70,9 @@ export class TemplateComponent implements OnInit {
         });
     }
 
-    deleteSectionDialog(sectionId: Guid): void {
+    deleteSectionDialog(section: Section): void {
         const dialogRef = this.dialog.open(DeleteSectionDialogComponent, {
-            data: { sectionId }
+            data: { sectionId: section.sectionId, sectionName: section.sectionName }
         });
 
         dialogRef.afterClosed().subscribe(result => {
