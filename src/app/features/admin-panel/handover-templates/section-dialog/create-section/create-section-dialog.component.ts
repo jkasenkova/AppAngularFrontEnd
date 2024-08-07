@@ -8,7 +8,7 @@ import { SectionDialogModel } from "../../models/sectionDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'template-dialog',
+    selector: 'crete-section-dialog',
     templateUrl: './create-section-dialog.component.html',
     styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,

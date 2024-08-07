@@ -47,13 +47,13 @@ export class HandoverTemplatesComponent implements OnInit {
 
     templateListTemp: Template[] = [
         {
-            templateId: Guid.create(),
+            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             templateName: "Template 1",
             isHandoverTemplate: false,
             sections: []
         },
         {
-            templateId: Guid.create(),
+            templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
             templateName: "Template 2",
             isHandoverTemplate: false,
             sections: []
@@ -94,11 +94,10 @@ export class HandoverTemplatesComponent implements OnInit {
 
     onSelectTemplate(event: MatSelectChange): void {
         if (event.value != undefined) {
-
             this.sessionStorageService.setItem('templateId', event.value.templateId);
-
             this.isSelectedTemplate = true;
             this.template = event.value;
+            this.selectedTemplate = event.value;
         }
         else {
             this.isSelectedTemplate = false;
