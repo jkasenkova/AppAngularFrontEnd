@@ -1,0 +1,23 @@
+<h4 mat-dialog-title>{{ data.action }} Template</h4>
+<mat-dialog-content>
+    <form [formGroup]="templateForm">
+        <mat-form-field>
+            <mat-label>Template Name:</mat-label>
+            <input matInput formControlName="templateName">
+            @if(templateForm.get('templateName').hasError('required')){
+               <mat-error>Template Name is required</mat-error>
+            }
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+@if(data.action === 'delete') {
+    <div mat-dialog-content>
+        <p>Are you sure you want to delete this template?</p>
+    </div>
+}
+<mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+    <button mat-button (click)="onSave()" [disabled]="templateForm.invalid" cdkFocusInitial>
+        {{ data.action === 'delete' ? 'Delete' : 'Save' }}
+    </button>
+</mat-dialog-actions>

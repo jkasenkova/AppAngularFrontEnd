@@ -1,0 +1,14 @@
+# Oryx Manifest
+
+# Specify the programming language and version
+[platform]
+name = "nodejs"
+version = "18.19.1"
+
+# Specify the build commands
+[build]
+command = "npm install && ng build --prod"
+
+# Specify the run command
+[run]
+command = "npm start"
