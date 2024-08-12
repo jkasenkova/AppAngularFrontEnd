@@ -1,3 +1,10 @@
+*{
+  font-family: "Proxima-Nova-Regular";
+  word-wrap: break-word;
+  letter-spacing: normal;
+  font-size: 16px;
+}
+
 .container {
     .child-tabs {
 
@@ -20,19 +27,28 @@
               
               .mat-form-field-appearance-outline {
                 padding-top: 6px;
+                width: 300px;
+                overflow:hidden;
+                text-overflow:ellipsis;
               }
 
               .mat-mdc-form-field-flex {
                 height: 45px;
               }
-              
-              :host mat-select ::ng-deep .mat-select-arrow {
-                transform: rotate(-90deg);
-               }
-                
-                ::ng-deep .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
-                  transform: rotate(0deg);
-                }
+
+              mat-option{
+                font-family: "Proxima-Nova-Regular";
+                word-wrap: break-word;
+                letter-spacing: normal;
+                font-size: 16px;
+              }
+
+              ::ng-deep .mat-select-panel .mat-option-text{ 
+                font-family: "Proxima-Nova-Regular";
+                word-wrap: break-word;
+                letter-spacing: normal;
+                font-size: 16px;
+              }
         }
 
         .mat-mdc-tab-label-container {

@@ -1,0 +1,50 @@
+<div clas="template-topic-dialog">
+    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+        <h4>Create Template Topic</h4>
+        <div class="dialog-actions">
+            <button mat-button mat-dialog-close (click)="onSave()" class="save-btn"
+            [disabled]="templateTopicForm.invalid">Save</button>
+            <button mat-button mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <mat-dialog-content>
+        <form [formGroup]="templateTopicForm">
+            <div clas="vertical-center">
+                <mat-form-field appearance="fill">
+                    <mat-label>Topic</mat-label>
+                    <input matInput formControlName="templateTopicName" placeholder="Enter Topic" class="simple-input">
+                    @if(templateTopicForm.get('templateTopicName').hasError('required')){
+                        <mat-error>Topic is required</mat-error>
+                    }
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Reference</mat-label>
+                    <input matInput formControlName="templateReferenceName" placeholder="Enter Reference" class="simple-input">
+                    @if(templateTopicForm.get('templateReferenceName').hasError('required')){
+                        <mat-error>Reference is required</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="select-template">
+                <mat-form-field appearance="outline">
+                    <mat-label>Associated Templates</mat-label>
+                    <mat-select placeholder="Select a Template">
+                        <mat-option>None</mat-option>
+                        @for (template of data.templates; track template) {
+                            <mat-option [value]="template">{{template.templateName}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="templateDescription" placeholder="Enter Description">
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+    </div>
+    

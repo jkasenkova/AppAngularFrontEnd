@@ -251,9 +251,7 @@ export class TemplateComponent implements OnInit {
 
     addHideRowTopicForm(index: number){
         let nativeElement = this.addRowElement.toArray()[index].nativeElement;
-        debugger;
-        var res =  nativeElement.style.display;
-
+        
         nativeElement.style.display =
           nativeElement.style.display === "none" || !nativeElement.style.display
           ? "inline-block"

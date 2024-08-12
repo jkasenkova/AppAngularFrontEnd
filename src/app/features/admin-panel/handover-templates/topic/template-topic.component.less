@@ -1,6 +1,23 @@
 .container {
     background: none;
 
+    .button-row{
+        padding: 5px 5px 5px 90px;
+
+        .btn-add-topic{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: white;
+            border: 1px solid #0096C8;
+            color: #333;
+
+            &:hover{
+                background-color: #0096C8;
+                color: white;
+            }
+        }
+    }
+
     .ag-theme-quartz {
         overflow: hidden;
         height: 500px;
@@ -18,6 +35,7 @@
         justify-content: space-between;
     }
 }
+
 .plus-btn {
     background-image: url("/assets/img/plus_light_icon.svg");
     background-repeat: no-repeat;
@@ -187,5 +205,19 @@
                 color: blue;
             }
         }
+    }
+}
+
+.btn-edit-topic{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid #0096C8;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: #0096C8;
+        color: white;
     }
 }

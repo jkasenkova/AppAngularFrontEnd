@@ -1,4 +1,7 @@
 <div class="container">
+    <div class="button-row">
+        <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
+    </div>
     <ag-grid-angular  class="ag-theme-quartz" 
                      [rowData]="rowData"
                      [columnDefs]="colDefs"
@@ -6,6 +9,5 @@
                      [paginationPageSizeSelector]="paginationPageSizeSelector"
                      [paginationPageSize]="paginationPageSize"
                      [alwaysShowHorizontalScroll]="false">
-    </ag-grid-angular>
-</div>
+    </ag-grid-angular> 
 
