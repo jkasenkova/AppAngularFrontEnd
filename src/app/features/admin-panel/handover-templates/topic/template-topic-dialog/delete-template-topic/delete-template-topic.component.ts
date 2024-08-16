@@ -4,16 +4,16 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { TemplateDialogModel } from "../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
-import {MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list'; 
-
+import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
-    selector: 'create-template-dialog',
-    templateUrl: './create-template-dialog.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    selector: 'edit-template-topic-dialog',
+    templateUrl: './edit-template-topic-dialog.component.html',
+    styleUrl: '../../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -27,20 +27,22 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
+        MatSelectModule,
         MatDialogModule,
         MatGridListModule
     ],
 })
-export class CreateTemplateDialogComponent {
-    templateForm: FormGroup;
-    
+export class DeleteTemplateTopicDialogComponent {
+    templateTopicForm: FormGroup;
+
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<CreateTemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        public dialogRef: MatDialogRef<DeleteTemplateTopicDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: TemplateTopicDialogModel
     ) {
-        this.templateForm = this.fb.group({
-            templateName: ['', Validators.required]
+        this.templateTopicForm = this.fb.group({
+            templateTopicName: [data.templateTopicName, Validators.required],
+            templateTopicId: [data.templateTopicId]
         });
     }
 
@@ -49,8 +51,8 @@ export class CreateTemplateDialogComponent {
     }
 
     onSave(): void {
-        if (this.templateForm.valid) {
-            this.dialogRef.close(this.templateForm.value);
+        if (this.templateTopicForm.valid) {
+            this.dialogRef.close(this.templateTopicForm.value);
         }
     }
 }

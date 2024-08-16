@@ -1,15 +1,24 @@
-<div clas="section-dialog">
-    <div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
-        <h4>Delete Section</h4>
-        <div class="dialog-actions">
-            <button mat-button mat-dialog-close (click)="onSave()" class="save-btn"
-            [disabled]="sectionForm.invalid">Delete</button>
-            <button mat-button mat-dialog-close>
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
+<div class="section-dialog">
+    <mat-grid-list cols="2" rowHeight="3:1" class="grid-layout-custom">
+        <mat-grid-tile><h2 mat-dialog-title>Delete Section</h2></mat-grid-tile>
+        <mat-grid-tile> 
+            <mat-dialog-actions>
+                <button mat-button mat-dialog-close class="close-btn"></button>
+                <button mat-button 
+                    (click)="onSave()" 
+                    [disabled]="sectionForm.invalid" 
+                    cdkFocusInitial>
+                    Delete</button>
+    
+            </mat-dialog-actions>
+        </mat-grid-tile>
+        <mat-grid-tile rowspan="1" colspan="2">
+    
+            <mat-dialog-content>
+                <p>Are you sure you want to delete {{data.sectionName}} ?</p>
+            </mat-dialog-content>
+    
+        </mat-grid-tile>
+    
+      </mat-grid-list>
     </div>
-        <mat-dialog-content>
-            <p>Are you sure you want to delete {{data.sectionName}} ?</p>
-        </mat-dialog-content>
-</div>

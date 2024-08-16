@@ -1,8 +1,22 @@
-.template-dialog, .section-dialog {
+.template-dialog, .section-dialog, .template-topic-dialog{
     color: #464646;
-    padding: 16px 20px 20px;
+    padding: 10px 5px 5px 10px;
     border: none;
     letter-spacing: normal;
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .grid-layout-custom{
+        width: 20vw;
+    }
+ 
+    .dialog-header{
+        display: inline-flex;
+        align-items: center; 
+    }
 
     .vertical-center {
         display: flex;
@@ -14,7 +28,6 @@
         display: inline-block;
         color: #464646;
         font-size: 16px;
-        font-weight: 700;
         letter-spacing: normal;
         line-height: normal;
     }
@@ -29,6 +42,15 @@
 
     .mat-mdc-button:hover{
         opacity: 0.5;
+    }
+
+    .close-btn{
+        background-image: url("/assets/img/close_dark.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: pointer;
+        height: 10px;
+        width: 10px;
     }
 
     .save-btn{
@@ -66,7 +88,6 @@
 
     .mat-mdc-dialog-actions{
         padding: 10px !important;
-        gap: 10rem;
         margin-bottom: .4rem;
 
         .mat-mdc-button-base{
@@ -78,7 +99,7 @@
 
     .mdc-button{
         justify-content: right;
-        min-width: 40px;
+        min-width: 25px;
         padding: 0px;
         gap: 10px;
     }

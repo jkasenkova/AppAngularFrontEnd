@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list'; 
 
 @Component({
     selector: 'create-template-topic-dialog',
@@ -25,7 +27,9 @@ import { MatSelectModule } from '@angular/material/select';
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
-        MatSelectModule
+        MatSelectModule,
+        MatDialogModule,
+        MatGridListModule
     ],
 })
 export class CreateTemplateTopicDialogComponent {

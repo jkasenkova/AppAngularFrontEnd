@@ -6,6 +6,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { TemplateDialogModel } from "../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
     selector: 'edit-template-dialog',
@@ -23,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
         MatDialogActions,
         MatDialogClose,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatGridListModule,
+        MatDialogModule
     ],
 })
 export class EditTemplateDialogComponent {

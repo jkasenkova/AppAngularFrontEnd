@@ -9,6 +9,7 @@ import { CreateTemplateTopicDialogComponent } from './template-topic-dialog/crea
 import { EditButtonComponent } from './editButtonComponent';
 import { Template } from 'src/app/models/template';
 import { Guid } from 'guid-typescript';
+import { DeleteButtonComponent } from './deleteButtonComponent';
 
 @Component({
     selector: 'app-template-topic',
@@ -44,8 +45,16 @@ export class TemplateTopicComponent implements OnInit {
         {
             field: "actions",
             headerName: "",
+            width: 100,
             resizable: false,
             cellRenderer: EditButtonComponent 
+        },
+        {
+            field: "actions",
+            headerName: "",
+            width: 100,
+            resizable: false,
+            cellRenderer: DeleteButtonComponent 
         }
     ];
 

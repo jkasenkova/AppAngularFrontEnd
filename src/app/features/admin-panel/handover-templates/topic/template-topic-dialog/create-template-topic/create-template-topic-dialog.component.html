@@ -1,12 +1,20 @@
 <div class="template-topic-dialog">
+
+    <div class="header">
+
     <h4 mat-dialog-title>Create Template Topic</h4>
-    <div mat-dialog-actions class="dialog-actions">
-        <button mat-button (click)="onSave()" class="save-btn"
-        [disabled]="templateTopicForm.invalid">Save</button>
-        <button mat-button>
-            <mat-icon>close</mat-icon>
-        </button>
+
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="close-btn"></button>
+        <button mat-button 
+            (click)="onSave()" 
+            [disabled]="templateTopicForm.invalid" 
+            cdkFocusInitial>
+        Save</button>
+    </mat-dialog-actions>
+
     </div>
+
     <div mat-dialog-content>
         <form [formGroup]="templateTopicForm">
             <div clas="vertical-center">
@@ -46,4 +54,3 @@
         </form>
     </div>
 </div>
-    

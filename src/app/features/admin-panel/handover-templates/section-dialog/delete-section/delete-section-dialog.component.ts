@@ -6,6 +6,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { SectionDialogModel } from "../../models/sectionDialogModel";
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list'; 
 
 @Component({
     selector: 'delete-section-dialog',
@@ -23,7 +25,9 @@ import { MatIconModule } from '@angular/material/icon';
         MatDialogActions,
         MatDialogClose,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatDialogModule,
+        MatGridListModule
     ],
 })
 export class DeleteSectionDialogComponent {

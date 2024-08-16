@@ -9,9 +9,9 @@ import { EditTemplateTopicDialogComponent } from './template-topic-dialog/edit-t
     standalone: true,
     imports: [MatButtonModule],
     styleUrls: ['./template-topic.component.less'],
-    template: `<button mat-stroked-button class="btn-edit-topic" (click)="buttonClicked()">Edit</button>`,
+    template: `<button mat-stroked-button class="btn-delete-topic" (click)="buttonClicked()">Delete</button>`,
 })
-export class EditButtonComponent implements ICellRendererAngularComp {
+export class DeleteButtonComponent implements ICellRendererAngularComp {
     params: ICellRendererParams;
     readonly dialog = inject(MatDialog);
 
