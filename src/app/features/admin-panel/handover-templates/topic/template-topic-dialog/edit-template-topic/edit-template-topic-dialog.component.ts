@@ -30,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class EditTemplateTopicDialogComponent {
     templateTopicForm: FormGroup;
+    selectTemplate: boolean = false;
 
     constructor(
         private fb: FormBuilder,
@@ -51,6 +52,12 @@ export class EditTemplateTopicDialogComponent {
     onSave(): void {
         if (this.templateTopicForm.valid) {
             this.dialogRef.close(this.templateTopicForm.value);
+        }
+    }
+
+    onSelectTemplate(selectTemplate:any){
+        if(selectTemplate){
+            this.selectTemplate = true;
         }
     }
 }

@@ -1,4 +1,5 @@
 import { Guid } from "guid-typescript";
+import { Section } from "src/app/models/section";
 import { Template } from "src/app/models/template";
 
 export interface TemplateTopicDialogModel {
@@ -10,4 +11,5 @@ export interface TemplateTopicDialogModel {
     templateDescription?: string;
     attachToTemplate?: Guid[];
     templates?:Template[];
+    sections?:Section[];
 }

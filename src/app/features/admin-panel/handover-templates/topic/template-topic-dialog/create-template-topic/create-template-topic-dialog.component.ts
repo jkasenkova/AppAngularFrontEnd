@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, inject, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -9,6 +9,7 @@ import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'create-template-topic-dialog',
@@ -29,11 +30,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
-        MatGridListModule
+        MatGridListModule,
+        NgbDatepickerModule
     ],
 })
 export class CreateTemplateTopicDialogComponent {
     templateTopicForm: FormGroup;
+    selectTemplate: boolean = false;
 
     constructor(
         private fb: FormBuilder,
@@ -55,6 +58,12 @@ export class CreateTemplateTopicDialogComponent {
     onSave(): void {
         if (this.templateTopicForm.valid) {
             this.dialogRef.close(this.templateTopicForm.value);
+        }
+    }
+
+    onSelectTemplate(selectTemplate:any){
+        if(selectTemplate){
+            this.selectTemplate = true;
         }
     }
 }

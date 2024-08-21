@@ -3,7 +3,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { EditTemplateTopicDialogComponent } from './template-topic-dialog/edit-template-topic/edit-template-topic-dialog.component';
+import { DeleteTemplateTopicDialogComponent } from './template-topic-dialog/delete-template-topic/delete-template-topic-dialog.component';
 
 @Component({
     standalone: true,
@@ -11,6 +11,7 @@ import { EditTemplateTopicDialogComponent } from './template-topic-dialog/edit-t
     styleUrls: ['./template-topic.component.less'],
     template: `<button mat-stroked-button class="btn-delete-topic" (click)="buttonClicked()">Delete</button>`,
 })
+
 export class DeleteButtonComponent implements ICellRendererAngularComp {
     params: ICellRendererParams;
     readonly dialog = inject(MatDialog);
@@ -24,7 +25,7 @@ export class DeleteButtonComponent implements ICellRendererAngularComp {
     }
 
     buttonClicked() {
-        const dialogRef = this.dialog.open(EditTemplateTopicDialogComponent, { 
+        const dialogRef = this.dialog.open(DeleteTemplateTopicDialogComponent, { 
             data: { 
                 templateTopicName: this.params.data.topic, 
                 templateReferenceName:  this.params.data.reference, 
