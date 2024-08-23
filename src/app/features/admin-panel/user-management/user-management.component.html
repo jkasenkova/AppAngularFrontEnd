@@ -1,1 +1,14 @@
-User Management Page
+<div class="app-user-management container">
+    <div class="button-row">
+        <button mat-stroked-button class="btn-add-user" (click)="addUser()">Add User</button>
+    </div>
+    <ag-grid-angular class="ag-theme-quartz" #agGrid
+                     [rowData]="rowData"
+                     [columnDefs]="colDefs"
+                     [pagination]="true"
+                     [detailRowAutoHeight]="true"
+                     [paginationPageSizeSelector]="paginationPageSizeSelector"
+                     [paginationPageSize]="paginationPageSize"
+                     [alwaysShowHorizontalScroll]="false">
+    </ag-grid-angular> 
+</div>

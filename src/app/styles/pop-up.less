@@ -1,4 +1,4 @@
-.template-dialog, .section-dialog, .template-topic-dialog{
+.template-dialog, .section-dialog, .template-topic-dialog, .user-dialog{
     color: #464646;
     padding: 10px 5px 15px 10px;
     border: none;
@@ -100,6 +100,12 @@
         -webkit-text-stroke-width: .2px;
         -webkit-text-stroke-color: #0096C8;
     }
+
+    .save-btn:disabled{
+        opacity: .55;
+        cursor: not-allowed;
+    }
+
 
     .mat-mdc-form-field-focus-overlay, .mdc-text-field--filled:not(.mdc-text-field--disabled) { 
         background-color: white !important; 

@@ -1,19 +1,20 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, inject, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserModel } from "../../model/userModel";
 
 @Component({
-    selector: 'delete-template-topic-dialog',
-    templateUrl: './delete-template-topic-dialog.component.html',
-    styleUrl: '../../../../../../styles/pop-up.less',
+    selector: 'delete-user-dialog',
+    templateUrl: './delete-user-dialog.component.html',
+    styleUrl: '/../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -29,20 +30,22 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
-        MatGridListModule
+        MatGridListModule,
+        NgbDatepickerModule
     ],
 })
-export class DeleteTemplateTopicDialogComponent {
-    templateTopicForm: FormGroup;
+export class DeleteUserDialogComponent {
+    userForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<DeleteTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateTopicDialogModel
+        public dialogRef: MatDialogRef<DeleteUserDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: UserModel
     ) {
-        this.templateTopicForm = this.fb.group({
-            templateTopicName: data.templateTopicName,
-            templateTopicId: data.templateTopicId
+        this.userForm = this.fb.group({
+            userName: data.userName,
+            userSurname: data.userSurname,
+            userId: data.userId
         });
     }
 
@@ -51,8 +54,8 @@ export class DeleteTemplateTopicDialogComponent {
     }
 
     onSave(): void {
-        if (this.templateTopicForm.valid) {
-            this.dialogRef.close(this.templateTopicForm.value);
+        if (this.userForm.valid) {
+            this.dialogRef.close(this.userForm.value);
         }
     }
 }

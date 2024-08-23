@@ -1,0 +1,197 @@
+<div class="user-dialog">
+
+    <div class="header">
+        <h4 mat-dialog-title>Edit User</h4>
+        <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="close-btn"></button>
+        <button mat-button  class="save-btn"
+            (click)="onSave()" 
+            [disabled]="userForm.invalid" 
+            cdkFocusInitial>
+        Save</button>
+        </mat-dialog-actions>
+    </div>
+
+    <div mat-dialog-content>
+        <form [formGroup]="userForm">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput formControlName="userName" placeholder="Enter Name">
+                                    @if(userForm.get('userName').hasError('required')){
+                                        <mat-error>Name is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Team</mat-label>
+                                    <mat-select placeholder="Select a Team">
+                                        <mat-option>--</mat-option>
+                                        @for (team of data.teams; track team) {
+                                            <mat-option [value]="team">{{team.teamName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Surname</mat-label>
+                                    <input matInput formControlName="userSurname" placeholder="Enter Surname">
+                                    @if(userForm.get('userSurname').hasError('required')){
+                                        <mat-error>Surname is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Role</mat-label>
+                                    <mat-select placeholder="Select a Role">
+                                        <mat-option>--</mat-option>
+                                        @for (role of data.roles; track role) {
+                                            <mat-option [value]="role">{{role.roleName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Email/Login</mat-label>
+                                    <input matInput formControlName="email" placeholder="Enter Email">
+                                    @if (userForm.hasError('email') && !userForm.hasError('required')) {
+                                        <mat-error>Please enter a valid email address</mat-error>
+                                      }
+                                    @if(userForm.get('email').hasError('required')){
+                                        <mat-error>Email/Login is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Rotation</mat-label>
+                                    <input matInput formControlName="rotation">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput formControlName="password" placeholder="Enter Password">
+                                    @if(userForm.get('password').hasError('required')){
+                                        <mat-error>Password is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Template</mat-label>
+                                    <input matInput formControlName="template">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Comfirm Password</mat-label>
+                                    <input matInput formControlName="confirmPassword" placeholder="Comfirm Password">
+                                    @if(userForm.get('confirmPassword').hasError('required')){
+                                        <mat-error>Comfirm Password is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Line Manager</mat-label>
+                                    <mat-select placeholder="Select Line Manager">
+                                        <mat-option>--</mat-option>
+                                        @for (lineManager of data.lineManagers; track lineManager) {
+                                            <mat-option [value]="lineManager">{{lineManager.userName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Contributors</mat-label>
+                                    <mat-select placeholder="Select Contributors" multiple>
+                                        <mat-option>--</mat-option>
+                                        @for (contributor of data.contributors; track contributor) {
+                                            <mat-option [value]="contributor">{{contributor.userName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+</div>
