@@ -1,4 +1,4 @@
-.template-dialog, .section-dialog, .template-topic-dialog, .user-dialog{
+.template-dialog, .section-dialog, .template-topic-dialog, .user-dialog, .location-dialog{
     color: #464646;
     padding: 10px 5px 15px 10px;
     border: none;
@@ -156,12 +156,18 @@
 }
 
 @media (min-width: 768px) {
-    .modal-dialog {
+    .mat-mdc-dialog-container {
         width: 600px;
         margin: 30px auto;
     }
 }
 
+
+.mat-mdc-dialog-container {
+    position: relative;
+    width: auto;
+    margin: 10px;
+}
 
 .mat-form-field-wrapper{
     outline: none;

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="111.25 269.25 27.5 27.5">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-4 {
+        fill: none;
+      }
+
+      .cls-1, .cls-4 {
+        stroke: #b4b4b4;
+        stroke-width: 1.5px;
+      }
+
+      .cls-3 {
+        fill: #b4b4b4;
+        opacity: 0;
+      }
+
+      .cls-4 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="Group_1" data-name="Group 1" transform="translate(21796 16952)">
+    <circle id="ellipse" class="cls-1" cx="13" cy="13" r="13" transform="translate(-21684 -16682)"/>
+    <g id="Group_31229" data-name="Group 31229" transform="translate(-261.75 6213.25)">
+      <rect id="Rectangle_7359" data-name="Rectangle 7359" class="cls-2" width="15" height="15" transform="translate(-21416.25 -22889.75)"/>
+    </g>
+    <g id="Group_31233" data-name="Group 31233" transform="translate(-22119 -16747)">
+      <g id="Group_31232" data-name="Group 31232" transform="translate(-2 -31.5)">
+        <g id="Group_31230" data-name="Group 31230" transform="translate(442 101.5)">
+          <rect id="Rectangle_7360" data-name="Rectangle 7360" class="cls-3" width="16" height="16"/>
+        </g>
+        <g id="Group_31231" data-name="Group 31231" transform="translate(444.933 104.433)">
+          <line id="Line_6571" data-name="Line 6571" class="cls-4" y2="10.5" transform="translate(5.067 -0.184)"/>
+          <line id="Line_6572" data-name="Line 6572" class="cls-4" x2="10.5" transform="translate(-0.184 5.067)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

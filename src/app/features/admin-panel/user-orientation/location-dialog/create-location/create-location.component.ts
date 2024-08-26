@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, inject, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -7,13 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list'; 
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserModel } from "../../model/userModel";
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { LocationModel } from "../../model/locationModel";
 
 @Component({
-    selector: 'delete-user-dialog',
-    templateUrl: './delete-user-dialog.component.html',
+    selector: 'location-dialog',
+    templateUrl: './create-location.component.html',
     styleUrl: '/../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
@@ -30,22 +29,22 @@ import { UserModel } from "../../model/userModel";
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
-        MatGridListModule,
         NgbDatepickerModule
     ],
 })
-export class DeleteUserDialogComponent {
-    userForm: FormGroup;
+export class CreateLocationDialogComponent {
+    locationForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<DeleteUserDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserModel
+        public dialogRef: MatDialogRef<CreateLocationDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
-        this.userForm = this.fb.group({
-            userName: data.userName,
-            userSurname: data.userSurname,
-            userId: data.userId
+        this.locationForm = this.fb.group({
+            name: ['', Validators.required],
+            address: [''],
+            mapLink: [''],
+            timeZoneId: ['', Validators.required]
         });
     }
 
@@ -54,8 +53,8 @@ export class DeleteUserDialogComponent {
     }
 
     onSave(): void {
-        if (this.userForm.valid) {
-            this.dialogRef.close(this.userForm.value);
+        if (this.locationForm.valid) {
+            this.dialogRef.close(this.locationForm.value);
         }
     }
 }
