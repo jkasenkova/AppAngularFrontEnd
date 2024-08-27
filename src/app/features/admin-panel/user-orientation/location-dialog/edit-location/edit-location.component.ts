@@ -12,7 +12,7 @@ import { LocationModel } from "../../model/locationModel";
 
 @Component({
     selector: 'location-dialog',
-    templateUrl: './create-location.component.html',
+    templateUrl: './edit-location.component.html',
     styleUrl: '/../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
@@ -32,19 +32,20 @@ import { LocationModel } from "../../model/locationModel";
         NgbDatepickerModule
     ],
 })
-export class CreateLocationDialogComponent {
+export class EditLocationDialogComponent {
     locationForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<CreateLocationDialogComponent>,
+        public dialogRef: MatDialogRef<EditLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
         this.locationForm = this.fb.group({
-            name: ['', Validators.required],
-            address: [''],
-            mapLink: [''],
-            timeZoneId: ['', Validators.required]
+            name: [data.name, Validators.required],
+            address: [data.address],
+            mapLink: [data.mapLink],
+            id: [data.id],
+            timeZoneId: [data.timeZoneId, Validators.required]
         });
     }
 

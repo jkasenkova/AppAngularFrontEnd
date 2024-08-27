@@ -16,8 +16,14 @@
                     </span>
                 </div>
                 <div class="panel-body">
-                    <div class="text-center ng-binding"></div>
-                    <div class="list-group" style="font-size: 12px">
+                    <div class="list-group">
+                        @for (location of locations; track location) {
+                           <div class="list-group-item list-group-item-action">
+                                {{location.name}}
+                                <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                            </div> 
+                        }
                     </div>
                 </div>
             </section>
