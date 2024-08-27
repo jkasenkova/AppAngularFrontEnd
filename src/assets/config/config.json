@@ -1,5 +1,5 @@
 {
   "apiServer": {
-    "url": "https://localhost:7209/gateway"
+    "url": "https://localhost:7209/api"
   }
 }

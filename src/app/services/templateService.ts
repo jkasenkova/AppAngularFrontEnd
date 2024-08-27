@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../models/template';
-import configurl from '../../assets/config/config.json'
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,7 @@ export class TemplateService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/template';
+    url = environment.routerUrl + '/template';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTemplates(): Observable<Template[]> {
