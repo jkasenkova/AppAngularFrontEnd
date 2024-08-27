@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 
-export interface TeamModel {
+export class Team {
     teamId?: Guid;
     teamName: string;
     locationId: Guid;

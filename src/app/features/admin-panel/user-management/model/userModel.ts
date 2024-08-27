@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import { RoleModel } from "src/app/models/role";
-import { TeamModel } from "src/app/models/team";
+import { Team } from "src/app/models/team";
 
 export interface UserModel {
     userId?: Guid;
@@ -14,5 +14,5 @@ export interface UserModel {
     contributors?: UserModel[];
     lineManagers?: UserModel[];
     roles?: RoleModel[];
-    teams?: TeamModel[]; 
+    teams?: Team[]; 
 }

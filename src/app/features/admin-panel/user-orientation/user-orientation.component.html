@@ -18,11 +18,20 @@
                 <div class="panel-body">
                     <div class="list-group">
                         @for (location of locations; track location) {
-                           <div class="list-group-item list-group-item-action">
-                                {{location.name}}
-                                <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
-                                <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
-                            </div> 
+                            @if(selectedLocation == location){
+                                <div class="list-group-item selected" (click)="selectLocation(location)">
+                                    {{location.name}}
+                                    <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                    <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                </div>
+                            }
+                            @else{
+                                <div class="list-group-item list-group-item-action" (click)="selectLocation(location)">
+                                    {{location.name}}
+                                    <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                    <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                </div>
+                            }
                         }
                     </div>
                 </div>
@@ -40,10 +49,32 @@
                         Teams
                     </strong>
                   
+                    @if(selectedLocation){
+                        <span class="icon-right plus-btn btn-circle btn btn-link" (click)="addTeam(selectedLocation.id)"></span>
+                    }
+                    @else{
+                        <span class="icon-right btn-circle btn btn-link"></span>
+                    }
+
                 </div>
                 <div class="panel-body">
-                    <div class="text-center ng-binding"></div>
-                    <div class="list-group" style="font-size: 12px">
+                    <div class="list-group">
+                        @for (team of teams; track team) {
+                            @if(selectedTeam == team){
+                                <div class="list-group-item selected" (click)="selectTeam(team)">
+                                    {{team.teamName}}
+                                    <span class="pull-right btn-close" (click)="removeTeam(team)"></span>
+                                    <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
+                                </div>
+                            }
+                            @else{
+                                <div class="list-group-item list-group-item-action" (click)="selectTeam(team)">
+                                    {{team.teamName}}
+                                    <span class="pull-right btn-close" (click)="removeTeam(team)"></span>
+                                    <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
             </section>
@@ -57,6 +88,13 @@
                     <strong class="ng-binding">
                         Roles
                     </strong>
+
+                    @if(selectedTeam){
+                        <span class="icon-right plus-btn btn-circle btn btn-link" (click)="addRole(selectedTeam.teamId)"></span>
+                    }
+                    @else{
+                        <span class="icon-right btn-circle btn btn-link"></span>
+                    }
                 </div>
                 <div class="panel-body">
                     <div class="text-center ng-binding"></div>

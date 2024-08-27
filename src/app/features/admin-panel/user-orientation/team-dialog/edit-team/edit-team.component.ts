@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -8,12 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { LocationModel } from "../../model/locationModel";
-import moment from 'moment-timezone';
+import { Team } from "src/app/models/team";
 
 @Component({
-    selector: 'location-dialog',
-    templateUrl: './create-location.component.html',
+    selector: 'team-dialog',
+    templateUrl: './edit-team.component.html',
     styleUrl: '/../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
@@ -33,33 +32,28 @@ import moment from 'moment-timezone';
         NgbDatepickerModule
     ],
 })
-export class CreateLocationDialogComponent implements OnInit {
-    locationForm: FormGroup;
+export class EditTeamDialogComponent {
+    teamForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<CreateLocationDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: LocationModel
+        public dialogRef: MatDialogRef<EditTeamDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: Team
     ) {
-        this.locationForm = this.fb.group({
-            name: ['', Validators.required],
-            address: [''],
-            mapLink: [''],
-            timeZoneId: ['', Validators.required]
+        this.teamForm = this.fb.group({
+            teamName: [data.teamName, Validators.required],
+            teamId:[data.teamId],
+            locationId:[data.locationId]
         });
     }
 
-    ngOnInit(){
-        debugger;
-       var res =  moment.tz.names()
-    }
     onNoClick(): void {
         this.dialogRef.close();
     }
 
     onSave(): void {
-        if (this.locationForm.valid) {
-            this.dialogRef.close(this.locationForm.value);
+        if (this.teamForm.valid) {
+            this.dialogRef.close(this.teamForm.value);
         }
     }
 }

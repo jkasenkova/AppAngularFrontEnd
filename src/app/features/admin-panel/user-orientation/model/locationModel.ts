@@ -6,5 +6,5 @@ export interface LocationModel {
     address?: string;
     mapLink?: string;
     timeZoneId: Guid;
-    timeZones?:[];
+    timeZones?:string[];
 }

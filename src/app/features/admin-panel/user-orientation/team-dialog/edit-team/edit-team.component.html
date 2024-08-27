@@ -1,0 +1,38 @@
+<div class="team-dialog">
+
+    <div class="header">
+        <h4 mat-dialog-title>Edit Team</h4>
+        <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="close-btn"></button>
+        <button mat-button  class="save-btn"
+            (click)="onSave()" 
+            [disabled]="teamForm.invalid" 
+            cdkFocusInitial>
+        Save</button>
+        </mat-dialog-actions>
+    </div>
+
+    <div mat-dialog-content>
+        <form [formGroup]="teamForm">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Team Name</mat-label>
+                                    <input matInput formControlName="teamName" placeholder="Enter Team Name">
+                                    @if(teamForm.get('teamName').hasError('required')){
+                                        <mat-error>Name is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
