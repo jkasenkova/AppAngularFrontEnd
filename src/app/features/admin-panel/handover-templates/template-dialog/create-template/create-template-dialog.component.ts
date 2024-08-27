@@ -6,6 +6,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { TemplateDialogModel } from "../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
+import {MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+
 
 @Component({
     selector: 'create-template-dialog',
@@ -23,12 +26,14 @@ import { MatIconModule } from '@angular/material/icon';
         MatDialogActions,
         MatDialogClose,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatDialogModule,
+        MatGridListModule
     ],
 })
 export class CreateTemplateDialogComponent {
     templateForm: FormGroup;
-
+    
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<CreateTemplateDialogComponent>,

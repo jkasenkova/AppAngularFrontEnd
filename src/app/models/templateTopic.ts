@@ -13,6 +13,6 @@ export class TemplateTopic {
     public isExpand: boolean = false;
     public parentTopicId?: Guid;
     public parentTopic?: TemplateTopic;
-    public childTopics: TemplateTopic[] = [];
+    public childTopics?: TemplateTopic[] = [];
     public references: Reference[] = [];
 }

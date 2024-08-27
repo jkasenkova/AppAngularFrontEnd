@@ -1,0 +1,257 @@
+.app-user-management {
+   width: 100%;
+   height: 100%;
+}
+
+.container {
+    background: none;
+
+    .button-row{
+        padding: 5px 5px 5px 0px;
+
+        .btn-add-user{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: white;
+            border: 1px solid #0096C8;
+            color: #333;
+
+            &:hover{
+                background-color: #0096C8;
+                color: white;
+            }
+        }
+
+        .btn-delete-topic{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: white;
+            border: 1px solid red;
+            color: #333;
+            height: 30px;
+        
+            &:hover{
+                background-color: red;
+                color: white;
+            }
+        } 
+    }
+
+    .ag-theme-quartz {
+        overflow: hidden;
+        height: 300px;
+        width: 100%;
+        margin: auto;
+    }
+
+    .ag-icon-plus {
+        cursor: pointer;
+    }
+
+    .custom-header {
+        display: flex;
+        background: #ccc;
+        justify-content: space-between;
+    }
+}
+
+
+.plus-btn {
+    background-image: url("/assets/img/plus_light_icon.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.icon-right {
+  margin-top: -3px;
+  float: right;
+}
+
+.tableTab {
+    margin-bottom: 0;
+
+    .headRow {
+        font-family: 'Proxima-Nova-Regular';
+        border: none;
+        font-size: 13px;
+        color: #707070;
+        border-bottom: 0.5px solid #DBDBDB;
+        line-height: 2.5em;
+
+        .topic-title {
+            width: 25rem;
+            min-width: 25rem;
+            display: inline-block;
+            padding: 5px 0px 0px 20px;
+            font-size: 15px;
+            text-align: center;
+            font-weight: bolder;
+            border-left: 0.5px solid #DBDBDB;
+
+
+            .plus-btn {
+                background-image: url("/assets/img/plus_light_icon.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                cursor: pointer;
+                height: 25px;
+            }
+
+            .icon-right {
+                margin-top: 3px;
+                margin-right: 10px;
+                float: right;
+            }
+        }
+
+        .head-title {
+            width: 25rem !important;
+            min-width: 25rem !important;
+            max-width: 25rem !important;
+            display: inline-block;
+            font-size: 15px;
+            padding: 5px 0px 0px 20px;
+            text-align: center;
+            font-weight: bolder;
+            border-left: 0.5px solid #DBDBDB;
+        }
+    }
+
+    .rowTopicGroupData {
+        padding: 0px;
+    }
+
+    .rowTopicData {
+        padding: 0px;
+        border-top: 0.5px solid #DBDBDB;
+    }
+
+    .divRow {
+        border-bottom: 0.5px solid #DBDBDB;
+        font-size: 15px;
+        line-height: 1.3em;
+        vertical-align: middle;
+        border-top: none;
+        font-family: 'Proxima-Nova-Regular';
+        color: #0096C8 !important;
+        display: inline-block;
+
+        .body-row {
+            display: inline-block;
+            vertical-align: middle;
+            color: #707070;
+            font-weight: bold;
+            min-width: 25rem !important;
+            max-width: 25rem !important;
+            width: 25rem !important;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            cursor: pointer;
+            font-size: 15px;
+            padding: 15px 5px 5px 20px;
+            border-left: 0.5px solid #DBDBDB;
+            height: 3em;
+
+            .mark {
+                color: red;
+            }
+
+            .removeTopic {
+                width: 20px;
+                height: 15px;
+                padding: 0;
+                background-image: url("/assets/img/close_dark.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                margin-top: 5px;
+                cursor: pointer;
+                margin-left: 0px;
+                opacity: 0.5;
+                float: right;
+            }
+
+            .edit-topic-btn {
+                width: 25px;
+                height: 25px;
+                padding: 0;
+                background-image: url("/assets/img/pencil_dark.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                opacity: 0.5;
+                float: right;
+            }
+
+            .search {
+                background-image: url("/assets/img/search.svg");
+                background-repeat: no-repeat;
+                background-position: center;
+                cursor: pointer;
+                height: 25px;
+                width: 20px;
+                opacity: 0.6;
+            }
+
+            .icon-right {
+                margin-right: 10px;
+                float: right;
+            }
+
+
+            .searchInput {
+                text-overflow: ellipsis;
+                font-size: 10pt;
+                line-height: 1.3em;
+                font-family: Proxima-Nova-Regular;
+                border: none;
+                color: #707070;
+                cursor: default;
+                width: 20rem;
+
+                .highlighted {
+                    background-color: yellow;
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            p {
+                display: inline;
+            }
+
+            span {
+                color: blue;
+            }
+        }
+    }
+}
+
+.btn-edit-user{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid #0096C8;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: #0096C8;
+        color: white;
+    }
+}
+
+.btn-delete-user{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid red;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: red;
+        color: white;
+    }
+} 

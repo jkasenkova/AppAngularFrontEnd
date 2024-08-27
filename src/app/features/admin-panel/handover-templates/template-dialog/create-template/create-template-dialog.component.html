@@ -1,23 +1,38 @@
-<div clas="template-dialog">
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
-    <h4>Create Template</h4>
-    <div class="dialog-actions">
-        <button mat-button mat-dialog-close (click)="onSave()" class="save-btn"
-        [disabled]="templateForm.invalid">Save</button>
-        <button mat-button mat-dialog-close>
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-</div>
-<mat-dialog-content>
-    <form [formGroup]="templateForm">
-        <mat-form-field appearance="fill">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="templateName" placeholder="Enter Name">
-            @if(templateForm.get('templateName').hasError('required')){
-                <mat-error>Name is required</mat-error>
-            }
-        </mat-form-field>
-    </form>
-</mat-dialog-content>
+<div class="template-dialog">
+<mat-grid-list cols="2" rowHeight="2:1" class="grid-layout-custom">
+    <mat-grid-tile>
+        <h2 mat-dialog-title>Create Template</h2>
+    </mat-grid-tile>
+    <mat-grid-tile> 
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close class="close-btn"></button>
+            <button mat-button class="save-btn"
+                (click)="onSave()" 
+                [disabled]="templateForm.invalid" 
+                cdkFocusInitial>
+            Save</button>
+
+        </mat-dialog-actions>
+    </mat-grid-tile>
+    <mat-grid-tile rowspan="1" colspan="2">
+
+        <mat-dialog-content>
+            <form [formGroup]="templateForm">
+        
+                <mat-form-field class="example-full-width">
+                    <input type="text"
+                           placeholder="Enter Name"
+                           matInput
+                           formControlName="templateName">
+                           @if(templateForm.get('templateName').hasError('required')){
+                                <mat-error>Template Name is required</mat-error>
+                            }
+                  </mat-form-field>
+        
+            </form>
+        </mat-dialog-content>
+
+    </mat-grid-tile>
+
+  </mat-grid-list>
 </div>

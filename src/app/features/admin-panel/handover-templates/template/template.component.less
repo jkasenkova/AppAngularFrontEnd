@@ -1,13 +1,16 @@
+*{
+  font-family: "Proxima-Nova-Regular";
+  word-wrap: break-word;
+  letter-spacing: normal;
+  font-size: 16px;
+}
 .container {
-    padding-top: 20px;
-
     .mat-tab-group {
         margin-bottom: 48px;
     }
 
     .btnTemplate {
         background-color: white !important;
-        color: #0096C8 !important;
         border-color: #0096C8 !important;
         margin-left: 20px;
         margin-top: 10px;
@@ -37,7 +40,6 @@
                 width: fit-content;
                 text-align: center;
                 word-wrap: break-word;
-                font-family: Proxima-Nova-Regular;
                 font-weight: 700;
                 font-size: 16px;
                 color: inherit;
@@ -106,6 +108,7 @@
                     min-height: 53px;
                     padding-top: 12px;
                     display: block;
+                    padding-bottom: 0px;
 
                     .btn-plus {
                         width: 85px;
@@ -152,8 +155,346 @@
                             color: #fff;
                         }
                     }
+                    .table-block{
+                        .table {
+                            margin-bottom: 0;
+                
+                            .headRow {
+                              border: none;
+                              font-size: 13px;
+                              padding: 6px 0px;
+                              padding-top: 5px;
+                              color: #707070;
+                              display: inline-block;
+                
+                              .actions-title {
+                                width: 10rem;
+                                min-width: 10rem;
+                                display: inline-block;
+                                padding: 5px 0px 6px 10px;
+                              }
+                
+                              .type-title {
+                                width: 10rem !important;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+                                display: inline-block;
+                                padding: 5px 0px 6px 10px;
+                              }
+                
+                              .reference-title {
+                                width: 12rem !important;
+                                min-width: 12rem !important;
+                                max-width: 12rem !important;
+                                display: inline-block;
+                                padding: 5px 0px 6px 10px;
+                              }
+                
+                              .notes-title {
+                                width: 35rem !important;
+                                padding-left: 20px;
+                                min-width: 35rem !important;
+                                max-width: 35rem !important;
+                                display: inline-block;
+                                padding: 5px 0px 6px 10px;
+                              }
+                
+                              .intel-title {
+                                width: 12rem !important;
+                                min-width: 12rem !important;
+                                max-width: 12rem !important;
+                                display: inline-block;
+                                padding: 5px 0px 6px 10px;
+                              }
+                            }
+                
+                            .rowTopicData {
+                              padding: 0px;
+                              width: 100%;
+                            }
+                
+                            .divRow, .divTopicRow {
+                              border-bottom: 0.5px solid #DBDBDB;
+                              font-size: 14px;
+                              line-height: 2.2em;
+                              vertical-align: middle;
+                              border-top: none;
+                              color: #0096C8 !important;
+                              
+                              .add-topic-form{
+                                display: inline-flex;
+                                padding-left: 0px;
+
+                                .type-body{
+                                   .example-form {
+                                    min-width: 150px;
+                                    max-width: 10rem;
+                                    width: 100%;
+                                  }
+                                  
+                                  .example-full-width {
+                                    width: 100%;
+                                  }
+                                }
+
+                                .reference-body{
+                                  .mat-mdc-form-field{
+                                    font-size: 14px;
+                                    max-width: 10rem;
+                                    vertical-align: middle;
+                                  }
+                                }
+                              }
+
+                              .actions-body {
+                                display: inline-block;
+                                width: 10rem !important;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+
+                                .draganddrop {
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  background: none;
+                                  opacity: 0.5;
+                                  cursor: move;
+                
+                                  .span {
+                                    &:before {
+                                      background-image: url("/assets/img/drag.svg");
+                                      background-repeat: no-repeat;
+                                      background-position: center;
+                                    }
+                                  }
+                
+                                  &:hover {
+                                    .span {
+                                      &:before {
+                                        background-image: url("/assets/img/drag.svg");
+                                        color: #0096C8;
+                                      }
+                                    }
+                                  }
+                                }
+
+                                .remove-btn, .cancel-btn {
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  background-image: url("/assets/img/remove.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                
+                                  &:hover {
+                                    background-image: url("/assets/img/remove_active.svg");
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                  }
+                                }
+                
+                                .edit-btn {
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  margin-top: 5px;
+                                  background-image: url("/assets/img/pencil_dark.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                  opacity: 0.5;
+                
+                                  &:hover {
+                                    color: #0096C8;
+                                  }
+                                }
+                              
+                              }
+
+                              .type-body {
+                                display: inline-block;
+                                padding-right: 15px;
+                                padding-left: 15px;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+                                width: 10rem !important;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                
+                                span {
+                                  color: #0096C8;
+                                }
+
+                                .mat-icon-rtl-mirror {
+                                  float: right;
+                                  padding: 5px 0px 0px 0px !important;
+                                  color: #0096C8;
+                                  cursor: pointer;
+                                }
+                              }
+                
+                              .reference-body {
+                                display: inline-block;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 12rem !important;
+                                max-width: 12rem !important;
+                                width: 12rem !important;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px 0px 15px;
+                                cursor: pointer;
+                
+                                span {
+                                  color: #0096C8;
+                                }
+
+                              }
+                
+                              .notes-body {
+                                display: inline-block;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 35rem !important;
+                                max-width: 35rem !important;
+                                width: 35rem !important;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                                padding-left: 5px;
+                              }
+                
+                              .intel-body {
+                                padding-top: 20px;
+                                padding-left: 20px;
+                                display: inline-block;
+                                width: 10rem !important;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+
+                                .inline-add-btn{
+                                  width: 85px;
+                                  height: 25px;
+                                  color: #fff;
+                                  border: 0;
+                                  line-height: normal;
+                                  border-radius: 15px;
+                                  background-color: #B4B4B4;
+                                }
+
+                                .inline-add-btn:hover{
+                                  background-color: #0096C8;
+                                }
+                              }
+                
+                              .rowReferenceData {
+                                border-top: 0.5px solid #DBDBDB;
+                                padding: 0px !important;
+                              }
+                            }
+                
+                            .addDataRow {
+                              font-size: 14px;
+                              line-height: 1.3em;
+                              vertical-align: middle;
+                              border-top: none;
+                            /*   font-family: 'Proxima-Nova-Regular'; */
+                              color: #0096C8 !important;
+                
+                              .actions-body {
+                                padding-left: 10px;
+                                display: inline-block;
+                                width: 10rem !important;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+                                padding-top: 30px;
+                              }
+                
+                              .type-body {
+                                display: inline-block;
+                                padding-right: 15px;
+                                padding-left: 15px;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+                                width: 10rem !important;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                              }
+                
+                              .reference-body {
+                                display: inline-block;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 12rem !important;
+                                max-width: 12rem !important;
+                                width: 12rem !important;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                                padding-left: 5px;
+                              }
+                
+                              .notes-body {
+                                display: inline-block;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                font-weight: bold;
+                                min-width: 35rem !important;
+                                max-width: 35rem !important;
+                                width: 35rem !important;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                                padding-left: 5px;
+                              }
+                
+                              .intel-body {
+                                display: inline-block;
+                                width: 10rem !important;
+                                min-width: 10rem !important;
+                                max-width: 10rem !important;
+                              }
+                            }
+                        }                            
+                    }
                 }
             }
         }
     }
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: white !important; 
+}
+
+.mat-mdc-button-persistent-ripple::before {
+  background-color: white !important;
+}
+
+.mat-mdc-button::before {
+  background-color: white !important;
+}
+
+
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-form-field-bottom-align {
+  display: none;
 }

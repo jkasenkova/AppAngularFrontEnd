@@ -1,0 +1,18 @@
+
+<div class="template-topic-dialog">
+
+    <div class="header">
+            <h4 mat-dialog-title>Delete Template Topic</h4>
+            <mat-dialog-actions>
+            <button mat-button mat-dialog-close class="close-btn"></button>
+            <button mat-button class="save-btn"
+                (click)="onSave()" 
+                cdkFocusInitial>
+            Delete</button>
+            </mat-dialog-actions>
+    </div>
+    
+    <div mat-dialog-content>
+            <p>Are you sure you want to delete {{data.templateTopicName}} ?</p>
+    </div>
+</div>

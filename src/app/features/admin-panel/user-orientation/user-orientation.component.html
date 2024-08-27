@@ -1,1 +1,70 @@
-User Orientation Tab
+<div class="app-user-orientation container">
+    <div class="row column-row">
+        <div class="col-md-4">
+            <section class="panel panel-default">
+
+                <div class="panel-heading text-center panel-heading-icon-right">
+                    <span class="icon-left help-btn btn-circle btn btn-link tooltipstered" title="About Locations">
+                        <span class="glyphicon span"></span>
+                    </span>
+                    <strong class="ng-binding">
+                        Locations
+                    </strong>
+
+                    <span class="icon-right plus-btn btn-circle btn btn-link" (click)="addLocation()">
+                        <span class="glyphicon span"></span>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        @for (location of locations; track location) {
+                           <div class="list-group-item list-group-item-action">
+                                {{location.name}}
+                                <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                            </div> 
+                        }
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+        <div class="col-md-4">
+            <section class="panel panel-default">
+                <div class="panel-heading text-center panel-heading-icon-right">
+                    <span class="icon-left help-btn btn-circle btn btn-link tooltipstered" data-tooltip-content="#tooltip_content_team" title="About Teams">
+                        <span class="glyphicon span"></span>
+                    </span>
+                    <strong class="ng-binding">
+                        Teams
+                    </strong>
+                  
+                </div>
+                <div class="panel-body">
+                    <div class="text-center ng-binding"></div>
+                    <div class="list-group" style="font-size: 12px">
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel panel-default">
+                <div class="panel-heading text-center panel-heading-icon-right">
+                    <span class="icon-left help-btn btn-circle btn btn-link tooltipstered" data-tooltip-content="#tooltip_content_role" title="About Roles">
+                        <span class="glyphicon span"></span>
+                    </span>
+                    <strong class="ng-binding">
+                        Roles
+                    </strong>
+                </div>
+                <div class="panel-body">
+                    <div class="text-center ng-binding"></div>
+                    <div class="list-group" style="font-size: 12px">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

@@ -1,10 +1,32 @@
+ .app-template-topic {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
 .container {
     background: none;
 
+    .button-row{
+        padding: 5px 5px 5px 0px;
+
+        .btn-add-topic{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: white;
+            border: 1px solid #0096C8;
+            color: #333;
+
+            &:hover{
+                background-color: #0096C8;
+                color: white;
+            }
+        }
+    }
+
     .ag-theme-quartz {
         overflow: hidden;
-        height: 500px;
-        width: 1085px;
+        height: 300px;
+        width: 100%;
         margin: auto;
     }
 
@@ -18,6 +40,8 @@
         justify-content: space-between;
     }
 }
+
+
 .plus-btn {
     background-image: url("/assets/img/plus_light_icon.svg");
     background-repeat: no-repeat;
@@ -189,3 +213,31 @@
         }
     }
 }
+
+.btn-edit-topic{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid #0096C8;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: #0096C8;
+        color: white;
+    }
+}
+
+.btn-delete-topic{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid red;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: red;
+        color: white;
+    }
+} 

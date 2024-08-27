@@ -2,6 +2,7 @@
 
 @import 'ag-grid-community/styles/ag-grid.css';
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body {
     height: 100%;
@@ -26,9 +27,17 @@ body {
   color: #0096C8;
 }
 
+.mat-mdc-option .mdc-list-item__primary-text{
+  font-family: "Proxima-Nova-Regular";
+    word-wrap: break-word;
+    letter-spacing: normal;
+    font-size: 16px;
+}
 
+::ng-deep .mat-form-field-underline {
+  display: none;
+}
 
-.mat-select-arrow:checked {
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-  }
+.ag-header-cell{
+  color: #0096C8;
+}

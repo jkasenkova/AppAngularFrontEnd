@@ -1,11 +1,14 @@
-<div class="container">
-    <ag-grid-angular  class="ag-theme-quartz" 
+<div class="app-template-topic container">
+    <div class="button-row">
+        <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
+    </div>
+    <ag-grid-angular class="ag-theme-quartz" #agGrid
                      [rowData]="rowData"
                      [columnDefs]="colDefs"
                      [pagination]="true"
+                     [detailRowAutoHeight]="true"
                      [paginationPageSizeSelector]="paginationPageSizeSelector"
                      [paginationPageSize]="paginationPageSize"
                      [alwaysShowHorizontalScroll]="false">
-    </ag-grid-angular>
+    </ag-grid-angular> 
 </div>
-

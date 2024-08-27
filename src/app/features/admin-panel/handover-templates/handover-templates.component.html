@@ -16,7 +16,7 @@
                 </mat-form-field>
             </div>
             <div class="button-row">
-                <button mat-stroked-button class="btnTemplate"
+                <button mat-stroked-button class="btnEditAddTemplate"
                         (click)="createTemplateDialog()">
                     New
                 </button>
@@ -26,11 +26,11 @@
                     <button mat-stroked-button class="btnEditAddTemplate" (click)="deleteTemplateDialog(template)">Delete</button>
                 }
             </div>
+            @if(template && isSelectedTemplate){
+                <app-template  [selectedTemplate]="template"></app-template>
+            } 
         </mat-tab>
 
         <mat-tab label="Topics"><app-template-topic></app-template-topic></mat-tab>
     </mat-tab-group>
-    @if(template){
-        <app-template  [selectedTemplate]="selectedTemplate"></app-template>
-    }
-</div>
+   
