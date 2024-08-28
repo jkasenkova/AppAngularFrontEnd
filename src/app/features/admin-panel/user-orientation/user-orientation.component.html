@@ -90,7 +90,8 @@
                     </strong>
 
                     @if(selectedTeam){
-                        <span class="icon-right plus-btn btn-circle btn btn-link" (click)="addRole(selectedTeam.teamId)"></span>
+                        <span class="icon-right plus-btn btn-circle btn btn-link" 
+                        (click)="addRole(selectedTeam.teamId, selectedLocation.id)"></span>
                     }
                     @else{
                         <span class="icon-right btn-circle btn btn-link"></span>
@@ -98,7 +99,14 @@
                 </div>
                 <div class="panel-body">
                     <div class="text-center ng-binding"></div>
-                    <div class="list-group" style="font-size: 12px">
+                    <div class="list-group">
+                        @for (role of roles; track role) {
+                            <div class="list-group-item">
+                                {{role.roleName}}
+                                <span class="pull-right btn-close" (click)="removeRole(role)"></span>
+                                <span class="pull-right pencil-block" (click)="editRole(role)"></span>
+                            </div>
+                        }
                     </div>
                 </div>
             </section>

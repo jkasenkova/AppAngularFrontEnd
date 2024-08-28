@@ -11,6 +11,11 @@ import { Team } from "src/app/models/team";
 import { EditTeamDialogComponent } from "./team-dialog/edit-team/edit-team.component";
 import { DeleteTeamDialogComponent } from "./team-dialog/delete-team/delete-team.component";
 import { CreateTeamDialogComponent } from "./team-dialog/create-team/create-team.component";
+import { CreateRoleDialogComponent } from "./role-dialog/create-role/create-role.component";
+import { UserType } from "src/app/models/userType";
+import { RoleModel } from "src/app/models/role";
+import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
+import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
 
 @Component({
     selector: 'app-user-orientation',
@@ -25,6 +30,7 @@ export class UserOrientationComponent implements OnInit {
     teams: Team[] = [];
     selectedLocation: LocationModel;
     selectedTeam: Team;
+    roles: RoleModel[];
 
     locationListTemp: LocationModel[] = [
         {
@@ -52,6 +58,33 @@ export class UserOrientationComponent implements OnInit {
         }
     ]
 
+    roleList: RoleModel[] = [
+        {
+            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
+            roleName: "Team Lead",
+            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
+            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            userType: UserType.Administrator,
+            teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
+        },
+        {
+            roleId: Guid.parse("1d1a6dd5-7b7a-4084-909d-36a25b4e1294"),
+            roleName: "Developers",
+            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
+            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            userType: UserType.User,
+            teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
+        },
+        {
+            roleId: Guid.parse("0bd64997-a753-445c-b62a-5276b01cbe62"),
+            roleName: "Sales",
+            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
+            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            userType: UserType.User,
+            teamId: Guid.parse("f8a1c4e2-a557-4958-8d99-b9a86963e76e")
+        }
+    ];
+
     ngOnInit(): void {
         this.locations = this.locationListTemp;
     }
@@ -60,10 +93,12 @@ export class UserOrientationComponent implements OnInit {
         this.selectedLocation = location;
 
         this.teams = this.teamsListTemp.filter(t => t.locationId.toString() == location.id.toString());
+        this.roles = [];
     }
 
     selectTeam(team: Team){
         this.selectedTeam = team;
+        this.roles =  this.roleList.filter(r => r.teamId.toString() == team.teamId.toString());
     }
 
     addLocation() {
@@ -154,7 +189,53 @@ export class UserOrientationComponent implements OnInit {
         });
     }
 
-    addRole(teamId: Guid){
+    addRole(teamId: Guid, locationId: Guid){
+        const dialogRef = this.dialog.open(CreateRoleDialogComponent, { 
+            data: { 
+                teamId: teamId,
+                locationId: locationId,
+                userType: UserType
+            }
+        });
 
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+        
+            }
+        });
+    }
+
+    editRole(role: RoleModel){
+        const dialogRef = this.dialog.open(EditRoleDialogComponent, { 
+            data: { 
+                roleName: role.roleName,
+                teamId: role.teamId,
+                locationId: role.locationId,
+                templateName: "Template for Role",
+                userType: role.userType,
+                roleId: role.roleId
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+        
+            }
+        });
+    }
+
+    removeRole(role: RoleModel){
+        const dialogRef = this.dialog.open(DeleteRoleDialogComponent, { 
+            data: { 
+                roleName: role.roleName,
+                roleId: role.roleId
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+        
+            }
+        });
     }
 }

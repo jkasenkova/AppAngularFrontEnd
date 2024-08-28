@@ -1,0 +1,118 @@
+<div class="location-dialog">
+
+    <div class="header">
+        <h4 mat-dialog-title>Edit Role</h4>
+        <mat-dialog-actions>
+        <button mat-button mat-dialog-close class="close-btn"></button>
+        <button mat-button  class="save-btn"
+            (click)="onSave()" 
+            [disabled]="roleForm.invalid" 
+            cdkFocusInitial>
+        Save</button>
+        </mat-dialog-actions>
+    </div>
+
+    <div mat-dialog-content>
+        <form [formGroup]="roleForm">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput formControlName="roleName" placeholder="Enter Role Name">
+                                    @if(roleForm.get('roleName').hasError('required')){
+                                        <mat-error>Name is required</mat-error>
+                                    }
+                                </mat-form-field>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>User Type</mat-label>
+                                    <mat-select placeholder="Select User Type">
+                                        @for (userType of userTypes; track userType) {
+                                            <mat-option [value]="userType">
+                                                {{ userType}}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Rotation</mat-label>
+                                    <mat-select placeholder="Select Rotation Type" (selectionChange)="onSelectRotationType($event)">
+                                        @for (rotationType of rotationTypes; track rotationType) {
+                                            <mat-option [value]="rotationType">
+                                                {{ rotationType}}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if(selectedRotation){
+                        <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                            <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field>
+                                    <mat-label>Shift Pattern*</mat-label>
+                                    <mat-select placeholder="Select Shift Pattern">
+                                        @for (shiftPatternType of shiftPatternTypes; track shiftPatternType) {
+                                            <mat-option [value]="shiftPatternType">
+                                                {{ shiftPatternType}}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if(selectedRotation){
+                    <div class="row">
+                        <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                            <div class="row padding-right-15">
+                                <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Template</mat-label>
+                                        <input
+                                          type="text"
+                                          placeholder="Create/Select Template"
+                                          matInput
+                                          formControlName="templateName"
+                                          [matAutocomplete]="auto"
+                                        />
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                                            @for (template of templates; track template) {
+                                                <mat-option [value]="template">{{template.templateName}}</mat-option>
+                                            }
+                                        </mat-autocomplete>
+                                      </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </form>
+    </div>
+</div>

@@ -109,21 +109,24 @@ export class UserManagementComponent implements OnInit {
             roleName: "Team Lead",
             locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.Administrator
+            userType: UserType.Administrator,
+            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862")
         },
         {
             roleId: Guid.parse("1d1a6dd5-7b7a-4084-909d-36a25b4e1294"),
             roleName: "Developers",
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.User
+            userType: UserType.User,
+            teamId: Guid.parse("ac054901-2994-41fd-8e10-197ddcc7d130")
         },
         {
             roleId: Guid.parse("0bd64997-a753-445c-b62a-5276b01cbe62"),
             roleName: "Sales",
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.User
+            userType: UserType.User,
+            teamId: Guid.parse("050945b1-2a70-4c24-b865-5506c67dc46a")
         }
     ];
 

@@ -7,4 +7,5 @@ export interface RoleModel {
     locationId: Guid;
     templateId?: Guid;
     userType: UserType;
+    teamId: Guid;
 }
