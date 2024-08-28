@@ -36,7 +36,7 @@
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <mat-form-field>
                                     <mat-label>User Type</mat-label>
-                                    <mat-select placeholder="Select User Type">
+                                    <mat-select placeholder="Select User Type"  formControlName="userType">
                                         @for (userType of userTypes; track userType) {
                                             <mat-option [value]="userType">
                                                 {{ userType}}
@@ -55,7 +55,8 @@
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <mat-form-field>
                                     <mat-label>Rotation</mat-label>
-                                    <mat-select placeholder="Select Rotation Type" (selectionChange)="onSelectRotationType($event)">
+                                    <mat-select placeholder="Select Rotation Type"  formControlName="rotationType"
+                                    (selectionChange)="onSelectRotationType($event)">
                                         @for (rotationType of rotationTypes; track rotationType) {
                                             <mat-option [value]="rotationType">
                                                 {{ rotationType}}
@@ -73,7 +74,7 @@
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <mat-form-field>
                                     <mat-label>Shift Pattern*</mat-label>
-                                    <mat-select placeholder="Select Shift Pattern">
+                                    <mat-select placeholder="Select Shift Pattern"  formControlName="shiftPatternType">
                                         @for (shiftPatternType of shiftPatternTypes; track shiftPatternType) {
                                             <mat-option [value]="shiftPatternType">
                                                 {{ shiftPatternType}}

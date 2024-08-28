@@ -11,6 +11,8 @@ import { Guid } from "guid-typescript";
 import { RoleModel } from "src/app/models/role";
 import { UserType } from "src/app/models/userType";
 import { UserModel } from "./model/userModel";
+import { RotationType } from "../user-orientation/model/rotationType";
+import { ShiftPatternType } from "src/app/models/shiftPatternType";
 
 @Component({
     selector: 'app-user-management',
@@ -110,6 +112,7 @@ export class UserManagementComponent implements OnInit {
             locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.Administrator,
+            rotationType: RotationType.NoRotation,
             teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862")
         },
         {
@@ -118,6 +121,8 @@ export class UserManagementComponent implements OnInit {
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.User,
+            rotationType: RotationType.Shift,
+            shiftPatternType: ShiftPatternType.hours12,
             teamId: Guid.parse("ac054901-2994-41fd-8e10-197ddcc7d130")
         },
         {
@@ -126,6 +131,8 @@ export class UserManagementComponent implements OnInit {
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.User,
+            rotationType: RotationType.Shift,
+            shiftPatternType: ShiftPatternType.hours8,
             teamId: Guid.parse("050945b1-2a70-4c24-b865-5506c67dc46a")
         }
     ];

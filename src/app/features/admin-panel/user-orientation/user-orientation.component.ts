@@ -16,6 +16,8 @@ import { UserType } from "src/app/models/userType";
 import { RoleModel } from "src/app/models/role";
 import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
 import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
+import { RotationType } from "./model/rotationType";
+import { ShiftPatternType } from "src/app/models/shiftPatternType";
 
 @Component({
     selector: 'app-user-orientation',
@@ -63,8 +65,8 @@ export class UserOrientationComponent implements OnInit {
             roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
             roleName: "Team Lead",
             locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.Administrator,
+            rotationType: RotationType.NoRotation,
             teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
         },
         {
@@ -73,6 +75,8 @@ export class UserOrientationComponent implements OnInit {
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.User,
+            rotationType: RotationType.Shift,
+            shiftPatternType: ShiftPatternType.hours12,
             teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
         },
         {
@@ -81,6 +85,8 @@ export class UserOrientationComponent implements OnInit {
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.User,
+            rotationType: RotationType.Shift,
+            shiftPatternType: ShiftPatternType.hours8,
             teamId: Guid.parse("f8a1c4e2-a557-4958-8d99-b9a86963e76e")
         }
     ];
@@ -213,7 +219,9 @@ export class UserOrientationComponent implements OnInit {
                 locationId: role.locationId,
                 templateName: "Template for Role",
                 userType: role.userType,
-                roleId: role.roleId
+                roleId: role.roleId,
+                rotationType: role.rotationType,
+                shiftPatternType: role.shiftPatternType
             }
         });
 

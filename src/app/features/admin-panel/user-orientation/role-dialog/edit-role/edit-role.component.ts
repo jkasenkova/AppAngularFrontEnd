@@ -75,8 +75,14 @@ export class EditRoleDialogComponent {
             locationId: [data.locationId],
             templateName: [""],
             userType: [data.userType],
-            roleId: [data.roleId]
+            roleId: [data.roleId],
+            rotationType: [data.rotationType],
+            shiftPatternType: [data.shiftPatternType]
         });
+
+        if(data.shiftPatternType){
+            this.selectedRotation = true;
+        }
 
         this.userTypes = Object.values(UserType);
         this.rotationTypes = Object.values(RotationType);
