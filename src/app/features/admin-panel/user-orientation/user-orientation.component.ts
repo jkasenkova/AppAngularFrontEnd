@@ -73,7 +73,7 @@ export class UserOrientationComponent implements OnInit {
             roleId: Guid.parse("1d1a6dd5-7b7a-4084-909d-36a25b4e1294"),
             roleName: "Developers",
             locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
             userType: UserType.User,
             rotationType: RotationType.Shift,
             shiftPatternType: ShiftPatternType.hours12,
@@ -221,6 +221,7 @@ export class UserOrientationComponent implements OnInit {
                 userType: role.userType,
                 roleId: role.roleId,
                 rotationType: role.rotationType,
+                templateId: role.templateId,
                 shiftPatternType: role.shiftPatternType
             }
         });

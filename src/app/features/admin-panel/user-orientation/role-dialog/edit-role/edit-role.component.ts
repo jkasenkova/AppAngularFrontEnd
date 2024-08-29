@@ -73,13 +73,12 @@ export class EditRoleDialogComponent {
             roleName: [data.roleName, Validators.required],
             teamId: [data.teamId],
             locationId: [data.locationId],
-            templateName: [""],
+            templateName: this.getTemplate(data.templateId),
             userType: [data.userType],
             roleId: [data.roleId],
             rotationType: [data.rotationType],
             shiftPatternType: [data.shiftPatternType]
         });
-
         if(data.shiftPatternType){
             this.selectedRotation = true;
         }
@@ -127,5 +126,17 @@ export class EditRoleDialogComponent {
 
     onSelectRotationType(event: any){
         this.selectedRotation = true;
+    }
+
+    getTemplate(templateId: Guid): Template|null {
+        debugger;
+        if(templateId){
+            var template = this.templateListTemp.find(t=>t.templateId.toString() == templateId.toString());
+                if(template){
+                    return template;
+                }
+            return null;
+        }
+        return null;
     }
 }

@@ -102,7 +102,8 @@
                                           formControlName="templateName"
                                           [matAutocomplete]="auto"
                                         />
-                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" 
+                                        [displayWith]="displayFn">
                                             @for (template of templates; track template) {
                                                 <mat-option [value]="template">{{template.templateName}}</mat-option>
                                             }
