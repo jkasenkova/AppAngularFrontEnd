@@ -3,7 +3,7 @@ import { TopicService } from '../../../../services/topicService';
 import { AgGridAngular } from 'ag-grid-angular';
 import { MatButtonModule } from '@angular/material/button';
 import { TemplateTopic } from 'src/app/models/templateTopic';
-import { ColDef } from "ag-grid-community";
+import { ColDef, GridReadyEvent } from "ag-grid-community";
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTemplateTopicDialogComponent } from './template-topic-dialog/create-template-topic/create-template-topic-dialog.component';
 import { EditButtonComponent } from './editButtonComponent';

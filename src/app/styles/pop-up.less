@@ -7,7 +7,60 @@
     letter-spacing: normal;
 
     .mat-mdc-dialog-content{
-        
+
+        .vertical-center {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            column-gap: 15px;
+        }
+
+        .full-width-row {
+            width: 100%;
+        }
+
+        ::ng-deep .full-width-row .mat-form-field-underline {
+            display: none;
+        }
+
+        textarea{
+            resize: none;
+            line-height: 4ch;
+            background-image: linear-gradient(transparent, transparent calc(4ch - 1px), #464646 0px);
+            background-size: 100% 4ch;
+        }
+
+        textarea:focus{
+            line-height: 4ch;
+            background-image: linear-gradient(transparent, transparent calc(4ch - 1px), #0096C8 0px);
+            background-size: 100% 4ch;
+        }
+
+        .mat-form-field-appearance-outline.mat-form-field-disabled, ::ng-deep .mat-form-field-outline {
+            opacity: 0;
+        }
+
+    }
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+    }
+
+     .grid-layout-custom{
+        width: auto;
+        min-width: 20rem;
+        max-width: 25rem;
+    } 
+ 
+    .dialog-header{
+        display: inline-flex;
+        align-items: center; 
+    }
+
+    .mat-mdc-dialog-content{
+
         .vertical-center {
             display: flex;
             flex-direction: row;
@@ -101,6 +154,10 @@
         color: #0096C8 !important;
         -webkit-text-stroke-width: .2px;
         -webkit-text-stroke-color: #0096C8;
+        opacity: .55;
+        color: #0096C8 !important;
+        -webkit-text-stroke-width: .2px;
+        -webkit-text-stroke-color: #0096C8;
     }
 
     .save-btn:disabled{
@@ -146,6 +203,34 @@
     }
 }
 
+.mat-mdc-dialog-container {
+    width: fit-content;
+    height: fit-content;
+
+    .mat-mdc-dialog-title{
+        font-family: "Proxima-Nova-Regular" !important;
+        font-size: 16px;
+        font-weight: 700;
+    }
+}
+
+@media (min-width: 768px) {
+    .mat-mdc-dialog-container {
+        width: 600px;
+        margin: 30px auto;
+    }
+}
+
+
+.mat-mdc-dialog-container {
+    position: relative;
+    width: auto;
+    margin: 10px;
+}
+
+.mat-form-field-wrapper{
+    outline: none;
+ }
 .mat-mdc-dialog-container {
     width: fit-content;
     height: fit-content;
