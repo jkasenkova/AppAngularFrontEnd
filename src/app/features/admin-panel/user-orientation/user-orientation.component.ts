@@ -38,12 +38,12 @@ export class UserOrientationComponent implements OnInit {
         {
             id: Guid.parse("a03b066d-f8a1-43f9-ad59-0a761aa8c7b4"),
             name: "Ukraine",
-            timeZoneId: Guid.parse("0aaceca4-4036-4e08-a30d-72a36da93db0")
+            timeZoneId: "0aaceca4-4036-4e08-a30d-72a36da93db0"
         },
         {
             id: Guid.parse("d5e65215-09a4-4d28-842d-25995018860c"),
             name: "London",
-            timeZoneId: Guid.parse("e27aa77e-09ab-48e1-a3fa-59dbe94f5d7c")
+            timeZoneId: "e27aa77e-09ab-48e1-a3fa-59dbe94f5d7c"
         },
     ];
 

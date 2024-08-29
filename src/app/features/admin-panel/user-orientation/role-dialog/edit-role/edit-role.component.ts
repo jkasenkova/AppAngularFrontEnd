@@ -107,7 +107,6 @@ export class EditRoleDialogComponent {
       }
 
       displayFn(template?: Template): string | undefined {
-        console.log(template ? template.templateId : "");
         return template ? template.templateName : undefined;
       }
       returnFn(template?: Template): string | undefined {

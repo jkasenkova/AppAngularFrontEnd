@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormControl } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -10,6 +10,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { LocationModel } from "../../model/locationModel";
 import moment from 'moment-timezone';
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { map, Observable, startWith } from "rxjs";
+import {AsyncPipe} from '@angular/common';
 
 @Component({
     selector: 'location-dialog',
@@ -30,11 +33,15 @@ import moment from 'moment-timezone';
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
-        NgbDatepickerModule
+        NgbDatepickerModule,
+        MatAutocompleteModule,
+        AsyncPipe
     ],
 })
 export class CreateLocationDialogComponent implements OnInit {
     locationForm: FormGroup;
+    timeZones: string[];
+    filteredTimeZone: Observable<string[]>;
 
     constructor(
         private fb: FormBuilder,
@@ -45,14 +52,26 @@ export class CreateLocationDialogComponent implements OnInit {
             name: ['', Validators.required],
             address: [''],
             mapLink: [''],
+            timeZoneControl: new FormControl(''),
             timeZoneId: ['', Validators.required]
         });
     }
 
     ngOnInit(){
-        debugger;
-       var res =  moment.tz.names()
+        this.timeZones =  moment.tz.names();
+
+        this.filteredTimeZone = this.locationForm.get('timeZoneControl').valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value || '')),
+          );
     }
+
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+    
+        return this.timeZones.filter(option => option.toLowerCase().includes(filterValue));
+      }
+
     onNoClick(): void {
         this.dialogRef.close();
     }

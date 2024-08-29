@@ -37,7 +37,32 @@
                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                         <div class="row padding-right-15">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                Local Timezone
+                                <!-- <mat-form-field>
+                                    <mat-label> Local Timezone</mat-label>
+                                    <mat-select placeholder="Select Time Zone" formControlName="timeZoneId">
+                                        @for (timeZone of filteredTimeZone; track timeZone) {
+                                            <mat-option [value]="timeZone">
+                                                {{ timeZone}}
+                                            </mat-option>
+                                        }
+                                    </mat-select> 
+                                </mat-form-field> -->
+
+
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Local Timezone</mat-label>
+                                    <input type="text"
+                                           placeholder="Select Time Zone"
+                                           aria-label="Local Timezone"
+                                           matInput
+                                           formControlName="timeZoneControl"
+                                           [matAutocomplete]="auto">
+                                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                      @for (option of filteredTimeZone | async; track option) {
+                                        <mat-option [value]="option">{{option}}</mat-option>
+                                      }
+                                    </mat-autocomplete>
+                                  </mat-form-field>
                             </div>
                         </div>
                     </div>
