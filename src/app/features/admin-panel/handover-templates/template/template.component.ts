@@ -18,6 +18,7 @@ import { Reference } from 'src/app/models/reference';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormBuilder  } from '@angular/forms';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @Component({
     selector: 'app-template',
@@ -31,7 +32,8 @@ import { MatInputModule } from '@angular/material/input';
         MatFormFieldModule,
         ReactiveFormsModule,
         FormsModule,
-        MatInputModule
+        MatInputModule,
+        MatAutocompleteModule
     ],
     templateUrl: './template.component.html',
     styleUrls: ['template.component.less']
@@ -45,6 +47,7 @@ export class TemplateComponent implements OnInit {
     @ViewChildren("addRowElement") addRowElement: QueryList<ElementRef>;
     topicForm: FormGroup;
     enableAddTopicBtn: boolean = true;
+    references: Reference[];
 
     sectionListTemp: Section[] = [
         {
@@ -184,6 +187,8 @@ export class TemplateComponent implements OnInit {
 
     constructor(private sectionService: SectionService, private fb: FormBuilder) {
         this.topicForm = this.fb.group({
+            topic: null,
+            reference: null,
             topicName: "",
             referenceName: "",
             description: ""
@@ -249,18 +254,20 @@ export class TemplateComponent implements OnInit {
 
     ///-----------Topics------------------
 
-    addHideRowTopicForm(index: number){
+    addHideRowTopicForm(section: Section, index: number){
         let nativeElement = this.addRowElement.toArray()[index].nativeElement;
         
         nativeElement.style.display =
           nativeElement.style.display === "none" || !nativeElement.style.display
           ? "inline-block"
             : "none";
-
+debugger;
              if(nativeElement.style.display !== "none"){
                 this.enableAddTopicBtn = false;
+                section.addBtnShow = false;
             }else{
                 this.enableAddTopicBtn = true;
+                section.addBtnShow = true;
             }
     
     }
@@ -308,6 +315,31 @@ export class TemplateComponent implements OnInit {
     
         section.sortReferenceType = SortType.index;
       //update
+      }
+
+
+      onSelectAddTopic(event: any){
+        var topic = event.option.value;
+        this.references = topic.references;
+
+        this.topicForm.controls['topic'].setValue(topic);
+
+      }
+
+      onSelectAddReference(event: any){
+        var reference = event.option.value;
+
+        this.topicForm.controls['reference'].setValue(reference);
+
+        this.topicForm.controls['description'].setValue(reference.description);
+      }
+
+      displayFn(topic?: TemplateTopic): string | undefined {
+        return topic ? topic.name : undefined;
+      }
+
+      displayRefFn(reference?: Reference): string | undefined {
+        return reference ? reference.name : undefined;
       }
 }
 

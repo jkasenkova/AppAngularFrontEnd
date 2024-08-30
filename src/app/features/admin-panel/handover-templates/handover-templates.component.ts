@@ -15,6 +15,7 @@ import { CreateTemplateDialogComponent } from "./template-dialog/create-template
 import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./template-dialog/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./template-dialog/delete-template/delete-template-dialog.component";
+import { CopyTemplateDialogComponent } from "./template-dialog/copy-template/copy-template.component";
 
 @Component({
     selector: 'app-handover-templates',
@@ -141,6 +142,24 @@ export class HandoverTemplatesComponent implements OnInit {
     deleteTemplateDialog(template: Template): void {
         const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, {
             data: { templateId: template.templateId, templateName: template.templateName },
+            panelClass: 'template-dialog'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+
+            }
+        });
+    }
+
+    copyTemplateDialog(template: Template){
+        const dialogRef = this.dialog.open(CopyTemplateDialogComponent, {
+            data: 
+            { 
+                templateId: template.templateId, 
+                templateName: template.templateName,
+                templates: this.templateListTemp
+            },
             panelClass: 'template-dialog'
         });
 

@@ -100,35 +100,54 @@
                                             <div class="actions-body">
                                                 <div class="btn btn-circle draganddrop">
                                                 </div>
-                                                <div class="btn btn-circle cancel-btn" (click)="addHideRowTopicForm(i)">
+                                                <div class="btn btn-circle cancel-btn" (click)="addHideRowTopicForm(section,i)">
                                                     <span class="glyphicon span"></span>
                                                 </div>
                                             </div>
 
-                                            <form class="add-topic-form">
+                                            <form [formGroup]="topicForm" class="add-topic-form">
                                                 <div class="type-body">
-                                                  <mat-form-field class="example-full-width">
-                                                    <input type="text"
-                                                           placeholder="Select/Add Topic"
-                                                           matInput
-                                                           name="topic">
-                                                  </mat-form-field>
+                                                    <mat-form-field class="example-full-width">
+                                                        <input
+                                                          type="text"
+                                                          placeholder="Select/Add Topic"
+                                                          matInput
+                                                          formControlName="topicName"
+                                                          [matAutocomplete]="autoRef"
+                                                        />
+                                                        <mat-autocomplete autoActiveFirstOption #autoRef="matAutocomplete"
+                                                        [displayWith]="displayFn" (optionSelected)="onSelectAddTopic($event)">
+                                                            @for (topic of section.sectionTopics; track topic) {
+                                                                <mat-option [value]="topic">{{topic.name}}</mat-option>
+                                                            }
+                                                        </mat-autocomplete>
+                                                      </mat-form-field>
                                                 </div>
                                                 <div class="reference-body">
                                                   <mat-form-field class="example-full-width">
-                                                    <input type="text"
-                                                           placeholder="Select/Add Reference"
-                                                           matInput
-                                                           name="reference">
+                                                    <input
+                                                    type="text"
+                                                    placeholder="Select/Add Reference"
+                                                    matInput
+                                                    formControlName="referenceName"
+                                                    [matAutocomplete]="auto"
+                                                  />
+                                                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                                                  [displayWith]="displayRefFn" (optionSelected)="onSelectAddReference($event)">
+                                                      @for (reference of references; track reference) {
+                                                          <mat-option [value]="reference">{{reference.name}}</mat-option>
+                                                      }
+                                                  </mat-autocomplete>
                                                   </mat-form-field>
                                                 </div>
                                                 <div class="notes-body">
                                                   <mat-form-field class="example-full-width">
-                                                           <textarea matInput
+                                                      <textarea matInput
                                                             cdkTextareaAutosize
                                                             placeholder="Notes"
                                                             #autosize="cdkTextareaAutosize"
                                                             cdkAutosizeMinRows="1"
+                                                            formControlName="description" 
                                                             cdkAutosizeMaxRows="5"></textarea>
                                                   </mat-form-field>
                                                 </div>
@@ -141,9 +160,9 @@
 
                                         </div>
                                     </div>
-                                    @if(enableAddTopicBtn){
+                                    @if(section.addBtnShow){
                                         <div class="navbar navbar-white">
-                                            <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(i)">Add Topic</div>
+                                            <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
                                         </div>
                                     }
                                 </div>
