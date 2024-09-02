@@ -11,12 +11,12 @@ export class Section {
   public sectionId?: Guid;
   public templateId!: Guid;
   public template?: Template;
-  public iHandoverSection: boolean = false;
-  public sectionType!: SectionType;
-  public addBtnShow: boolean = true;
+  public iHandoverSection?: boolean = false;
+  public sectionType?: SectionType;
+  public addBtnShow?: boolean = true;
   public sortType?: SortType = 0;
-  public sortReferenceType: SortType = 0;
-  public sectionTopics: TemplateTopic[] = [];
+  public sortReferenceType?: SortType = 0;
+  public sectionTopics?: TemplateTopic[] = [];
   public sectionReferences?: Reference[];
   public suggestTopics?: TemplateTopic[];
 }

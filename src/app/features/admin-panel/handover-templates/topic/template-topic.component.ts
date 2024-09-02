@@ -63,26 +63,131 @@ export class TemplateTopicComponent implements OnInit {
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             templateName: "Template 1",
             isHandoverTemplate: false,
-            sections: []
+            sections:  [
+                {
+                    templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "Section 1",
+                    iHandoverSection: false
+                },
+                {
+                    templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "Section 2",
+                    iHandoverSection: false
+                }
+            ]
         },
         {
             templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
             templateName: "Template 2",
             isHandoverTemplate: false,
-            sections: []
+            sections:  [
+                {
+                    templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "AAA",
+                    iHandoverSection: false
+                },
+                {
+                    templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "BBB",
+                    iHandoverSection: false
+                }
+            ]
         },
+        {
+            templateId: Guid.parse("3f7754ec-fc6c-4ee8-95bf-8b8fe3e7c94e"),
+            templateName: "Template 3",
+            isHandoverTemplate: false,
+            sections:  [
+                {
+                    templateId: Guid.parse("3f7754ec-fc6c-4ee8-95bf-8b8fe3e7c94e"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "Round 1",
+                    iHandoverSection: false
+                },
+                {
+                    templateId: Guid.parse("3f7754ec-fc6c-4ee8-95bf-8b8fe3e7c94e"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "Round 2",
+                    iHandoverSection: false
+                }
+            ]
+        },
+        {
+            templateId: Guid.parse("cb8ce69d-443d-40b3-92d3-68a36594785b"),
+            templateName: "Template 4",
+            isHandoverTemplate: false,
+            sections:  [
+                {
+                    templateId: Guid.parse("cb8ce69d-443d-40b3-92d3-68a36594785b"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "HSE",
+                    iHandoverSection: false
+                },
+                {
+                    templateId: Guid.parse("cb8ce69d-443d-40b3-92d3-68a36594785b"),
+                    sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+                    sectionName: "Core",
+                    iHandoverSection: false
+                }
+            ]
+        }
     ];
 
     rowData = [
-        { topic: "aaaa", reference: "aaaa", template: "aaaa", editable: true, templates:this.templateListTemp},
-        { topic: "bbbb", reference: "bbbb", template: "bbbb", editable: true, templates:this.templateListTemp},
-        { topic: "cccc", reference: "cccc", template: "cccc", editable: true, templates:this.templateListTemp}
+        { 
+            topic: "aaaa", 
+            reference: "aaaa", 
+            template: this.displayTemplatesName(this.templateListTemp.filter(t=>t.templateName != "Template 3" && t.templateName != "Template 4")),
+            associatedTemplates: this.templateListTemp.filter(t=>t.templateName != "Template 3" && t.templateName != "Template 4"), 
+            editable: true, 
+            templates: this.templateListTemp, 
+            topicId: Guid.parse("11dbdd41-fa7d-4b30-b16d-9f1b9a1cbce1"),
+            description: "aaaa" 
+        },
+        { 
+            topic: "bbbb", 
+            reference: "bbbb", 
+            template: this.displayTemplatesName(this.templateListTemp.filter(t=>t.templateName != "Template 1" && t.templateName != "Template 2")), 
+            description: "bbbb", 
+            editable: true, 
+            topicId: Guid.parse("ad5fb615-d4e2-423f-a77d-a1e4740381ed"),
+            associatedTemplates: this.templateListTemp.filter(t=>t.templateName != "Template 1" && t.templateName != "Template 2"), 
+            templates:this.templateListTemp
+        },
+        { 
+            topic: "cccc", 
+            reference: "cccc", 
+            template: this.displayTemplatesName(this.templateListTemp.filter(t=>t.templateName != "Template 2")),
+            description: "cccc",
+            editable: true, 
+            topicId: Guid.parse("22e80094-f1b5-433a-85f8-baf26ee44fc9"),
+            associatedTemplates: this.templateListTemp.filter(t=>t.templateName != "Template 2"), 
+            templates:this.templateListTemp
+        },
+        { 
+            topic: "dddd", 
+            reference: "dddd", 
+            template: "-",
+            description: "dddd",
+            editable: true, 
+            topicId: Guid.parse("3d21b769-4a75-45dc-ab51-d0afed107845"),
+            associatedTemplates: null, 
+            templates: this.templateListTemp
+        }
     ];
 
 
   constructor(private topicService: TopicService) {}
 
   ngOnInit(): void {
+  }
+
+  displayTemplatesName(templates:Template[]): string {
+    return templates.flatMap(t=>t.templateName).toString();
   }
 
   getTemplateTopics(): void{

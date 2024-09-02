@@ -20,7 +20,7 @@
             width: 100%;
         }
 
-        ::ng-deep .full-width-row .mat-form-field-underline {
+        .full-width-row .mat-form-field-underline {
             display: none;
         }
 
@@ -73,8 +73,9 @@
             width: 100%;
         }
 
-        ::ng-deep .full-width-row .mat-form-field-underline {
-            display: none;
+        .full-width-row .mdc-text-field--filled .mdc-line-ripple::before,
+        .mdc-text-field--filled .mdc-line-ripple::after {
+          border-bottom: 0px !important;
         }
 
         textarea{

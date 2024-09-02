@@ -261,7 +261,7 @@ export class TemplateComponent implements OnInit {
           nativeElement.style.display === "none" || !nativeElement.style.display
           ? "inline-block"
             : "none";
-debugger;
+
              if(nativeElement.style.display !== "none"){
                 this.enableAddTopicBtn = false;
                 section.addBtnShow = false;
