@@ -73,7 +73,9 @@ export class CreateRoleDialogComponent {
             roleName: ['', Validators.required],
             teamId: [data.teamId],
             locationId: [data.locationId],
-            templateName: ['']
+            templateName: [''],
+            userType: ['', Validators.required],
+            rotationType: ['', Validators.required]
         });
 
         this.userTypes = Object.values(UserType);
@@ -118,6 +120,21 @@ export class CreateRoleDialogComponent {
     }
 
     onSelectRotationType(event: any){
-        this.selectedRotation = true;
+        if(event.value == "No Rotation"){
+            this.selectedRotation = false;
+        }else{
+            this.selectedRotation = true;
+        }
+    }
+
+    onSelectUserType(event: any){
+        if(event.value == "User"){
+            this.roleForm.get('rotationType').setValue(RotationType.Shift);
+            this.selectedRotation = true;
+        }
+        else{
+            this.roleForm.get('rotationType').reset();
+            this.selectedRotation = false;
+        }
     }
 }
