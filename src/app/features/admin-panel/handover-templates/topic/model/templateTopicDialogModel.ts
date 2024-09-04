@@ -12,4 +12,5 @@ export interface TemplateTopicDialogModel {
     attachToTemplate?: Guid[];
     templates?:Template[];
     sections?:Section[];
+    associatedTemplates: Template[];
 }

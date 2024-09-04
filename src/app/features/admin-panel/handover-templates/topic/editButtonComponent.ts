@@ -4,6 +4,7 @@ import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { EditTemplateTopicDialogComponent } from './template-topic-dialog/edit-template-topic/edit-template-topic-dialog.component';
+import { Template } from 'src/app/models/template';
 
 @Component({
     standalone: true,
@@ -23,13 +24,20 @@ export class EditButtonComponent implements ICellRendererAngularComp {
         return true;
     }
 
+    getSelectTemplates(sourceArr: Template[], targetArr: Template[]): Template[]
+    {
+        return  sourceArr.filter( ( el ) => !targetArr.includes( el ));
+    }  
+
     buttonClicked() {
+
         const dialogRef = this.dialog.open(EditTemplateTopicDialogComponent, { 
             data: { 
                 templateTopicName: this.params.data.topic, 
                 templateReferenceName:  this.params.data.reference, 
-                templateDescription: '',
-                templates:  this.params.data.templates
+                templateDescription: this.params.data.description,
+                templates:  this.params.data.templates, 
+                associatedTemplates: this.params.data.associatedTemplates
             },
             panelClass: 'template-dialog'
         });
