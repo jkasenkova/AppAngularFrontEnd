@@ -130,10 +130,12 @@ export class CreateRoleDialogComponent {
     onSelectUserType(event: any){
         if(event.value == "User"){
             this.roleForm.get('rotationType').setValue(RotationType.Shift);
+            this.roleForm.get('rotationType').disable();
             this.selectedRotation = true;
         }
         else{
             this.roleForm.get('rotationType').reset();
+            this.roleForm.get('rotationType').enable();
             this.selectedRotation = false;
         }
     }
