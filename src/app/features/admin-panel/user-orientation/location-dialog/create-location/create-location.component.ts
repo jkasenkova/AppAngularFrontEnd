@@ -13,6 +13,7 @@ import moment from 'moment-timezone';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { map, Observable, startWith } from "rxjs";
 import {AsyncPipe} from '@angular/common';
+import { Timezone } from "../../model/timezoneModel";
 
 @Component({
     selector: 'location-dialog',
@@ -40,8 +41,8 @@ import {AsyncPipe} from '@angular/common';
 })
 export class CreateLocationDialogComponent implements OnInit {
     locationForm: FormGroup;
-    timeZones: string[];
-    filteredTimeZone: Observable<string[]>;
+    filteredTimeZone: string[];
+    timeZones: Timezone[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -58,19 +59,14 @@ export class CreateLocationDialogComponent implements OnInit {
     }
 
     ngOnInit(){
-        this.timeZones =  moment.tz.names();
-
-        this.filteredTimeZone = this.locationForm.get('timeZoneControl').valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter(value || '')),
-          );
+        this.timeZones = moment.tz.names().map((zoneName) => {
+            return {
+                zoneName: zoneName,
+                utc: moment.tz(zoneName).format('Z'),
+                zoneAbbr: moment.tz(zoneName).zoneAbbr()
+            }
+        });
     }
-
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-    
-        return this.timeZones.filter(option => option.toLowerCase().includes(filterValue));
-      }
 
     onNoClick(): void {
         this.dialogRef.close();
