@@ -7,6 +7,12 @@
     letter-spacing: normal;
 
     .mat-mdc-dialog-content{
+        width: 400px;
+        margin: 30px auto;
+
+        .mat-mdc-form-field{
+            width: 100%;
+        }
 
         .vertical-center {
             display: flex;
@@ -43,6 +49,12 @@
 
     }
 
+    @media (min-width: 768px) {
+        .mat-mdc-dialog-content {
+            width: 600px;
+            margin: 30px auto;
+        }
+    }
     .header{
         display: flex;
         justify-content: space-between;
@@ -72,6 +84,8 @@
         .full-width-row {
             width: 100%;
         }
+
+        
 
         .full-width-row .mdc-text-field--filled .mdc-line-ripple::before,
         .mdc-text-field--filled .mdc-line-ripple::after {
