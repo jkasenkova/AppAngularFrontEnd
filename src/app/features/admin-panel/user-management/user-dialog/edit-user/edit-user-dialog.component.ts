@@ -1,4 +1,4 @@
-import { Component, inject, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -8,8 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
+import { RotationType } from "../../../user-orientation/model/rotationType";
 
 @Component({
     selector: 'edit-user-dialog',
@@ -36,6 +37,7 @@ import { UserModel } from "../../model/userModel";
 })
 export class EditUserDialogComponent {
     userForm: FormGroup;
+    public showPassword: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -46,23 +48,25 @@ export class EditUserDialogComponent {
         this.userForm = this.fb.group({
             userName: [data.userName, Validators.required],
             userSurname: [data.userSurname, Validators.required],
-            email: [data.email, Validators.required, Validators.email],
+            email: [data.email, [Validators.required, Validators.email]],
             lineManagers: [data.lineManagers, Validators.required],
             roles: [data.roles, Validators.required],
+            role: "Team Lead",
             teams: [data.teams, Validators.required],
-            rotation: [''],
-            template: [''],
+            team: "Team 1",
+            rotation: [RotationType.NoRotation],
+            template: "Template 1",
             companyId: ['', Validators.required],
-            contributors: [''],
+            contributors: [data.contributors],
             password: [data.password, Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
-                Validators.maxLength(100)
+                Validators.maxLength(10)
             ])],
             confirmPassword: [data.password, Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
-                Validators.maxLength(100)
+                Validators.maxLength(10)
             ])]
         });
     }

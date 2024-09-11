@@ -1,0 +1,85 @@
+<div mat-dialog-content>
+    <form [formGroup]="securityForm">
+
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                    <div class="row padding-right-15">
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>RelayWorks email</mat-label>
+                                <input matInput formControlName="email" placeholder="Enter Email">
+                                @if(securityForm.get('email').hasError('email')){
+                                    <mat-error>Email is not correct</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                    <div class="row padding-right-15">
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Secondary Email</mat-label>
+                                <input matInput formControlName="secondaryEmail" placeholder="Enter Email">
+                                @if(securityForm.get('secondaryEmail').hasError('email')){
+                                    <mat-error>Secondary Email is not correct</mat-error>
+                                }
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field-container  margin-top-20">
+                <button type="button" class="btn change-password-btn" (click)="visible = !visible">Change Password</button>
+            </div>
+
+            @if(visible){
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Current Password</mat-label>
+                                    <input matInput formControlName="curentPassword">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>New Password</mat-label>
+                                    <input matInput formControlName="newPassword">
+                                        @if(securityForm.get('newPassword').hasError('compose')){
+                                            <mat-error>New Password is not correct</mat-error>
+                                        }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Confirm New Password*</mat-label>
+                                    <input matInput formControlName="confirmNewPassword">
+                                            @if(securityForm.get('confirmNewPassword').hasError('compose')){
+                                                <mat-error>Confirm New Password is not correct</mat-error>
+                                            }
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+    
+        </div>
+    </form>
+</div>
