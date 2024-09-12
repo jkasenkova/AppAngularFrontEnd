@@ -9,8 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatTabsModule } from '@angular/material/tabs';
-import { SubscriptionModel } from "src/app/models/SubscriptionModel";
 import { Guid } from "guid-typescript";
+import { SubscriptionModel } from "src/app/models/subscriptionModel";
 
 @Component({
     selector: 'account-tab',
@@ -55,7 +55,7 @@ export class AccountTabComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: SubscriptionModel
     ) {
         this.data = this.subscriptionTempDetails;
-        
+
         this.accountForm = this.fb.group({
             version: [this.subscriptionTempDetails.version],
             purchaseDate: [this.subscriptionTempDetails.purchaseDate],
