@@ -8,8 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
+import { RoleModel } from "src/app/models/role";
 
 @Component({
     selector: 'create-user-dialog',
@@ -36,7 +37,9 @@ import { UserModel } from "../../model/userModel";
 })
 export class CreateUserDialogComponent {
     userForm: FormGroup;
-
+    rolesOfTeam: RoleModel[];
+    public showPassword: boolean;
+    
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
@@ -52,7 +55,7 @@ export class CreateUserDialogComponent {
             rotation: [''],
             template: [''],
             companyId: ['', Validators.required],
-            contributors: [''],
+            contributors: [data.contributors],
             password: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
@@ -74,5 +77,9 @@ export class CreateUserDialogComponent {
         if (this.userForm.valid) {
             this.dialogRef.close(this.userForm.value);
         }
+    }
+
+    onSelectTeam(event: any){
+        this.rolesOfTeam = this.data.roles.filter(r => r.teamId.toString() == event.value.teamId.toString());
     }
 }

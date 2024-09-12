@@ -1,0 +1,29 @@
+<div class="profile-dialog">
+
+    <div class="header">
+        <mat-tab-group  animationDuration="0ms" 
+                        mat-stretch-tabs="false" 
+                        mat-align-tabs="start" >
+
+	        <mat-tab label="Profile">
+		        <ng-template matTabContent>
+                    <profile-tab></profile-tab>
+		        </ng-template> 
+	        </mat-tab>
+            @if(admin){
+	            <mat-tab label="Administration">
+		            <ng-template matTabContent>
+                        <account-tab></account-tab>
+		            </ng-template>
+	            </mat-tab>
+            }
+        </mat-tab-group>
+        <mat-dialog-actions>
+            <div class="upper-right-corner">
+                <button mat-button mat-dialog-close class="close-btn"></button>
+                <button mat-button  class="save-btn" (click)="onSave()" cdkFocusInitial>Save</button>
+            </div>
+        </mat-dialog-actions>
+    </div>
+
+</div>

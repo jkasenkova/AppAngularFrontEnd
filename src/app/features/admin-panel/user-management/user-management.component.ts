@@ -171,12 +171,45 @@ export class UserManagementComponent implements OnInit {
     ];
 
     rowData = [
-        { userName: "User A", location: "Ukraine", team: "Team 1", role:"Team Lead", 
-            userType: "Admin", rotation:"No Rotation", lastLogin: "20/08/2024", editable: true},
-        { userName: "User B", location: "USA", team: "Team 2",role:"developer", 
-            userType: "User", rotation:"Shift", lastLogin: "20/08/2024", editable: true},
-        { userName: "User C", location: "Moldova", team: "Team 3",role:"sales",
-            userType: "User", rotation:"Shift", lastLogin: "20/08/2024", editable: true}
+        { 
+            userName: "User", 
+            userSurname: "AAAA",  
+            location: "Ukraine", 
+            email: "userA@gmail.com",
+            password: "HgBx9TR227Tu",
+            team: this.teamList[0].teamName, 
+            role: this.roleList[0].roleName, 
+            userType: UserType.Administrator, 
+            rotation: RotationType.NoRotation, 
+            lastLogin: "20/08/2024", 
+            editable: true
+        },
+        { 
+            userName: "User",  
+            userSurname: "BBBB",  
+            location: "USA", 
+            email: "userB@gmail.com",
+            password: "HgBx9TR227Tu",
+            team: this.teamList[1].teamName, 
+            role: this.roleList[1].roleName, 
+            userType: UserType.User, 
+            rotation: RotationType.Shift, 
+            lastLogin: "20/08/2024",
+            editable: true
+        },
+        { 
+            userName: "User", 
+            userSurname: "CCC",  
+            email: "userC@gmail.com",
+            password: "HgBx9TR227Tu",
+            location: "Moldova", 
+            team: this.teamList[2].teamName, 
+            role: this.roleList[2].roleName, 
+            userType: UserType.User, 
+            rotation: RotationType.Shift,  
+            lastLogin: "20/08/2024", 
+            editable: true
+        }
     ];
 
     ngOnInit(): void {

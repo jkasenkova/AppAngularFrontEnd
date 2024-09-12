@@ -26,12 +26,7 @@ export class EditButtonComponent implements ICellRendererAngularComp {
 
     buttonClicked() {
         const dialogRef = this.dialog.open(EditUserDialogComponent, { 
-            data: { 
-                userName: this.params.data.userName, 
-                userSurname:  this.params.data.userSurname, 
-                userId:  this.params.data.userId,
-                rotation: this.params.data.rotation
-            },
+            data: this.params.data,
             panelClass: 'user-management-dialog'
         });
 

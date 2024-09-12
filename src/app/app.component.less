@@ -1,4 +1,5 @@
 .logo {
+    position: absolute;
     background-image: url("/assets/img/relay_logo.svg");
     background-repeat: no-repeat;
     background-position: center;
@@ -6,7 +7,54 @@
     margin-left: 55px;
     height: 50px;
 }
+
+.profile{
+    float: right;
+    padding: 10px 0 0;
+    position: relative;
+    display: block;
+}
+
 .mat-mdc-tab-label-container {
     background-color: whitesmoke;
     border-top: 1px solid #ddd;
 }
+
+.active{
+    color: #00aff0;
+}
+
+.mat-mdc-menu-content{
+    padding: 4px 10px 7px;
+}
+
+.mat-mdc-menu-item{
+    min-height: 25px;
+    font-size: 14px;
+    letter-spacing: 0;
+    padding: 4px 10px 7px;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+#icon-container {
+    float: right;
+    display: block;
+    margin-left: auto;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-position: 1px 0;
+    background: #464646;
+    cursor: pointer;
+  }
+  #name {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    padding-top: 2px;
+  }
