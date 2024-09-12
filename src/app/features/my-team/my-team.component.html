@@ -1,1 +1,62 @@
-My Team Page
+<app-tabs-menu></app-tabs-menu>
+
+<div class="container my-team">
+    <div class="row panels-block">
+        @for (teamRotation of teamRotations; track teamRotation) {
+            <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="row panels">
+                    <div class="col col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding padding-row">
+                        <div class="user-photo">
+                            <div class="user-photo-img">
+                                <div id="name">{{ getLetters(teamRotation) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-data col col-lg-7 col-md-7 col-sm-7 col-xs-7 padding-row">
+                        <div class="row no-margin">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                <div class="row no-margin user-contact">
+                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                        <div class="user-block">
+                                            <strong class="user-name">{{teamRotation.ownerName}}</strong>
+                                            <div class="circle" [ngClass]="teamRotation.isActiveRotation ? 'green' : 'grey'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row no-margin user-contact">
+                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                        <div class="user-email">
+                                            <div class="user-detail">{{teamRotation.ownerEmail}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row no-margin user-contact">
+                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                        <div class="user-position">
+                                            {{teamRotation.ownerPosition}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row no-margin">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                <div class="row no-margin user-container">
+                                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                        <div class="handover"></div>
+                                        <div class="handover-icon">
+                                           <!-- Add Handover info --> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @if (totalUsersCount > 9){
+
+    }
+</div>
