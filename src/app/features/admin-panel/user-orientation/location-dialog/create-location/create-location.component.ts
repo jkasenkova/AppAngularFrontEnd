@@ -11,8 +11,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { LocationModel } from "../../model/locationModel";
 import moment from 'moment-timezone';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { map, Observable, startWith } from "rxjs";
-import {AsyncPipe} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Timezone } from "../../model/timezoneModel";
 
 @Component({

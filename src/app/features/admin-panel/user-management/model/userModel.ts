@@ -15,4 +15,5 @@ export interface UserModel {
     lineManagers?: UserModel[];
     roles?: RoleModel[];
     teams?: Team[]; 
+    recipients?: UserModel[];
 }

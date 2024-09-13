@@ -29,7 +29,7 @@ export class RoleService {
         return this.http.delete<string>(this.url + '/' + roleId);
     }
 
-    getRole(roleId: Guid): Observable<RoleModel> {
+    getRoleById(roleId: Guid): Observable<RoleModel> {
         return this.http.get<RoleModel>(this.url + '/' + roleId);
     }
 }

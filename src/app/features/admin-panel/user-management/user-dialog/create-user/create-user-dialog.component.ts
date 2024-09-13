@@ -11,6 +11,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
 import { RoleModel } from "src/app/models/role";
+import { RoleService } from "src/app/services/roleService";
+import { RotationType } from "../../../user-orientation/model/rotationType";
 
 @Component({
     selector: 'create-user-dialog',
@@ -38,12 +40,13 @@ import { RoleModel } from "src/app/models/role";
 export class CreateUserDialogComponent {
     userForm: FormGroup;
     rolesOfTeam: RoleModel[];
-    public showPassword: boolean;
+    showPassword: boolean;
+    showRecipient: boolean = false;
     
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserModel
+        @Inject(MAT_DIALOG_DATA) public data: UserModel, private roleService: RoleService
     ) {
         this.userForm = this.fb.group({
             userName: ['', Validators.required],
@@ -65,7 +68,8 @@ export class CreateUserDialogComponent {
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(100)
-            ])]
+            ])],
+            recipients:[]
         });
     }
 
@@ -81,5 +85,20 @@ export class CreateUserDialogComponent {
 
     onSelectTeam(event: any){
         this.rolesOfTeam = this.data.roles.filter(r => r.teamId.toString() == event.value.teamId.toString());
+    }
+
+    onSelectRole(event: any){
+       var roleId = event.value.roleId;
+
+       var role = this.data.roles.find(r => r.roleId == roleId);
+
+        if(role){
+            this.userForm.get('rotation').setValue(role.rotationType);
+            this.userForm.get('template').setValue("Template 1");// role.templateId get name from service
+
+            if(role.rotationType == RotationType.Shift){
+                this.showRecipient = true;
+            }
+        }
     }
 }
