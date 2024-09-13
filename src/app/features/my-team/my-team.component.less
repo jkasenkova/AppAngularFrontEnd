@@ -22,6 +22,16 @@
             border-radius: 6px;
             border: 1px solid #b4b4b4;
 
+            &:hover, &:focus {
+                .user-data {
+                    .user-container {
+                        .edit-user {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+
             .padding-row{
                 display: inline-block;
                 padding-left: 22px !important;
@@ -88,6 +98,52 @@
 
             .user-data {
                 display: inline-block;
+
+                .user-container{
+                    display: inline-block;
+
+                    .handover{
+                        display: inline-block;
+                        font-size: 12px;
+                        font-weight: 700;
+                        margin-top: 10px;
+                        cursor: default;
+                    }
+
+                    .edit-user {
+                        display: none;
+                        background-image: url("/assets/img/pencil_dark.svg");
+                        width: 16px;
+                        height: 16px;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        cursor: pointer;
+                        position: relative;
+                        top: 5px;
+                        left: 5px;
+                    }
+
+                    #icon-container {
+                        float: left;
+                        display: block;
+                        margin-left: auto;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        background-position: 1px 0;
+                        background: #464646;
+                        cursor: pointer;
+                      }
+                      #name {
+                        width: 100%;
+                        text-align: center;
+                        color: white;
+                        font-size: 12px;
+                        margin-top: 15%;
+                      }
+                    
+                }
             }
         }
     }

@@ -33,7 +33,7 @@
                                 <div class="row no-margin user-contact">
                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                         <div class="user-position">
-                                            {{teamRotation.ownerPosition}}
+                                            {{teamRotation.ownerRole}}
                                         </div>
                                     </div>
                                 </div>
@@ -42,12 +42,16 @@
                         <div class="row no-margin">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                 <div class="row no-margin user-container">
-                                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
-                                        <div class="handover"></div>
-                                        <div class="handover-icon">
-                                           <!-- Add Handover info --> 
-                                        </div>
+                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                        <div class="handover">Handover to:</div>
                                     </div>
+                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                        <div id="icon-container">
+                                            <div id="name">{{ getLetters(teamRotation) }}</div>
+                                        </div>
+                                        <div class="edit-user" (click)="hadoverInfo(teamRotation)"></div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
