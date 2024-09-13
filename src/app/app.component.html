@@ -14,6 +14,8 @@
     </div>
 </mat-toolbar>
 
+<!-- <app-tabs-menu [url]="url"></app-tabs-menu> -->
+
 <mat-menu #menu="matMenu">
   @if(!admin){
     <button #menuItem mat-menu-item (click)="navigateToPage('/my-handover', $event)">
@@ -26,7 +28,7 @@
     </button>
     <button mat-menu-item class="menu-btn" (click)="navigateToPage('/admin-panel', $event)">
         <span>Admin Panel</span>
-    </button>
+    </button> 
   }
     <button mat-menu-item class="menu-btn">
         <span>Reports</span>

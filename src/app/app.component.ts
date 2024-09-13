@@ -42,6 +42,7 @@ export class AppComponent {
     userName: string = "Julia Kasenkova"; //for test;
     readonly dialog = inject(MatDialog);
     admin: boolean = true;
+    url: string;
 
     userTemp: UserModel =
     {
@@ -67,6 +68,7 @@ export class AppComponent {
         var element = event.target as HTMLElement;
         element.classList.add('active');
 
+        this.url = url;
         this.router.navigate([url]);
     }
 
