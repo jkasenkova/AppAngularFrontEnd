@@ -104,7 +104,7 @@
                                     <mat-select (selectionChange)="onSelectContributors($event)" 
                                                 formControlName="contributors" multiple>
                                         @for (user of users; track user) {
-                                            <mat-option [value]="user">{{user.ownerName}}</mat-option>
+                                            <mat-option [value]="user.userId">{{user.ownerName}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
