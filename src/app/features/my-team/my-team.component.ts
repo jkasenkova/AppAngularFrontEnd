@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { Guid } from 'guid-typescript';
 import { MyTeamModel } from 'src/app/models/myTeamModel';
 import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
@@ -11,7 +11,11 @@ import { HandoverInfoComponent } from './hondover-info/handover-info.component';
 @Component({
     selector: 'app-my-team',
     standalone: true,
-    imports: [TabsMenuComponent, CommonModule], 
+    imports: [
+        MatTabsModule,
+        TabsMenuComponent, 
+        CommonModule
+    ], 
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-team.component.html',
     styleUrls: ['./my-team.component.less'],
