@@ -8,6 +8,7 @@ export interface UserModel {
     password: string;
     roleId: Guid;
     teamId: Guid;
+    lineManagerId?: Guid;
     companyId: Guid;
     currentRotationId?: Guid;
     title?: string;

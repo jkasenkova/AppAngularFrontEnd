@@ -55,11 +55,41 @@
                     <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
                         <div class="row padding-right-15">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                Line Manager
-                                <!-- <mat-form-field class="example-full-width">
+                                <mat-form-field class="example-full-width">
                                     <mat-label>Line Manager</mat-label>
-                                    
-                                </mat-form-field> -->
+                                    <mat-select (selectionChange)="onSelectLineManager($event)" formControlName="lineMananer">
+                                        @for (user of users; track user) {
+                                            <mat-option [value]="user.userId">{{user.ownerName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label> Handover Recipient</mat-label>
+                                    <mat-select (selectionChange)="onSelectHandoverRecipient($event)" formControlName="recipient">
+                                        @for (user of users; track user) {
+                                            <mat-option [value]="user.userId">{{user.ownerName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                        <div class="row padding-right-15">
+                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Rotation</mat-label>
+                                    <input matInput formControlName="rotationType">
+                                </mat-form-field>
                             </div>
                         </div>
                     </div>
@@ -69,41 +99,19 @@
                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                         <div class="row padding-right-15">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                Handover Recipient
-                                <!-- <mat-form-field class="example-full-width">
-                                    <mat-label>Handover Recipient</mat-label>
-                                </mat-form-field> -->
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Observers</mat-label>
+                                    <mat-select (selectionChange)="onSelectContributors($event)" 
+                                                formControlName="contributors" multiple>
+                                        @for (user of users; track user) {
+                                            <mat-option [value]="user">{{user.ownerName}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                        <div class="row padding-right-15">
-                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                Contributors
-                                <!-- <mat-form-field class="example-full-width">
-                                    <mat-label>Contributors</mat-label>
-                                </mat-form-field> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                        <div class="row padding-right-15">
-                            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                Rotation Type:
-                                <!-- <mat-form-field class="example-full-width">
-                                    <mat-label>Rotation Type:</mat-label>
-                                </mat-form-field> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </form>
     </div>
