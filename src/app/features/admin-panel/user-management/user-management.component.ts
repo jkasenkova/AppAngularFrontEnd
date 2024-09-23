@@ -221,7 +221,8 @@ export class UserManagementComponent implements OnInit {
                 lineManagers: this.lineManagersList,
                 roles: this.roleList,
                 teams: this.teamList,
-                contributors: this.lineManagersList
+                contributors: this.lineManagersList,
+                recipients: this.lineManagersList
             },
             panelClass: 'user-dialog',
             height: '600px'

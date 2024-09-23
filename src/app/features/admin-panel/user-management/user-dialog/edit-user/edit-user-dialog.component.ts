@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -11,6 +11,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
 import { RotationType } from "../../../user-orientation/model/rotationType";
+import { Team } from "src/app/models/team";
+import { RoleModel } from "src/app/models/role";
+import { Guid } from "guid-typescript";
+import { UserType } from "src/app/models/userType";
 
 @Component({
     selector: 'edit-user-dialog',
@@ -35,9 +39,28 @@ import { RotationType } from "../../../user-orientation/model/rotationType";
         NgbDatepickerModule
     ],
 })
-export class EditUserDialogComponent {
+export class EditUserDialogComponent implements OnInit {
     userForm: FormGroup;
     public showPassword: boolean;
+    showRecipient: boolean = true;
+
+    team :  Team =
+    {
+        teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
+        teamName: "Team 1",
+        locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74")
+    };
+
+    role: RoleModel = 
+        {
+            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
+            roleName: "Team Lead",
+            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
+            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            userType: UserType.Administrator,
+            rotationType: RotationType.NoRotation,
+            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862")
+        };
 
     constructor(
         private fb: FormBuilder,
@@ -67,8 +90,15 @@ export class EditUserDialogComponent {
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(10)
-            ])]
+            ])],
+            recipients:[]
         });
+/* 
+        this.userForm.get('team').setValue(this.team);
+        this.userForm.get('role').setValue(this.role); */
+    }
+
+    ngOnInit(): void {
     }
 
     onNoClick(): void {

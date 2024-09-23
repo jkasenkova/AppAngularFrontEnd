@@ -8,6 +8,11 @@
     letter-spacing: normal;
 
     .mat-mdc-dialog-content{
+       // margin: 30px auto;
+
+        .mat-mdc-form-field{
+            width: 100%;
+        }
 
         .vertical-center {
             display: flex;
@@ -48,6 +53,12 @@
 
     }
 
+    @media (min-width: 768px) {
+        .location-content {
+            width: 600px;
+            margin: 30px auto;
+        }
+    }
     .header{
         display: flex;
         justify-content: space-between;
@@ -97,6 +108,11 @@
     .dialog-header{
         display: inline-flex;
         align-items: center; 
+    }
+
+    .location-content {
+        width: 400px;
+        margin: 10px auto;
     }
 
     .mat-mdc-dialog-content{

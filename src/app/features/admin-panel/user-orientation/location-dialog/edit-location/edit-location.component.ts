@@ -1,5 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormControl } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -9,6 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { LocationModel } from "../../model/locationModel";
+import moment from 'moment-timezone';
+import { Timezone } from "../../model/timezoneModel";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @Component({
     selector: 'location-dialog',
@@ -29,11 +32,14 @@ import { LocationModel } from "../../model/locationModel";
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
-        NgbDatepickerModule
+        NgbDatepickerModule,
+        MatAutocompleteModule
     ],
 })
 export class EditLocationDialogComponent {
     locationForm: FormGroup;
+    filteredTimeZone: string[];
+    timeZones: Timezone[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -45,7 +51,19 @@ export class EditLocationDialogComponent {
             address: [data.address],
             mapLink: [data.mapLink],
             id: [data.id],
+            timeZoneControl: new FormControl(''),
             timeZoneId: [data.timeZoneId, Validators.required]
+        });
+    }
+
+
+    ngOnInit(){
+        this.timeZones = moment.tz.names().map((zoneName) => {
+            return {
+                zoneName: zoneName,
+                utc: moment.tz(zoneName).format('Z'),
+                zoneAbbr: moment.tz(zoneName).zoneAbbr()
+            }
         });
     }
 
