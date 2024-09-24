@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+  <defs>
+    <style>
+      .cls-1, .cls-3, .cls-4 {
+        fill: #0096c8;
+      }
+
+      .cls-2 {
+        fill: #00aff0;
+        opacity: 0;
+      }
+
+      .cls-3, .cls-4 {
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <g id="Group_31893" data-name="Group 31893" transform="translate(-570 -139)">
+    <circle id="ellipse" class="cls-1" cx="15" cy="15" r="15" transform="translate(570 139)"/>
+    <g id="Group_31894" data-name="Group 31894" transform="translate(-11 -96.874)">
+      <g id="Group_31888" data-name="Group 31888" transform="translate(585 246.681)">
+        <rect id="Rectangle_50" data-name="Rectangle 50" class="cls-2" width="9.91" height="9.91" transform="translate(0 0)"/>
+        <path id="Path_278" data-name="Path 278" class="cls-3" d="M6.5,12.8l3.122,1.762v.881c0,.721-.446,1.321-.892,1.321H1.592c-.446,0-.892-.6-.892-1.321v-.881L3.822,12.8" transform="translate(-0.204 -7.35)"/>
+        <path id="Path_279" data-name="Path 279" class="cls-4" d="M10.659,3.3c0,1.581-.892,2.954-2.23,2.954S6.2,4.877,6.2,3.3,6.646.8,8.43.8,10.659,1.674,10.659,3.3Z" transform="translate(-3.475 -0.305)"/>
+      </g>
+      <g id="Group_31889" data-name="Group 31889" transform="translate(598.202 246.681)">
+        <rect id="Rectangle_50-2" data-name="Rectangle 50" class="cls-2" width="9.91" height="9.91" transform="translate(0 0)"/>
+        <path id="Path_278-2" data-name="Path 278" class="cls-3" d="M6.5,12.8l3.122,1.762v.881c0,.721-.446,1.321-.892,1.321H1.592c-.446,0-.892-.6-.892-1.321v-.881L3.822,12.8" transform="translate(-0.204 -7.35)"/>
+        <path id="Path_279-2" data-name="Path 279" class="cls-4" d="M10.659,3.3c0,1.581-.892,2.954-2.23,2.954S6.2,4.877,6.2,3.3,6.646.8,8.43.8,10.659,1.674,10.659,3.3Z" transform="translate(-3.475 -0.305)"/>
+      </g>
+      <g id="Group_31887" data-name="Group 31887" transform="translate(589.66 243)">
+        <rect id="Rectangle_50-3" data-name="Rectangle 50" class="cls-2" width="13.874" height="13.874" transform="translate(0 0)"/>
+        <path id="Path_278-3" data-name="Path 278" class="cls-3" d="M8.816,12.8l4.37,2.466V16.5c0,1.009-.624,1.85-1.249,1.85H1.949C1.324,18.349.7,17.509.7,16.5V15.266L5.07,12.8" transform="translate(-0.006 -5.17)"/>
+        <path id="Path_279-3" data-name="Path 279" class="cls-4" d="M12.443,4.295c0,2.213-1.249,4.136-3.122,4.136S6.2,6.508,6.2,4.295,6.824.8,9.322.8,12.443,2.023,12.443,4.295Z" transform="translate(-2.385 -0.106)"/>
+      </g>
+    </g>
+  </g>
+</svg>

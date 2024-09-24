@@ -8,6 +8,11 @@
                     <div class="col col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding padding-row">
                         <div class="user-photo">
                             <div class="user-photo-img">
+                                @if(teamRotation.contributors != null){
+                                    <div class="contributes-icon" 
+                                        [matTooltip]="contributorsInfo(teamRotation)"
+                                        matTooltipClass="contributes-tooltip"></div>
+                                }
                                 <div id="name">{{ getLetters(teamRotation) }}</div>
                             </div>
                         </div>

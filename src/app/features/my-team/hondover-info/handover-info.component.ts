@@ -113,6 +113,8 @@ export class HandoverInfoComponent implements OnInit {
             rotationType:  data.curentRotationId != null ? RotationType.Shift : RotationType.NoRotation,
             contributors: data.contributors
         });
+
+        this.handoverInfoForm.get('contributors').setValue(data.contributors);
     }
 
     ngOnInit(){
