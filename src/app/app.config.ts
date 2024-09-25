@@ -1,5 +1,4 @@
-import { ApplicationConfig } from "@angular/core";
-import { provideRouter, Routes } from "@angular/router";
+import { Routes } from "@angular/router";
 import { HomeComponent } from "./features/home-component/home-component.component";
 
 //export const appConfig: ApplicationConfig = {
@@ -8,5 +7,5 @@ import { HomeComponent } from "./features/home-component/home-component.componen
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent }
+    { path: 'home', component: HomeComponent },
 ];

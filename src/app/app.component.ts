@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 @Component({
     selector: 'app-root',
@@ -33,7 +34,8 @@ import { Guid } from 'guid-typescript';
         UserOrientationComponent,
         MatDialogModule,
         MatInputModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        SignInComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']
@@ -43,6 +45,7 @@ export class AppComponent {
     readonly dialog = inject(MatDialog);
     admin: boolean = true;
     url: string;
+    isAuth: boolean = true;
 
     userTemp: UserModel =
     {
@@ -69,6 +72,11 @@ export class AppComponent {
         element.classList.add('active');
 
         this.url = url;
+
+        if(url == "/sign-in"){
+            this.isAuth = false;
+        }
+
         this.router.navigate([url]);
     }
 

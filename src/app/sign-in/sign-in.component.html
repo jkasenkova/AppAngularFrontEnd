@@ -1,0 +1,67 @@
+
+<div class="sign-in-page">
+
+    <div class="sign-in-container">
+        <div class="relay-logo-block">
+            <a class="logo" href="\"></a>
+        </div>
+
+        <div class="row text-center">
+            <div class="col col-xs-12 title-block">
+                Login
+            </div>
+        </div>
+    
+        <div class="row text-center">
+            <div class="col col-xs-12">
+                <div class="form-block">
+                    <form [formGroup]="signInForm">
+
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Username</mat-label>
+                            <input matInput formControlName="userName">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Password</mat-label>
+                            <input matInput formControlName="password" type="password">
+                        </mat-form-field>
+
+                        <button type="submit" class="btn btn-send">Login</button>
+                    </form>
+                </div>
+                <span class="change-indicator"></span>
+            </div>
+        </div>
+    
+     
+    
+        <div class="row text-center">
+            <div class="col col-xs-12">
+                <div class="buttons-block">
+                    <div class="btn btn-remember-me">
+                        remember me
+                    </div>
+                    <div class="btn btn-forgot-password">
+                        forgot password
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row text-center">
+            <div class="col col-xs-12">
+                <div class="sign-in-block">
+                    <div class="text">
+                        <span>Don't have an account?</span>
+                    </div>
+                    <a class="btn btn-sign-up margin-left-15">
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    
+</div>
