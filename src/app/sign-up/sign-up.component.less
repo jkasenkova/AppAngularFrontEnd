@@ -1,0 +1,113 @@
+*{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.sign-up-page {
+    background-image: url("/assets/img/relay-bg-auth.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100%;
+
+    .sign-up-container {
+        height: 100%;
+        padding-left: 70px;
+        padding-right: 70px;
+        width: 100%;
+        margin: 0 auto;
+ 
+
+        .relay-logo-block{
+            height: 60px;
+            border-bottom: 2px solid #FFFFFF;
+    
+            .logo {
+                background-image: url(/assets/img/relay-logo-auth.png);
+                background-repeat: no-repeat;
+                background-size: contain;
+                display: block;
+                height: 60px;
+                width: 170px;
+                background-position: 0;
+            }
+        }
+
+        .title-block {
+            padding-top: 50px;
+            font-size: 35px;
+            color: white;
+            padding-bottom: 40px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+    
+        .text-center {
+            text-align: center;
+        }
+
+        .form-block {
+            width: 500px;
+            height: 100%;
+            background: white;
+            display: inline-block;
+            border-radius: 6px;
+            padding: 20px;
+
+            .mat-mdc-form-field{
+                width: 100%;
+            }
+            
+        }
+
+        .terms-conditions-block {
+            margin: 0 auto;
+            width: 700px;
+            background-color: #FFF;
+            border-radius: 6px;
+            height: 40px;
+            padding-top: 10px;
+
+            .terms-conditions-title {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: normal;
+                color: #464646;
+                margin-left: 17px;
+            }
+
+             .terms-check {
+                display: table-cell;
+                float: right;
+                margin-right: 20px;
+            } 
+        }
+
+        .margin-top-15 {
+            margin-top: 15px;
+        }
+
+       .buttons-block {
+            margin: 26px 0px;
+
+            .btn-pay {
+                width: 220px;
+                display: inline-block;
+                font-size: 14px;
+                font-weight: bold;
+                text-transform: uppercase;
+                margin: 0px;
+                color: #ffffff;
+                background: #0096C8;
+                box-shadow: 0px 2px 0px #0096C8;
+                height: 33px;
+                border-radius: 15px;
+                box-shadow: none;
+            }
+        }
+
+    }
+}
+
+.mat-mdc-form-field-focus-overlay, .mdc-text-field--filled:not(.mdc-text-field--disabled) { 
+    background-color: white !important; 
+} 
