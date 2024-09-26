@@ -8,6 +8,7 @@ import { MyHandoverComponent } from './app/features/my-handover/my-handover.comp
 import { MyTeamComponent } from './app/features/my-team/my-team.component';
 import { AdminPanelComponent } from './app/features/admin-panel/admin-panel.component';
 import { SignInComponent } from './app/sign-in/sign-in.component';
+import { SignUpComponent } from './app/sign-up/sign-up.component';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -35,6 +36,9 @@ const routes: Routes =
         },
         {
             path: 'sign-in', component: SignInComponent
+        },
+        {
+            path: 'sign-up', component: SignUpComponent
         }
       /*   {
             path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)

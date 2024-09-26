@@ -24,7 +24,7 @@
 
                         <mat-form-field class="example-full-width">
                             <mat-label>Password</mat-label>
-                            <input matInput formControlName="password" type="password">
+                            <input matInput formControlName="password" type='password'>
                         </mat-form-field>
 
                         <button type="submit" class="btn btn-send">Login</button>
@@ -55,7 +55,7 @@
                     <div class="text">
                         <span>Don't have an account?</span>
                     </div>
-                    <a class="btn btn-sign-up margin-left-15">
+                    <a class="btn btn-sign-up margin-left-15" (click)="registration()">
                         Sign Up
                     </a>
                 </div>
@@ -65,3 +65,5 @@
     </div>
     
 </div>
+
+<router-outlet></router-outlet> 
