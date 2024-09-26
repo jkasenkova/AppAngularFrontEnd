@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 export class SubscriptionManagementComponent implements OnInit {
     subscriptions: Subscription[];
-
+    currentYear: number;
     //for test
     subscriptionsTmp: Subscription[] = [
         {
@@ -63,5 +63,7 @@ export class SubscriptionManagementComponent implements OnInit {
 
     ngOnInit(): void {
         this.subscriptions = this.subscriptionsTmp;
+
+        this.currentYear = new Date().getFullYear();
     }
 }
