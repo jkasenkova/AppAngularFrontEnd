@@ -33,7 +33,7 @@ export class SignUpComponent implements OnInit{
 
     constructor(private fb: FormBuilder) {
         this.signUpForm = this.fb.group({
-            email: ['', Validators.email],
+            email: ['',   Validators.compose([Validators.email, Validators.required])],
             name: ['', Validators.required],
             surname: ['', Validators.required],
             company: ['', Validators.required],
