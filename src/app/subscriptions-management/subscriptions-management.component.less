@@ -1,0 +1,107 @@
+*{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.subscriptions-management-page {
+    background-image: url("/assets/img/relay-bg-auth.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100%;
+
+    .subscriptions-management-container {
+        height: 100%;
+        padding-left: 70px;
+        padding-right: 70px;
+        width: 100%;
+        margin: 0 auto;
+ 
+
+        .relay-logo-block{
+            height: 60px;
+            border-bottom: 2px solid #FFFFFF;
+    
+            .logo {
+                background-image: url(/assets/img/relay-logo-auth.png);
+                background-repeat: no-repeat;
+                background-size: contain;
+                display: block;
+                height: 60px;
+                width: 170px;
+                background-position: 0;
+            }
+        }
+
+        .title-block {
+            padding-top: 50px;
+            font-size: 35px;
+            color: white;
+            padding-bottom: 40px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+    
+        .text-center {
+            text-align: center;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            min-height: 0.01%;
+
+            .table {
+                background: white;
+                padding-top: 10px;
+                border-radius: 6px;
+                border-collapse:unset;
+        
+                th{
+                    color: #0096C8 !important;
+                }
+
+                .btn{
+                    border: none;
+                    display: inline-block;
+                    font-size: 14px;
+                    font-weight: bold;
+                    margin: 0px;
+                    color: #ffffff;
+                    line-height: 1.2em;
+                    height: 30px;
+                    border-radius: 50px;
+                }
+
+                .mat-icon {
+                    color: #337ab7;
+                }
+
+                .mat-icon:hover, .mat-icon:focus {
+                    color: #23527c;
+                }
+
+                .view-subscription{
+                    border: none;
+                    background:none;
+                }
+
+                .block-subscription {
+                    background: red;
+                    margin-left: 5px;
+                }
+
+                .activate-subscription{
+                    background: orange;
+                }
+            }
+
+            .table-block{
+                min-height: calc(100vh - 160px);
+                .message-block{
+                    color: white;
+                    font-size: 25px;
+                }
+            }
+        }
+ 
+    }
+}

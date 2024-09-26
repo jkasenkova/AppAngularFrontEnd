@@ -1,11 +1,11 @@
 import { Guid } from "guid-typescript";
 
-export class SubscriptionModel {
+export class SubscriptionDetail {
     public version: string;
     public purchaseDate: string;
     public billingDate: string;
     public planType: string;
-    public timeZoneId: Guid;
+    public timeZoneId: string;
     public templatesLimit: number;
     public users: string;
 }

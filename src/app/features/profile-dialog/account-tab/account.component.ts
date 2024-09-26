@@ -10,7 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatTabsModule } from '@angular/material/tabs';
 import { Guid } from "guid-typescript";
-import { SubscriptionModel } from "src/app/models/subscriptionModel";
+import { SubscriptionDetail } from "src/app/models/subscriptionDetail";
 
 @Component({
     selector: 'account-tab',
@@ -38,13 +38,13 @@ export class AccountTabComponent implements OnInit {
     accountForm: FormGroup;
     admin: boolean = true;
 
-    subscriptionTempDetails: SubscriptionModel =
+    subscriptionTempDetails: SubscriptionDetail =
     {
         version: "RelayWorks Version v2.2",
         purchaseDate: new Date().toLocaleString(),
         billingDate: new Date().toLocaleString(),
         planType: "Advanced", 
-        timeZoneId: Guid.parse("b84108c9-7e98-4bcb-8a45-86e0895e666d"),
+        timeZoneId: "Kiev",
         templatesLimit:3, 
         users: "8/75"
     }
@@ -52,7 +52,7 @@ export class AccountTabComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<AccountTabComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: SubscriptionModel
+        @Inject(MAT_DIALOG_DATA) public data: SubscriptionDetail
     ) {
         this.data = this.subscriptionTempDetails;
 

@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { AdminPanelComponent } from './features/admin-panel/admin-panel.component';
@@ -40,7 +40,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     userName: string = "Julia Kasenkova"; //for test;
     readonly dialog = inject(MatDialog);
     admin: boolean = true;
@@ -60,7 +60,19 @@ export class AppComponent {
         title: "Mrs"
     };
 
-    constructor(private router: Router, private userService: UserService) {}
+    constructor(
+        private router: Router, 
+        private userService: UserService) {}
+
+    ngOnInit(): void {
+
+        // it for test (hard code)
+        var urlCur = window.location.pathname; 
+
+        if(urlCur == "/subscriptions-management" || urlCur == "/sign-up"){
+            this.isAuth = false;
+        }
+    }
 
     navigateToPage(url: string, event: Event){
 
