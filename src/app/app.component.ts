@@ -17,6 +17,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { FooterComponent } from './features/footer/footer.component';
 
 @Component({
     selector: 'app-root',
@@ -35,7 +36,8 @@ import { SignInComponent } from './sign-in/sign-in.component';
         MatDialogModule,
         MatInputModule,
         MatFormFieldModule,
-        SignInComponent
+        SignInComponent,
+        FooterComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']
