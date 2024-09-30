@@ -28,6 +28,7 @@ export class MyTeamComponent implements OnInit {
     totalUsersCount: number;
     teamRotations: MyTeamModel[];
     readonly dialog = inject(MatDialog);
+    urlMyTeam: string = "my-team";
     
     constructor(private myTeamService: MyTeamService){}
 

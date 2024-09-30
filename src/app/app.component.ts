@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { AdminPanelComponent } from './features/admin-panel/admin-panel.component';
@@ -18,6 +18,7 @@ import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { FooterComponent } from './features/footer/footer.component';
+import { TabsMenuComponent } from './features/tabs-menu/tabs-menu.component';
 
 @Component({
     selector: 'app-root',
@@ -37,7 +38,8 @@ import { FooterComponent } from './features/footer/footer.component';
         MatInputModule,
         MatFormFieldModule,
         SignInComponent,
-        FooterComponent
+        FooterComponent,
+        TabsMenuComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']
@@ -48,6 +50,7 @@ export class AppComponent implements OnInit {
     admin: boolean = true;
     url: string;
     isAuth: boolean = true;
+    @Output() urlActive = new EventEmitter<string>();
 
     userTemp: UserModel =
     {
@@ -90,6 +93,8 @@ export class AppComponent implements OnInit {
         if(url == "/sign-in"){
             this.isAuth = false;
         }
+        debugger;
+        this.urlActive.emit(this.url);
 
         this.router.navigate([url]);
     }
