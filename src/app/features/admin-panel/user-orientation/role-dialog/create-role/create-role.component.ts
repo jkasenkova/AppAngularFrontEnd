@@ -10,12 +10,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoleModel } from "src/app/models/role";
 import { UserType } from "src/app/models/userType";
-import { RotationType } from "../../model/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { Template } from "src/app/models/template";
 import { Guid } from "guid-typescript";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { map, Observable, startWith } from "rxjs";
+import { RotationType } from "../../../../../models/rotationType";
 
 @Component({
     selector: 'role-dialog',

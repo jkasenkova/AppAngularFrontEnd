@@ -8,10 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { LocationModel } from "../../model/locationModel";
 import moment from 'moment-timezone';
-import { Timezone } from "../../model/timezoneModel";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { Timezone } from "../../../../../models/timezoneModel";
+import { LocationModel } from "../../../../../models/locationModel";
 
 @Component({
     selector: 'location-dialog',

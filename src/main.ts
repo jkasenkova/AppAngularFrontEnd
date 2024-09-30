@@ -10,6 +10,7 @@ import { AdminPanelComponent } from './app/features/admin-panel/admin-panel.comp
 import { SignInComponent } from './app/sign-in/sign-in.component';
 import { SignUpComponent } from './app/sign-up/sign-up.component';
 import { SubscriptionManagementComponent } from './app/subscriptions-management/subscriptions-management.component';
+import { FooterComponent } from './app/features/footer/footer.component';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -43,6 +44,9 @@ const routes: Routes =
         },
         {
             path: 'subscriptions-management', component: SubscriptionManagementComponent
+        },
+        {
+            path: 'footer', component: FooterComponent
         }
       /*   {
             path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)

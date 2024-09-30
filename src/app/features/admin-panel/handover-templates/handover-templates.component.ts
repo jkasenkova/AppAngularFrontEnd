@@ -11,11 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionStorageService } from "../../../services/sessionStorageService";
 import { map } from "rxjs";
-import { CreateTemplateDialogComponent } from "./template-dialog/create-template/create-template-dialog.component";
+import { CreateTemplateDialogComponent } from "./dialogs/template/create-template/create-template-dialog.component";
 import { Guid } from 'guid-typescript';
-import { EditTemplateDialogComponent } from "./template-dialog/edit-template/edit-template-dialog.component";
-import { DeleteTemplateDialogComponent } from "./template-dialog/delete-template/delete-template-dialog.component";
-import { CopyTemplateDialogComponent } from "./template-dialog/copy-template/copy-template.component";
+import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
+import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
+import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
 
 @Component({
     selector: 'app-handover-templates',

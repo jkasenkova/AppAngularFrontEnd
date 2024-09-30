@@ -10,11 +10,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
-import { RotationType } from "../../../user-orientation/model/rotationType";
 import { Team } from "src/app/models/team";
 import { RoleModel } from "src/app/models/role";
 import { Guid } from "guid-typescript";
 import { UserType } from "src/app/models/userType";
+import { RotationType } from "../../../../../models/rotationType";
 
 @Component({
     selector: 'edit-user-dialog',

@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript";
 import { UserType } from "./userType";
-import { RotationType } from "../features/admin-panel/user-orientation/model/rotationType";
 import { ShiftPatternType } from "./shiftPatternType";
+import { RotationType } from "./rotationType";
 
 export interface RoleModel {
     roleId?: Guid;

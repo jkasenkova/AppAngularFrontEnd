@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { LocationModel } from "../../model/locationModel";
+import { LocationModel } from "src/app/models/locationModel";
 
 @Component({
     selector: 'location-dialog',

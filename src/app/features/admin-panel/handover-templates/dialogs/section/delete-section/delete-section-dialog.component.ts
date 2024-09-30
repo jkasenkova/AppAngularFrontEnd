@@ -4,15 +4,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { TemplateDialogModel } from "../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { SectionDialogModel } from "../../../models/sectionDialogModel";
 
 @Component({
-    selector: 'edit-template-dialog',
-    templateUrl: './edit-template-dialog.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    selector: 'delete-section-dialog',
+    templateUrl: './delete-section-dialog.component.html',
+    styleUrl: '../../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -26,21 +26,21 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
-        MatGridListModule,
-        MatDialogModule
+        MatDialogModule,
+        MatGridListModule
     ],
 })
-export class EditTemplateDialogComponent {
-    templateForm: FormGroup;
+export class DeleteSectionDialogComponent {
+    sectionForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<EditTemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        public dialogRef: MatDialogRef<DeleteSectionDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
-        this.templateForm = this.fb.group({
-            templateId: [data.templateId],
-            templateName: [data.templateName, Validators.required]
+        this.sectionForm = this.fb.group({
+            sectionId: [data.sectionId],
+            sectionName: [data.sectionName, Validators.required]
         });
     }
 
@@ -49,8 +49,8 @@ export class EditTemplateDialogComponent {
     }
 
     onSave(): void {
-        if (this.templateForm.valid) {
-            this.dialogRef.close(this.templateForm.value);
+        if (this.sectionForm.valid) {
+            this.dialogRef.close(this.sectionForm.value);
         }
     }
 }

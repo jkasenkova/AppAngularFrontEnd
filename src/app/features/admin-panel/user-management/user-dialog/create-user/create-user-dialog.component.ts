@@ -12,7 +12,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from "../../model/userModel";
 import { RoleModel } from "src/app/models/role";
 import { RoleService } from "src/app/services/roleService";
-import { RotationType } from "../../../user-orientation/model/rotationType";
+import { RotationType } from "../../../../../models/rotationType";
 
 @Component({
     selector: 'create-user-dialog',

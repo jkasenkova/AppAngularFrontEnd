@@ -4,9 +4,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { RouterOutlet } from '@angular/router';
 import moment from 'moment-timezone';
-import { Timezone } from "../features/admin-panel/user-orientation/model/timezoneModel";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { Timezone } from "../models/timezoneModel";
 
 @Component({
     selector: 'sign-up',

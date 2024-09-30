@@ -11,8 +11,8 @@ import { Guid } from "guid-typescript";
 import { RoleModel } from "src/app/models/role";
 import { UserType } from "src/app/models/userType";
 import { UserModel } from "./model/userModel";
-import { RotationType } from "../user-orientation/model/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
+import { RotationType } from "../../../models/rotationType";
 
 @Component({
     selector: 'app-user-management',
