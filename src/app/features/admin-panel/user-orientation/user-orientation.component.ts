@@ -3,7 +3,6 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateLocationDialogComponent } from "./location-dialog/create-location/create-location.component";
-import { LocationModel} from "./model/locationModel";
 import { Guid } from "guid-typescript";
 import { EditLocationDialogComponent } from "./location-dialog/edit-location/edit-location.component";
 import { DeleteLocationDialogComponent } from "./location-dialog/delete-location/delete-location.component";
@@ -16,8 +15,9 @@ import { UserType } from "src/app/models/userType";
 import { RoleModel } from "src/app/models/role";
 import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
 import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
-import { RotationType } from "./model/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
+import { RotationType } from "../../../models/rotationType";
+import { LocationModel } from "../../../models/locationModel";
 
 @Component({
     selector: 'app-user-orientation',

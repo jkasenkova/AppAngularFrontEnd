@@ -4,15 +4,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { TemplateDialogModel } from "../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { SectionDialogModel } from "../../../models/sectionDialogModel";
 
 @Component({
-    selector: 'delete-template-dialog',
-    templateUrl: './delete-template-dialog.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    selector: 'crete-section-dialog',
+    templateUrl: './create-section-dialog.component.html',
+    styleUrl: '../../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -30,17 +30,16 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatGridListModule
     ],
 })
-export class DeleteTemplateDialogComponent {
-    templateForm: FormGroup;
+export class CreateSectionDialogComponent {
+    sectionForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<DeleteTemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        public dialogRef: MatDialogRef<CreateSectionDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
-        this.templateForm = this.fb.group({
-            templateId: [data.templateId],
-            templateName: [data.templateName, Validators.required]
+        this.sectionForm = this.fb.group({
+            sectionName: ['', Validators.required]
         });
     }
 
@@ -49,8 +48,8 @@ export class DeleteTemplateDialogComponent {
     }
 
     onSave(): void {
-        if (this.templateForm.valid) {
-            this.dialogRef.close(this.templateForm.value);
+        if (this.sectionForm.valid) {
+            this.dialogRef.close(this.sectionForm.value);
         }
     }
 }

@@ -4,15 +4,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { SectionDialogModel } from "../../models/sectionDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
+import { SectionDialogModel } from "../../../models/sectionDialogModel";
 
 @Component({
-    selector: 'crete-section-dialog',
-    templateUrl: './create-section-dialog.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    selector: 'edit-section-dialog',
+    templateUrl: './edit-section-dialog.component.html',
+    styleUrl: '../../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -30,16 +30,18 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatGridListModule
     ],
 })
-export class CreateSectionDialogComponent {
+export class EditSectionDialogComponent {
     sectionForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<CreateSectionDialogComponent>,
+        public dialogRef: MatDialogRef<EditSectionDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
+        debugger;
         this.sectionForm = this.fb.group({
-            sectionName: ['', Validators.required]
+            sectionId: [data.sectionId],
+            sectionName: [data.sectionName, Validators.required]
         });
     }
 

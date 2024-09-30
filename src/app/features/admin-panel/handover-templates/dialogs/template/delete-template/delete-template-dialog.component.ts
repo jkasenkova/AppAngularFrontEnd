@@ -4,15 +4,15 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { SectionDialogModel } from "../../models/sectionDialogModel";
+import { TemplateDialogModel } from "../../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatGridListModule } from '@angular/material/grid-list'; 
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
-    selector: 'delete-section-dialog',
-    templateUrl: './delete-section-dialog.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    selector: 'delete-template-dialog',
+    templateUrl: './delete-template-dialog.component.html',
+    styleUrl: '../../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -30,17 +30,17 @@ import { MatGridListModule } from '@angular/material/grid-list';
         MatGridListModule
     ],
 })
-export class DeleteSectionDialogComponent {
-    sectionForm: FormGroup;
+export class DeleteTemplateDialogComponent {
+    templateForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<DeleteSectionDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
+        public dialogRef: MatDialogRef<DeleteTemplateDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
     ) {
-        this.sectionForm = this.fb.group({
-            sectionId: [data.sectionId],
-            sectionName: [data.sectionName, Validators.required]
+        this.templateForm = this.fb.group({
+            templateId: [data.templateId],
+            templateName: [data.templateName, Validators.required]
         });
     }
 
@@ -49,8 +49,8 @@ export class DeleteSectionDialogComponent {
     }
 
     onSave(): void {
-        if (this.sectionForm.valid) {
-            this.dialogRef.close(this.sectionForm.value);
+        if (this.templateForm.valid) {
+            this.dialogRef.close(this.templateForm.value);
         }
     }
 }

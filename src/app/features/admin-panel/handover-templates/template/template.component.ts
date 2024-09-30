@@ -6,9 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Guid } from 'guid-typescript';
-import { CreateSectionDialogComponent } from '../section-dialog/create-section/create-section-dialog.component';
-import { EditSectionDialogComponent } from '../section-dialog/edit-section/edit-section-dialog.component';
-import { DeleteSectionDialogComponent } from '../section-dialog/delete-section/delete-section-dialog.component';
 import { SectionType } from 'src/app/models/sectionType';
 import { SortType } from 'src/app/models/sortType';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -19,6 +16,9 @@ import { FormGroup, FormsModule, ReactiveFormsModule, FormBuilder  } from '@angu
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { CreateSectionDialogComponent } from '../dialogs/section/create-section/create-section-dialog.component';
+import { EditSectionDialogComponent } from '../dialogs/section/edit-section/edit-section-dialog.component';
+import { DeleteSectionDialogComponent } from '../dialogs/section/delete-section/delete-section-dialog.component';
 
 @Component({
     selector: 'app-template',
@@ -228,6 +228,7 @@ export class TemplateComponent implements OnInit {
     }
 
     editSectionDialog(section: Section): void {
+        debugger;
         const dialogRef = this.dialog.open(EditSectionDialogComponent, {
             data: { sectionId: section.sectionId, sectionName: section.sectionName },
              panelClass: 'section-dialog'

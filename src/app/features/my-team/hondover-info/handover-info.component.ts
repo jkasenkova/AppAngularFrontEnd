@@ -7,9 +7,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MyTeamModel } from "src/app/models/myTeamModel";
-import { LocationModel } from "../../admin-panel/user-orientation/model/locationModel";
 import { Guid } from "guid-typescript";
-import { RotationType } from "../../admin-panel/user-orientation/model/rotationType";
+import { LocationModel } from "src/app/models/locationModel";
+import { RotationType } from "src/app/models/rotationType";
 
 @Component({
     selector: 'handover-info',

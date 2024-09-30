@@ -30,8 +30,6 @@ export class TabsMenuComponent implements OnInit {
     constructor(private sessionStorageService: SessionStorageService) {}
     
     ngOnInit(): void {
-        debugger;
-        var res = this.urlActive;
         this.selectedIndex = this.sessionStorageService.getItem<number>('active-tab');
     }
 
