@@ -17,7 +17,6 @@ import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
         TabsMenuComponent
     ],
     templateUrl: './admin-panel.component.html',
-    styleUrls: ['./admin-panel.component.less'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None
 })
