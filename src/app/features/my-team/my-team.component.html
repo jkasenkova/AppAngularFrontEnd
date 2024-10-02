@@ -1,7 +1,8 @@
 <app-tabs-menu [urlActive]="urlMyTeam"></app-tabs-menu>
 
 <div class="container my-team">
-    <div class="row panels-block">
+    @if(teamRotations.length > 0){
+        <div class="row panels-block">
         @for (teamRotation of teamRotations; track teamRotation) {
             <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="row panels">
@@ -64,8 +65,12 @@
                 </div>
             </div>
         }
-    </div>
-    @if (totalUsersCount > 9){
-
+        </div>
+    }
+    @else{
+        <div class="text-center message-block">
+            You have no users in your team.
+        </div>
+        
     }
 </div>

@@ -34,7 +34,7 @@ export class UserService {
         return this.http.get<UserModel>(this.url + '/' + userId);
     }
 
-    getAvatar(): Observable<string>{
-        return this.http.get<string>(this.url + '/');
+    getLettersAvatar(userId: Guid): Observable<string>{
+        return this.http.get<string>(this.url + '/' + userId);
     }
 }

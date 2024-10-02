@@ -24,4 +24,8 @@ export class MyTeamService {
     getTeamUsers(): Observable<MyTeamModel[]> {
         return this.http.get<MyTeamModel[]>(this.url);
     }
+
+    updateTeamUser(myTeamModel: MyTeamModel){
+        this.http.put(this.url, myTeamModel, this.httpHeaders).subscribe();
+    }
 }

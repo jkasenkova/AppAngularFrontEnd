@@ -7,7 +7,7 @@ export class MyTeamModel {
     public userId: Guid;
     public isActiveRotation: boolean;
     public recipientId: Guid;
-    public locationid: Guid;
+    public locationId: Guid;
     public lineManagerId: Guid;
     public curentRotationId?: Guid;
     public contributors?: Guid[];
