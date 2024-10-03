@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UserModel } from "src/app/models/user";
 import { SecurityTabComponent } from "../security-tab/security.component";
+import { RoleService } from "src/app/services/roleService";
 
 @Component({
     selector: 'personal-tab',
@@ -32,7 +33,7 @@ import { SecurityTabComponent } from "../security-tab/security.component";
         SecurityTabComponent
     ],
 })
-export class PersonalTabComponent implements OnInit {
+export class PersonalTabComponent {
     personalForm: FormGroup;
     admin: boolean = true;
     titles: string[];
@@ -40,19 +41,21 @@ export class PersonalTabComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<PersonalTabComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserModel
+        @Inject(MAT_DIALOG_DATA) public data: UserModel,
+        private roleService: RoleService
     ) {
         this.personalForm = this.fb.group({
             name: [data.userName, Validators.required],
             userSurname: [data.userSurname, Validators.required],
             title: data.title,
-            roleName: "Developer"
+            roleName: ''
         });
 
-       this.titles = ["Mr", "Mrs", "Ms", "Miss", "Dr"];
-    }
 
-    ngOnInit(): void {
+        this.roleService.getRoleById(this.data.roleId).subscribe(role =>  
+            this.personalForm.get('roleName').setValue(role.roleName));
+
+        this.titles = ["Mr", "Mrs", "Ms", "Miss", "Dr"];
     }
 
     onNoClick(): void {

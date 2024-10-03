@@ -10,6 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { UserModel } from "src/app/models/user";
 import { MatTabsModule } from '@angular/material/tabs';
+import { UserService } from "src/app/services/userService";
 
 @Component({
     selector: 'security-tab',
@@ -41,7 +42,8 @@ export class SecurityTabComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<SecurityTabComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserModel
+        @Inject(MAT_DIALOG_DATA) public data: UserModel,
+        private userService: UserService 
     ) {
         this.securityForm = this.fb.group({
             email: [data.email, [Validators.required, Validators.email]],
@@ -74,6 +76,7 @@ export class SecurityTabComponent implements OnInit {
     }
 
     onChangePassword(){
-
+        this.data.password = this.securityForm.get('newPassword').value;
+        this.userService.updateUser(this.data);
     }
 }

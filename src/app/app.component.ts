@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { MyHandoverComponent } from './features/my-handover/my-handover.component';
 import { UserOrientationComponent } from './features/admin-panel/user-orientation/user-orientation.component';
 import { UserService } from './services/userService';
+import { SubscriptionService } from './services/subscriptionService';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProfileDialogComponent } from './features/profile-dialog/profile-dialog.component';
 import { MatInputModule } from '@angular/material/input';
@@ -45,31 +46,31 @@ import { TabsMenuComponent } from './features/tabs-menu/tabs-menu.component';
     styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-    userName: string = "Julia Kasenkova"; //for test;
+    userName: string;
     readonly dialog = inject(MatDialog);
-    admin: boolean = true;
+    isAdmin: boolean = true;
+    adminId: Guid;
+    admin: UserModel = new UserModel();
+    subscriptionId: Guid;
     url: string;
     isAuth: boolean = true;
     @Output() urlActive = new EventEmitter<string>();
 
-    userTemp: UserModel =
-    {
-        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        userName: "Julia",
-        userSurname: "Kasenkova",
-        email: "jkasenkova@gmail.com",
-        password: "HgBx9TR227Tu",
-        roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-        teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-        companyId: Guid.parse("80f73fe0-851f-4194-bde9-0992d9000553"),
-        title: "Mrs"
-    };
-
     constructor(
         private router: Router, 
-        private userService: UserService) {}
+        private userService: UserService,
+        private subscriptionService: SubscriptionService) {}
 
     ngOnInit(): void {
+        //get subscriptionId Id
+
+        this.subscriptionService.getSubscriptionById(this.subscriptionId).subscribe(subscription =>
+            this.adminId = subscription.adminId
+        );
+
+        this.userService.getUser(this.adminId).subscribe(admin =>
+            this.admin = admin
+        );
 
         // it for test (hard code)
         var urlCur = window.location.pathname; 
@@ -93,29 +94,28 @@ export class AppComponent implements OnInit {
         if(url == "/sign-in"){
             this.isAuth = false;
         }
-        debugger;
-        this.urlActive.emit(this.url);
 
+        this.urlActive.emit(this.url);
         this.router.navigate([url]);
     }
 
     getFullName(): string {
 
-        /* this.userService.getAvatar().subscribe(userName => {
-            this.userName = userName;
-        }); */
+        if(Boolean(this.admin.userName) && Boolean(this.admin.userSurname)){
+            var getLetters = this.admin.userName + this.admin.userSurname
+            .split(" ")
+            .map(n => n[0])
+            .join("");
 
-        var getLetters = this.userName
-        .split(" ")
-        .map(n => n[0])
-        .join("");
+            return getLetters;
+        }
 
-        return getLetters;
+        return "";
     }
 
     getProfile(){
         const dialogRef = this.dialog.open(ProfileDialogComponent, { 
-            data: this.userTemp
+            data: this.admin
         });
 
         dialogRef.afterClosed().subscribe(result => {

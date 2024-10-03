@@ -1,11 +1,11 @@
 import { Guid } from "guid-typescript";
 
-export interface UserModel {
+export class UserModel {
     userId?: Guid;
-    userName: string;
+    userName: string = '';
     userSurname?: string;
-    email: string;
-    password: string;
+    email: string = '';
+    password: string = '';
     roleId: Guid;
     teamId: Guid;
     lineManagerId?: Guid;

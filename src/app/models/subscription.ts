@@ -9,4 +9,5 @@ export class Subscription {
     public limitUsers: string;
     public activeHandovers: string;
     public email: string;
+    public adminId: Guid;
 }

@@ -50,8 +50,12 @@ export class ProfileDialogComponent implements OnInit {
             userName: [data.userName, Validators.required],
             surName:  [data.userSurname, Validators.required],
             title: data.title,
-          //  roleName: this.roleService.getRole(data.roleId).subscribe(roleDetail => roleDetail.roleName), //need check!
+            roleName: ''
         });
+
+        this.roleService.getRoleById(data.roleId).subscribe(role =>  
+            this.profileForm.get('roleName').setValue(role.roleName));
+
     }
 
     ngOnInit(): void {

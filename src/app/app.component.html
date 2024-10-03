@@ -15,7 +15,7 @@
 }
 
 <mat-menu #menu="matMenu">
-  @if(admin){}
+  @if(isAdmin){}
     <button #menuItem mat-menu-item (click)="navigateToPage('/my-handover', $event)">
       <span>My Handover</span>
     </button>
@@ -34,5 +34,6 @@
 </mat-menu>
 
 <router-outlet></router-outlet> 
-
+@if(isAuth){
 <footer></footer>
+}
