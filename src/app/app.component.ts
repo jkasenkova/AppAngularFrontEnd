@@ -102,11 +102,8 @@ export class AppComponent implements OnInit {
     getFullName(): string {
 
         if(Boolean(this.admin.userName) && Boolean(this.admin.userSurname)){
-            var getLetters = this.admin.userName + this.admin.userSurname
-            .split(" ")
-            .map(n => n[0])
-            .join("");
-
+            
+            var getLetters = [this.admin.userName[0] + this.admin.userSurname[0]].join("");
             return getLetters;
         }
 

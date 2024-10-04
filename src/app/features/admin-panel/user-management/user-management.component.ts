@@ -13,6 +13,7 @@ import { UserType } from "src/app/models/userType";
 import { UserModel } from "./model/userModel";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { RotationType } from "../../../models/rotationType";
+import { IconComponent } from "./iconComponent";
 import { TeamService } from "src/app/services/teamServices";
 import { RoleService } from "src/app/services/roleService";
 import { UserService } from "src/app/services/userService";
@@ -39,6 +40,13 @@ export class UserManagementComponent implements OnInit {
 
     colDefs: ColDef[] = [
         {
+            field: "icon",
+            headerName: "",
+            width: 60,
+            resizable: false,
+            cellRenderer: IconComponent 
+        },
+        {
             field: "userName",
             headerName: "User Name",
             width: 160,
@@ -48,14 +56,14 @@ export class UserManagementComponent implements OnInit {
         {
             field: "location",
             headerName: "Location",
-            width: 170,
+            width: 160,
             resizable: false,
             cellClass: "line-col"
         },
         {
             field: "team",
             headerName: "Team",
-            width: 150,
+            width: 155,
             resizable: false
         },
         {
@@ -73,13 +81,13 @@ export class UserManagementComponent implements OnInit {
         {
             field: "rotation",
             headerName: "Rotation",
-            width: 150,
+            width: 130,
             resizable: false
         },
         {
             field: "lastLogin",
             headerName: "Last Login",
-            width: 150,
+            width: 120,
             resizable: false
         },
         {

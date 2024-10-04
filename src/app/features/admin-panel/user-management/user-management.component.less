@@ -221,7 +221,59 @@
                 }
             }
         }
+    
+
+.btn-edit-user{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid #0096C8;
+    color: #333;
+    height: 30px;
+
+    &:hover{
+        background-color: #0096C8;
+        color: white;
     }
+}
+
+.btn-delete-user{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: white;
+    border: 1px solid red;
+    color: #333;
+    height: 30px;
+
+            &:hover{
+                background-color: red;
+                color: white;
+            }
+        } 
+    }
+}
+
+.icon-container {
+    float: right;
+    display: block;
+    margin-left: auto;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-position: 1px 0;
+    background: #464646;
+    cursor: pointer;
+  }
+  .name {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+  }
+
+.container{
+    min-height: calc(100vh - 180px);
 }
 
 .btn-edit-user{
@@ -251,7 +303,3 @@
         color: white;
     }
 } 
-
-.container{
-    min-height: calc(100vh - 180px);
-}

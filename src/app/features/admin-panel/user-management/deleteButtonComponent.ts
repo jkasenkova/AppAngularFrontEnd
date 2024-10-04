@@ -25,7 +25,6 @@ export class DeleteButtonComponent implements ICellRendererAngularComp {
     }
 
     buttonClicked() {
-        debugger;
         const dialogRef = this.dialog.open(DeleteUserDialogComponent, { 
             data: { 
                 userName: this.params.data.userName, 
