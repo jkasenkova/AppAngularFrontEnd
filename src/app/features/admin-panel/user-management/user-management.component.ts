@@ -13,6 +13,11 @@ import { UserType } from "src/app/models/userType";
 import { UserModel } from "./model/userModel";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { RotationType } from "../../../models/rotationType";
+import { TeamService } from "src/app/services/teamServices";
+import { RoleService } from "src/app/services/roleService";
+import { UserService } from "src/app/services/userService";
+import { LocationService } from "src/app/services/locationService";
+import { LocationModel } from "src/app/models/locationModel";
 
 @Component({
     selector: 'app-user-management',
@@ -25,6 +30,12 @@ export class UserManagementComponent implements OnInit {
     public paginationPageSize = 10;
     public paginationPageSizeSelector: number[] | boolean = [10, 20, 50, 100];
     readonly dialog = inject(MatDialog);
+    teamList: Team[] = [];
+    roleList: RoleModel[] = [];
+    lineManagersList: UserModel[] = [];
+    rowData: UserModel[] = [];
+    locations: LocationModel[] = [];
+    noRowsDisplay: string = "No users to show";
 
     colDefs: ColDef[] = [
         {
@@ -87,132 +98,46 @@ export class UserManagementComponent implements OnInit {
         }
     ];
 
-    teamList: Team[] = [
-        {
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-            teamName: "Team 1",
-            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74")
-        },
-        {
-            teamId: Guid.parse("ac054901-2994-41fd-8e10-197ddcc7d130"),
-            teamName: "Team 2",
-            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8")
-        },
-        {
-            teamId: Guid.parse("050945b1-2a70-4c24-b865-5506c67dc46a"),
-            teamName: "Team 3",
-            locationId: Guid.parse("aad6d83c-3146-46ec-8264-1da22de20de4")
-        }
-    ];
-
-    roleList: RoleModel[] = [
-        {
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            roleName: "Team Lead",
-            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.Administrator,
-            rotationType: RotationType.NoRotation,
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862")
-        },
-        {
-            roleId: Guid.parse("1d1a6dd5-7b7a-4084-909d-36a25b4e1294"),
-            roleName: "Developers",
-            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.User,
-            rotationType: RotationType.Shift,
-            shiftPatternType: ShiftPatternType.hours12,
-            teamId: Guid.parse("ac054901-2994-41fd-8e10-197ddcc7d130")
-        },
-        {
-            roleId: Guid.parse("0bd64997-a753-445c-b62a-5276b01cbe62"),
-            roleName: "Sales",
-            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.User,
-            rotationType: RotationType.Shift,
-            shiftPatternType: ShiftPatternType.hours8,
-            teamId: Guid.parse("050945b1-2a70-4c24-b865-5506c67dc46a")
-        }
-    ];
-
-    lineManagersList: UserModel[] = [
-        {
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            userName: "User A",
-            userSurname: "Bell",
-            email: "bell_userA@gmail.com",
-            password: "HgBx9TR227Tu",
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-            lineManagerId: Guid.parse("66206dbc-be15-4b7d-84ed-6d8eb7ae0354")
-        },
-        {
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            userName: "User B",
-            userSurname: "Hansley",
-            email: "hansley_userB@gmail.com",
-            password: "anV7pHhgS2ta",
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-            lineManagerId: Guid.parse("66206dbc-be15-4b7d-84ed-6d8eb7ae0354")
-        },
-        {
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            userName: "User C",
-            userSurname: "Marley",
-            email: "marley_userC@gmail.com",
-            password: "8PuyxcSSvhYk",
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-            lineManagerId: Guid.parse("66206dbc-be15-4b7d-84ed-6d8eb7ae0354")
-        }
-    ];
-
-    rowData = [
-        { 
-            userName: "User", 
-            userSurname: "AAAA",  
-            location: "Ukraine", 
-            email: "userA@gmail.com",
-            password: "HgBx9TR227Tu",
-            team: this.teamList[0].teamName, 
-            role: this.roleList[0].roleName, 
-            userType: UserType.Administrator, 
-            rotation: RotationType.NoRotation, 
-            lastLogin: "20/08/2024", 
-            editable: true
-        },
-        { 
-            userName: "User",  
-            userSurname: "BBBB",  
-            location: "USA", 
-            email: "userB@gmail.com",
-            password: "HgBx9TR227Tu",
-            team: this.teamList[1].teamName, 
-            role: this.roleList[1].roleName, 
-            userType: UserType.User, 
-            rotation: RotationType.Shift, 
-            lastLogin: "20/08/2024",
-            editable: true
-        },
-        { 
-            userName: "User", 
-            userSurname: "CCC",  
-            email: "userC@gmail.com",
-            password: "HgBx9TR227Tu",
-            location: "Moldova", 
-            team: this.teamList[2].teamName, 
-            role: this.roleList[2].roleName, 
-            userType: UserType.User, 
-            rotation: RotationType.Shift,  
-            lastLogin: "20/08/2024", 
-            editable: true
-        }
-    ];
+    constructor(
+        private locationService: LocationService,
+        private teamService: TeamService,
+        private userService: UserService,
+        private roleService: RoleService) {}
 
     ngOnInit(): void {
+        this.teamService.getTeams().subscribe(teams => {
+            this.teamList = teams
+        });
+
+        this.userService.getUsers().subscribe(users => {
+            this.lineManagersList = users
+        });
+
+        this.roleService.getRoles().subscribe(roles => {
+            this.roleList = roles
+        });
+
+        this.locationService.getLocations().subscribe(locations => {
+            this.locations = locations
+        });
+        
+        if( this.lineManagersList.length > 0){
+            this.lineManagersList.map(user => {
+                this.rowData.push(
+                {
+                    userName: user.userName, 
+                    userSurname: user.userSurname,  
+                    email: user.email,
+                    password: user.password,
+                    locationId: user.locationId, 
+                    teamId: user.teamId, 
+                    roleId: user.roleId, 
+                    userType: UserType.User, 
+                    rotation: RotationType.Shift,  
+                    lastLogin: new Date().getFullYear()
+                });
+            });
+        }
     }
 
     addUser(){

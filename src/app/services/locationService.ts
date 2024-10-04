@@ -32,4 +32,8 @@ export class LocationService {
     getLocationById(locationId: Guid): Observable<LocationModel> {
         return this.http.get<LocationModel>(this.url + '/' + locationId);
     }
+
+    getLocations(): Observable<LocationModel[]> {
+        return this.http.get<LocationModel[]>(this.url);
+    }
 }

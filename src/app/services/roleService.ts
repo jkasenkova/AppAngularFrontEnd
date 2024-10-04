@@ -32,4 +32,12 @@ export class RoleService {
     getRoleById(roleId: Guid): Observable<RoleModel> {
         return this.http.get<RoleModel>(this.url + '/' + roleId);
     }
+
+    getRolesByTeamId(teamId: Guid): Observable<RoleModel[]> {
+        return this.http.get<RoleModel[]>(this.url + '/' + teamId);
+    }
+
+    getRoles(): Observable<RoleModel[]> {
+        return this.http.get<RoleModel[]>(this.url);
+    }
 }

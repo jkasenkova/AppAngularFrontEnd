@@ -48,6 +48,7 @@ export class CreateUserDialogComponent {
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: UserModel, private roleService: RoleService
     ) {
+
         this.userForm = this.fb.group({
             userName: ['', Validators.required],
             userSurname: ['', Validators.required],

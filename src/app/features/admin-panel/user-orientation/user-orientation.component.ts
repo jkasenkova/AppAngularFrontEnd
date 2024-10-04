@@ -18,6 +18,9 @@ import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { RotationType } from "../../../models/rotationType";
 import { LocationModel } from "../../../models/locationModel";
+import { LocationService } from "src/app/services/locationService";
+import { TeamService } from "src/app/services/teamServices";
+import { RoleService } from "src/app/services/roleService";
 
 @Component({
     selector: 'app-user-orientation',
@@ -34,77 +37,34 @@ export class UserOrientationComponent implements OnInit {
     selectedTeam: Team;
     roles: RoleModel[];
 
-    locationListTemp: LocationModel[] = [
-        {
-            id: Guid.parse("a03b066d-f8a1-43f9-ad59-0a761aa8c7b4"),
-            name: "Ukraine",
-            timeZoneId: "0aaceca4-4036-4e08-a30d-72a36da93db0"
-        },
-        {
-            id: Guid.parse("d5e65215-09a4-4d28-842d-25995018860c"),
-            name: "London",
-            timeZoneId: "e27aa77e-09ab-48e1-a3fa-59dbe94f5d7c"
-        },
-    ];
-
-    teamsListTemp: Team[] = [
-        {
-            teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587"),
-            teamName : "Team 1",
-            locationId:  Guid.parse("a03b066d-f8a1-43f9-ad59-0a761aa8c7b4")
-        },
-        {
-            teamId: Guid.parse("f8a1c4e2-a557-4958-8d99-b9a86963e76e"),
-            teamName : "Team 2",
-            locationId:  Guid.parse("d5e65215-09a4-4d28-842d-25995018860c")
-        }
-    ]
-
-    roleList: RoleModel[] = [
-        {
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            roleName: "Team Lead",
-            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
-            userType: UserType.Administrator,
-            rotationType: RotationType.NoRotation,
-            teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
-        },
-        {
-            roleId: Guid.parse("1d1a6dd5-7b7a-4084-909d-36a25b4e1294"),
-            roleName: "Developers",
-            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
-            templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
-            userType: UserType.User,
-            rotationType: RotationType.Shift,
-            shiftPatternType: ShiftPatternType.hours12,
-            teamId: Guid.parse("30a4557f-9e58-4f66-96db-2c2ffbcf5587")
-        },
-        {
-            roleId: Guid.parse("0bd64997-a753-445c-b62a-5276b01cbe62"),
-            roleName: "Sales",
-            locationId: Guid.parse("4e1b1366-4be3-4dc1-8631-fee17c5076b8"),
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            userType: UserType.User,
-            rotationType: RotationType.Shift,
-            shiftPatternType: ShiftPatternType.hours8,
-            teamId: Guid.parse("f8a1c4e2-a557-4958-8d99-b9a86963e76e")
-        }
-    ];
+    constructor(
+        private locationService: LocationService,
+        private teamService: TeamService,
+        private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locations = this.locationListTemp;
+        this.locationService.getLocations().subscribe(locations => 
+            this.locations = locations
+        );
+
+        this.teamService.getTeams().subscribe(teams => 
+            this.teams = teams
+        );
     }
 
     selectLocation(location:LocationModel){
         this.selectedLocation = location;
 
-        this.teams = this.teamsListTemp.filter(t => t.locationId.toString() == location.id.toString());
+        this.teams = this.teams.filter(t => t.locationId == location.id);
         this.roles = [];
     }
 
     selectTeam(team: Team){
         this.selectedTeam = team;
-        this.roles =  this.roleList.filter(r => r.teamId.toString() == team.teamId.toString());
+
+        this.roleService.getRolesByTeamId(team.teamId).subscribe(roles => 
+            this.roles = roles
+        );
     }
 
     addLocation() {
@@ -228,7 +188,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.roleService.updateRole(result);
             }
         });
     }
@@ -243,7 +203,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.roleService.deleteRole(result.roleId);
             }
         });
     }

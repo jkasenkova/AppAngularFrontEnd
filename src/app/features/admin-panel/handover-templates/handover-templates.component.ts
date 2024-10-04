@@ -46,45 +46,31 @@ export class HandoverTemplatesComponent implements OnInit {
     @Output() selectedTemplate: Template;
     readonly dialog = inject(MatDialog);
 
-    templateListTemp: Template[] = [
-        {
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            templateName: "Template 1",
-            isHandoverTemplate: false,
-            sections: []
-        },
-        {
-            templateId: Guid.parse("92e15cb3-e13d-4c02-8622-483ac0bf89c2"),
-            templateName: "Template 2",
-            isHandoverTemplate: false,
-            sections: []
-        },
-    ];
-
     constructor(
         private templateService: TemplateService,
         private sessionStorageService: SessionStorageService) { }
 
     ngOnInit(): void {
-
-        this.templates = this.templateListTemp;
+        this.templateService.getTemplates().subscribe(templates =>
+            this.templates = templates
+        );
 
         var templateId = this.sessionStorageService.getItem<Guid>('templateId');
         this.selectedIndex = this.sessionStorageService.getItem<number>('template-tab');
 
-        this.getTemplates();
-
         if (templateId) {
-            this.isSelectedTemplate = true;
             this.getTemplateById(templateId);
-        }
+        } 
     }
 
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
             map(templates => templates.find(template => template.templateId === id))
-        ).subscribe(template => this.template = template);
+        ).subscribe(template => {
+            this.template = template;
+            this.isSelectedTemplate = true;
+        });
     }
 
 
@@ -121,7 +107,7 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                
+                this.templateService.addTemplate(result);
             }
         });
     }
@@ -134,7 +120,8 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
+                //check value result
+                this.templateService.updateTemplate(result);
             }
         });
     }
@@ -147,7 +134,7 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
+                this.templateService.deleteTemplateById(result.templateId);
             }
         });
     }
@@ -158,14 +145,13 @@ export class HandoverTemplatesComponent implements OnInit {
             { 
                 templateId: template.templateId, 
                 templateName: template.templateName,
-                templates: this.templateListTemp
+                templates: this.templates
             },
             panelClass: 'template-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
             }
         });
     }
