@@ -41,8 +41,8 @@ export class DeleteTeamDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: Team
     ) {
         this.teamForm = this.fb.group({
-            teamName: [data.teamName, Validators.required],
-            teamId:[data.teamId]
+            teamName: [data.name, Validators.required],
+            teamId:[data.id]
         });
     }
 

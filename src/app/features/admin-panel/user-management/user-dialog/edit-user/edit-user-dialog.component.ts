@@ -46,8 +46,8 @@ export class EditUserDialogComponent implements OnInit {
 
     team :  Team =
     {
-        teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
-        teamName: "Team 1",
+        id: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
+        name: "Team 1",
         locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74")
     };
 

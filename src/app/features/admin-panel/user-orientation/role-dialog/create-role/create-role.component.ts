@@ -70,12 +70,12 @@ export class CreateRoleDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: RoleModel
     ) {
         this.roleForm = this.fb.group({
-            roleName: ['', Validators.required],
+            roleName: [data.roleName, Validators.required],
             teamId: [data.teamId],
             locationId: [data.locationId],
-            templateName: [''],
-            userType: ['', Validators.required],
-            rotationType: ['', Validators.required]
+            template: [''],
+            userType: [data.userType, Validators.required],
+            rotationType: [data.rotationType, Validators.required]
         });
 
         this.userTypes = Object.values(UserType);
@@ -114,6 +114,7 @@ export class CreateRoleDialogComponent {
     }
 
     onSave(): void {
+        debugger;
         if (this.roleForm.valid) {
             this.dialogRef.close(this.roleForm.value);
         }

@@ -15,12 +15,10 @@ import { UserType } from "src/app/models/userType";
 import { RoleModel } from "src/app/models/role";
 import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
 import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
-import { ShiftPatternType } from "src/app/models/shiftPatternType";
-import { RotationType } from "../../../models/rotationType";
 import { LocationModel } from "../../../models/locationModel";
 import { LocationService } from "src/app/services/locationService";
-import { TeamService } from "src/app/services/teamServices";
 import { RoleService } from "src/app/services/roleService";
+import { TeamService } from "src/app/services/teamServices";
 
 @Component({
     selector: 'app-user-orientation',
@@ -46,14 +44,13 @@ export class UserOrientationComponent implements OnInit {
         this.locationService.getLocations().subscribe(locations => 
             this.locations = locations
         );
-
-        this.teamService.getTeams().subscribe(teams => 
-            this.teams = teams
-        );
     }
 
     selectLocation(location:LocationModel){
         this.selectedLocation = location;
+        this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
+            this.teams = teams
+        );
 
         this.teams = this.teams.filter(t => t.locationId == location.id);
         this.roles = [];
@@ -62,7 +59,7 @@ export class UserOrientationComponent implements OnInit {
     selectTeam(team: Team){
         this.selectedTeam = team;
 
-        this.roleService.getRolesByTeamId(team.teamId).subscribe(roles => 
+        this.roleService.getRolesByTeamId(team.id).subscribe(roles => 
             this.roles = roles
         );
     }
@@ -72,7 +69,8 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                debugger;
+                this.locationService.createLocation(result);
             }
         });
     }
@@ -87,7 +85,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.locationService.deleteLocation(result.id);
             }
         });
     }
@@ -105,7 +103,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.locationService.updateLocation(result);
             }
         });
     }
@@ -119,7 +117,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.teamService.createTeam(result);
             }
         });
     }
@@ -127,14 +125,14 @@ export class UserOrientationComponent implements OnInit {
     removeTeam(team: Team){
         const dialogRef = this.dialog.open(DeleteTeamDialogComponent, { 
             data: { 
-                teamName: team.teamName,
-                teamId:team.teamId
+                name: team.name,
+                id:team.id
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.teamService.deleteTeam(result.id);
             }
         });
     }
@@ -142,15 +140,15 @@ export class UserOrientationComponent implements OnInit {
     editTeam(team: Team){
         const dialogRef = this.dialog.open(EditTeamDialogComponent, { 
             data: { 
-                teamName: team.teamName,
-                teamId:team.teamId,
+                name: team.name,
+                id: team.id,
                 locationId:team.locationId
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                this.teamService.updateTeam(result);
             }
         });
     }
@@ -166,7 +164,8 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-        
+                debugger;
+                this.roleService.createRole(result);
             }
         });
     }
@@ -203,6 +202,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                debugger;
                 this.roleService.deleteRole(result.roleId);
             }
         });

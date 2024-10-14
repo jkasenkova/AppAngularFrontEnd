@@ -1,17 +1,15 @@
 import { Guid } from "guid-typescript";
-import { TemplateTopic } from "./templateTopic";
+import { RotationTopic } from "./rotationTopic";
 
-export class Reference {
+export class RotationReference {
     public id!: Guid;
-    public templateTopicId?: Guid;
-    public templateTopic?: TemplateTopic;
     public rotationTopicId?: Guid;
+    public rotationTopic?: RotationTopic;
     public name!: string;
     public description?: string;
     public enabled: boolean = false;
     public index: number = 0;
     public editing: boolean = false;
     public parentReferenceId?: string;
-    public childReferences?: Reference[];
-    public templateId?: string;
+    public childReferences?: RotationReference[];
 }

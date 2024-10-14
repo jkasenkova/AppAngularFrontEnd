@@ -5,15 +5,14 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { Team } from "src/app/models/team";
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { SectionDialogModel } from "../../../models/sectionDialogModel";
 
 @Component({
-    selector: 'team-dialog',
-    templateUrl: './edit-team.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    selector: 'edit-section',
+    templateUrl: './edit-section.component.html',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -27,24 +26,21 @@ import { Team } from "src/app/models/team";
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
-        MatSelectModule,
         MatDialogModule,
-        NgbDatepickerModule
+        MatGridListModule
     ],
 })
-export class EditTeamDialogComponent {
-    teamForm: FormGroup;
+export class EditSectionDialogComponent {
+    sectionForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<EditTeamDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Team
+        public dialogRef: MatDialogRef<EditSectionDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
     ) {
-        debugger;
-        this.teamForm = this.fb.group({
-            name: [data.name, Validators.required],
-            id:[data.id],
-            locationId:[data.locationId]
+        this.sectionForm = this.fb.group({
+            sectionId: [data.sectionId],
+            sectionName: [data.sectionName, Validators.required]
         });
     }
 
@@ -53,8 +49,8 @@ export class EditTeamDialogComponent {
     }
 
     onSave(): void {
-        if (this.teamForm.valid) {
-            this.dialogRef.close(this.teamForm.value);
+        if (this.sectionForm.valid) {
+            this.dialogRef.close(this.sectionForm.value);
         }
     }
 }

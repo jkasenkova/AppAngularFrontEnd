@@ -14,10 +14,11 @@ export class RoleService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/userManagment/role';  //!!!!set correct url
+    url = configurl.apiServer.url + '/userManagment/role';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createRole(roleModel: RoleModel): Observable<RoleModel> {
+        debugger;
         return this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders);
     }
 

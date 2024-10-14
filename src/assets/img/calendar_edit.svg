@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1385.25 126.25 27.5 27.5">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f0f0f0;
+        opacity: 0;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fff;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2, .cls-3, .cls-5 {
+        stroke: #b4b4b4;
+      }
+
+      .cls-3, .cls-5 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        fill: #b4b4b4;
+      }
+
+      .cls-5 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="Group_31657" data-name="Group 31657" transform="translate(337 -211)">
+    <rect id="rectangle-1" class="cls-1" width="26" height="26" transform="translate(1049 338)"/>
+    <g id="Group_16500" data-name="Group 16500" transform="translate(1049 338)">
+      <circle id="ellipse" class="cls-2" cx="13" cy="13" r="13"/>
+      <rect id="Rectangle_4473" data-name="Rectangle 4473" class="cls-3" width="14" height="14" transform="translate(6 6)"/>
+      <rect id="Rectangle_4474" data-name="Rectangle 4474" class="cls-4" width="14" height="3" transform="translate(6 6)"/>
+    </g>
+    <g id="Group_31658" data-name="Group 31658" transform="translate(1057.199 347.796)">
+      <g id="Group_589" data-name="Group 589" transform="translate(0.8 0.7)">
+        <path id="Path_407" data-name="Path 407" class="cls-5" d="M7.288,2.961l-4.4,4.316L1.8,6.216,6.2,1.9" transform="translate(-1.078 -1.051)"/>
+        <path id="Path_408" data-name="Path 408" class="cls-5" d="M2.605,9.061.8,9.839,1.522,8Z" transform="translate(-0.8 -2.835)"/>
+        <path id="Path_409" data-name="Path 409" class="cls-5" d="M7.9,1.549,8.478.912a.708.708,0,0,1,1.011,0l.072.071a.674.674,0,0,1,0,.99l-.578.637" transform="translate(-2.773 -0.7)"/>
+      </g>
+    </g>
+  </g>
+</svg>

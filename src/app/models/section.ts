@@ -2,7 +2,6 @@ import { Template } from "./template";
 import { SectionType } from "./sectionType";
 import { SortType } from "./sortType";
 import { TemplateTopic } from "./templateTopic";
-import { Observable } from "rxjs";
 import { Reference } from "./reference";
 import { Guid } from 'guid-typescript';
 

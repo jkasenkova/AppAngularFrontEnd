@@ -1,0 +1,49 @@
+<div class="modal-dialog">
+    <div class="theme">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row vertical-center">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="modal-title">Handover Recipient</div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                        <button type="submit" class="btn btn-save">Save</button>
+                        <button type="button" mat-dialog-close aria-hidden="true" class="btn btn-close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                        <div class="handover-recipients-title">Select another user to handover to today</div>
+                        <div class="handover-recipients-container">
+                            @if (teamMembers.length > 0)
+                            {
+                                <swiper-container
+                                    direction="vertical"
+                                    slides-per-view="3"
+                                    scrollbar="true"
+                                    height="130">
+                                    <swiper-slide>Slide 1</swiper-slide>
+                                    <swiper-slide>Slide 2</swiper-slide>
+                                    <swiper-slide>Slide 3</swiper-slide>
+                                    <swiper-slide>Slide 4</swiper-slide>
+                                </swiper-container>
+                             
+
+                                
+                            }
+                            @else
+                            {
+                                <div class="no-handover-recipient">
+                                    No any recipients
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

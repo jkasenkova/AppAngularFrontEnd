@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript";
 
 export class Team {
-    teamId?: Guid;
-    teamName: string;
+    id?: Guid;
+    name: string;
     locationId: Guid;
 }
