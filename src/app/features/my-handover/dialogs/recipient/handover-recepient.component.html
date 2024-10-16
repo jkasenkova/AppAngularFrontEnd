@@ -19,19 +19,30 @@
                         <div class="handover-recipients-container">
                             @if (teamMembers.length > 0)
                             {
-                                <swiper-container
-                                    direction="vertical"
-                                    slides-per-view="3"
-                                    scrollbar="true"
-                                    height="130">
-                                    <swiper-slide>Slide 1</swiper-slide>
-                                    <swiper-slide>Slide 2</swiper-slide>
-                                    <swiper-slide>Slide 3</swiper-slide>
-                                    <swiper-slide>Slide 4</swiper-slide>
-                                </swiper-container>
-                             
-
-                                
+                                <div class="swiper-container recipients-container swiper-container-vertical">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            @for (teamMember of teamMembers; track teamMember)
+                                            {
+                                                <div class="col col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                    <div class="recipient-block"
+                                                        [ngClass]="teamMember.selected ? 'active': 'inactive'" 
+                                                        (click)="selectMember(teamMember)">
+                                                        <div class="icon-container">
+                                                            <div class="name">{{ getLettersIcon(teamMember.ownerName) }}</div>
+                                                        </div> 
+                                                        <div class="user-name">{{teamMember.ownerName}}</div>
+                                                        @if(teamMember.selected){
+                                                            <div class="check-icon"></div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="handover-recipients-swiper-prev"></div>
+                                <div class="handover-recipients-swiper-next"></div>
                             }
                             @else
                             {

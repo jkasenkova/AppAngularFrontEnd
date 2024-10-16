@@ -11,4 +11,5 @@ export class MyTeamModel {
     public lineManagerId: Guid;
     public curentRotationId?: Guid;
     public contributors?: Guid[];
+    public selected: boolean = false;
 }

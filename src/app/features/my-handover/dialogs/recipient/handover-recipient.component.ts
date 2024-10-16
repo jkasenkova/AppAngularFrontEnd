@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Inject, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -11,8 +11,7 @@ import { Handover } from "src/app/models/handover";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { Guid } from "guid-typescript";
-import { Swiper } from "swiper";
-
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'handover-recepient',
@@ -33,15 +32,16 @@ import { Swiper } from "swiper";
         ReactiveFormsModule,
         MatIconModule,
         MatDialogModule,
-        MatGridListModule
+        MatGridListModule,
+        CommonModule      
     ],
 })
-export class HandoverRecipientDialogComponent implements AfterViewInit {
+
+export class HandoverRecipientDialogComponent implements OnInit {
     recipientForm: FormGroup;
     teamMembers: MyTeamModel[] = [];
-    
-    @ViewChild('swiperRef')
-    swiperRef: ElementRef | undefined;
+    selected: boolean = false;
+
 
     teamRotationsTmp: MyTeamModel[] = [
         {
@@ -53,7 +53,8 @@ export class HandoverRecipientDialogComponent implements AfterViewInit {
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb")
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
         },
         {
             ownerName: "Peter Hlazunov",
@@ -64,7 +65,8 @@ export class HandoverRecipientDialogComponent implements AfterViewInit {
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb")
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
         },
         {
             ownerName: "Vlad Gurov",
@@ -75,7 +77,8 @@ export class HandoverRecipientDialogComponent implements AfterViewInit {
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb")
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
         }
     ]
 
@@ -83,27 +86,18 @@ export class HandoverRecipientDialogComponent implements AfterViewInit {
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<HandoverRecipientDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Handover,
-        private myTeamService: MyTeamService
-
+        private myTeamService: MyTeamService,
+        private elementRef: ElementRef
     ) {
         this.teamMembers = this.teamRotationsTmp;
+
         this.recipientForm = this.fb.group({
             handoverId: [data.handoverId],
             recipientId: [data.recipientId, Validators.required]
         });
     }
 
-
-    ngAfterViewInit(): void {
-        var swiper = new Swiper('.swiper-container', {
-            direction: 'vertical',
-            height: 40,
-            slidesPerView: 3,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }
-        });
+    ngOnInit(): void {
     }
 
 
@@ -128,5 +122,15 @@ export class HandoverRecipientDialogComponent implements AfterViewInit {
         .join("");
 
         return getLetters;
+    }
+
+    selectMember(teamMember: MyTeamModel) {
+        teamMember.selected = true;
+
+        this.teamMembers.forEach(member =>{
+            if(teamMember.userId != member.userId){
+            member.selected = false;
+            }
+        });
     }
 }
