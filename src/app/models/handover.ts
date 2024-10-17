@@ -10,4 +10,5 @@ export class Handover {
     public createDate: string;
     public endDate: string;
     public liveRotation: boolean = false;
+
 }

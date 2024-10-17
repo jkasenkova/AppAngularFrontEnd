@@ -24,6 +24,7 @@ import { RotationReference } from "src/app/models/rotationReference";
 import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
 import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
+import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
 
 @Component({
     selector: 'app-my-handover',
@@ -402,6 +403,20 @@ export class MyHandoverComponent implements OnInit {
         const dialogRef = this.dialog.open(EditShiftDialogComponent, { 
             data: { 
                 handover: this.handover
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+               
+            }
+        });
+    }
+
+    shareReport(){
+        const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
+            data: { 
+                handoverId: this.handover.handoverId
             }
         });
 

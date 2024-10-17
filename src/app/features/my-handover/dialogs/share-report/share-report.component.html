@@ -1,0 +1,102 @@
+<div class="modal-dialog">
+    <div class="theme">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row vertical-center">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="modal-title">Share Report</div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                        <button type="submit" class="btn btn-save" (click)="onSave()">Save</button>
+                        <button type="button" mat-dialog-close aria-hidden="true" class="btn btn-close"></button>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="shareForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                            <div class="row">
+                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                    <mat-form-field>
+                                        <mat-label>Users</mat-label>
+                                        <mat-select 
+                                            placeholder="Enter/Select User to add to List" 
+                                            multiple
+                                            formControlName="sharedUsers">
+                                            @for (teamMember of teamMembers; track teamMember) {
+                                                <mat-option [value]="teamMember">
+                                                    {{ teamMember.ownerName}}
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                    <mat-form-field>
+                                        <mat-chip-grid #chipList formArrayName="emails">
+                                          <!--   @for(email of emailList; track email){
+                                                <mat-chip 
+                                                    [selectable]="true" 
+                                                    [removable]="removable" 
+                                                    (removed)="removeEmail(email)" 
+                                                    required name="chips"> 
+                                                        {{displayEmailChip(email)}}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                </mat-chip>
+                                            } -->
+                                            <input 
+                                                placeholder="Enter Email " 
+                                                [matChipInputFor]="chipList" 
+                                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" 
+                                                [matChipInputAddOnBlur]="true"
+                                                (matChipInputTokenEnd)="add($event)" />
+                                        </mat-chip-grid>
+                                    </mat-form-field>
+                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email ID</mat-error>
+                                </div>
+                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                    @for(email of emailList; track email){
+                                        <mat-chip 
+                                            [selectable]="true" 
+                                            [removable]="removable" 
+                                            (removed)="removeEmail(email)" 
+                                            required name="chips"> 
+                                                {{displayEmailChip(email)}}
+                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                            <div class="share-report-container">
+                                <div class="title-container">
+                                    <div class="title-save-recipient">Always</div>
+                                    <div class="title-email">Name/Email</div>
+                                    <div class="title-position">Position</div>
+                                </div>
+                                <div class="swiper-container share-recipient swiper-container-vertical">
+                                    <div class="swiper-wrapper swiper-recipient">
+                                        @if(sharedMember.length > 0 && emailList.length > 0){
+                                       
+                                        }
+                                        @else{
+                                            <div class="empty-recipient">
+                                                This report is not shared with any users.
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
