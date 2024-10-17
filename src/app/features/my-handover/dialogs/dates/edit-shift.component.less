@@ -1,0 +1,197 @@
+.edit-shift{
+    color: #464646;
+    padding: 10px 5px 15px 10px;
+    border: none;
+    letter-spacing: normal;
+
+}
+
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 600px;
+        margin: 30px auto;
+    }
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 10px;
+
+    .modal-content {
+        background-color: #fff;
+        font-family: Proxima-Nova-Regular;
+        padding: 16px 20px 20px;
+        border: none;
+        width: 600px !important;
+        height: 300px !important;
+        position: relative;
+        display: block;
+
+        .modal-header {
+            color: #464646 !important;
+            text-align: left;
+            padding: 0 !important;
+            border: none;
+            display: block;
+            font-weight: 700;
+
+            .vertical-center {
+                display: flex;
+                align-items: center;
+            }
+
+            .btn-save {
+                font-size: 14px;
+                font-weight: 700;
+                background: 0 0;
+                border: none;
+                color: #b4b4b4;
+                padding-right: 8px;
+            }
+
+           .btn-save:hover {
+                opacity: .55;
+                color: #0096C8 !important;
+                -webkit-text-stroke-width: .2px;
+                -webkit-text-stroke-color: #0096C8;
+            }
+
+        }
+
+        .modal-body {
+            padding-top: 15px !important;
+            color: #464646;
+            padding: 20px 15px;
+            position: relative;
+        }
+
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .date-btn {
+            width: 140px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            display: inline-block;
+            cursor: pointer;
+            margin: 0 10px;
+
+            &:hover{
+                opacity: 0.8;
+            }
+        }
+
+        .active {
+            background-color: #00AFF0;
+            color: #fff !important;
+        }
+
+        .not-active{
+            background-color: #F0F0F0;
+            color: #464646;
+        }
+
+        .field-container {
+            .time-label {
+                padding-right: 30px;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .time-container {
+                display: inline-block;
+                color: #fff;
+                margin-right: 20px;
+
+                input[type=time] {
+                    border: none;
+                    color: #2a2c2d;
+                    font-size: 14px;
+                    font-family: helvetica;
+                    width: 120px;
+                    height: 40px;
+                  }
+
+                  input[type=time]::-webkit-datetime-edit-fields-wrapper {
+                    display: flex;
+                  }
+                  
+                  /* The space between the fields - between hour and minute, the minute and 
+                  second, second and am/pm */
+                  input[type=time]::-webkit-datetime-edit-text {
+                    padding: 19px 4px;
+                  }
+                  
+                  /* The naming convention for the hour, minute, second, and am/pm field is
+                  `-webkit-datetime-edit-{field}-field` */
+                  
+                  /* Hour */
+                  input[type=time]::-webkit-datetime-edit-hour-field {
+                    background-color: #f2f4f5;
+                    border-radius: 15%;
+                    padding: 19px 13px;
+                  }
+                  
+                  /* Minute */
+                  input[type=time]::-webkit-datetime-edit-minute-field {
+                    background-color: #f2f4f5;
+                    border-radius: 15%;
+                    padding: 19px 13px;
+                  }
+                  
+                  /* 'X' button for resetting/clearing time */
+                  input[type=time]::-webkit-clear-button {
+                    display: none;
+                  }
+                  
+                  /* Up/Down arrows for incrementing/decrementing the value */
+                  input[type=time]::-webkit-inner-spin-button {
+                    display: none;
+                  }
+                  
+            }
+        }
+    }
+}
+
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.margin-top-20{
+    margin-top: 20px !important;
+}
+
+.text-center{
+    text-align: center !important;
+}
+.mat-toolbar.mat-primary {
+--mat-toolbar-container-background-color: #00AFF0 !important;
+}
+
+.mat-mdc-mini-fab.mat-primary {
+    --mdc-fab-small-container-color:  #00AFF0 !important;
+}
+
+.mat-mdc-button:not(:disabled) {
+    color: #00AFF0 !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: white !important;
+}
+
+.mat-mdc-form-field-focus-overlay, .mdc-text-field--filled:not(.mdc-text-field--disabled) { 
+    background-color: white !important; 
+} 

@@ -11,6 +11,7 @@ import { SignInComponent } from './app/sign-in/sign-in.component';
 import { SignUpComponent } from './app/sign-up/sign-up.component';
 import { SubscriptionManagementComponent } from './app/subscriptions-management/subscriptions-management.component';
 import { FooterComponent } from './app/features/footer/footer.component';
+import { register as registerSwiperElements } from 'swiper/element/bundle';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -53,7 +54,7 @@ const routes: Routes =
         },  */
     ];
 
-
+registerSwiperElements();
 bootstrapApplication(AppComponent,
     {
         providers: [

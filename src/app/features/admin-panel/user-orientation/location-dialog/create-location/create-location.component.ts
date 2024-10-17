@@ -52,8 +52,7 @@ export class CreateLocationDialogComponent implements OnInit {
             name: ['', Validators.required],
             address: [''],
             mapLink: [''],
-            timeZoneControl: new FormControl(''),
-            timeZoneId: ['', Validators.required]
+            timeZoneControl: new FormControl('')
         });
     }
 

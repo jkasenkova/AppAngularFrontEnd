@@ -62,14 +62,14 @@
                         @for (team of teams; track team) {
                             @if(selectedTeam == team){
                                 <div class="list-group-item selected" (click)="selectTeam(team)">
-                                    {{team.teamName}}
+                                    {{team.name}}
                                     <span class="pull-right btn-close" (click)="removeTeam(team)"></span>
                                     <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
                                 </div>
                             }
                             @else{
                                 <div class="list-group-item list-group-item-action" (click)="selectTeam(team)">
-                                    {{team.teamName}}
+                                    {{team.name}}
                                     <span class="pull-right btn-close" (click)="removeTeam(team)"></span>
                                     <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
                                 </div>
@@ -91,7 +91,7 @@
 
                     @if(selectedTeam){
                         <span class="icon-right plus-btn btn-circle btn btn-link" 
-                        (click)="addRole(selectedTeam.teamId, selectedLocation.id)"></span>
+                        (click)="addRole(selectedTeam.id, selectedLocation.id)"></span>
                     }
                     @else{
                         <span class="icon-right btn-circle btn btn-link"></span>

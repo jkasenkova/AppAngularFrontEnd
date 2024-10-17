@@ -40,9 +40,10 @@ export class EditTeamDialogComponent {
         public dialogRef: MatDialogRef<EditTeamDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Team
     ) {
+        debugger;
         this.teamForm = this.fb.group({
-            teamName: [data.teamName, Validators.required],
-            teamId:[data.teamId],
+            name: [data.name, Validators.required],
+            id:[data.id],
             locationId:[data.locationId]
         });
     }

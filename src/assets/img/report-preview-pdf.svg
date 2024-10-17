@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="111.25 269.25 27.5 27.5">
+  <defs>
+    <style>
+      .cls-1, .cls-3, .cls-4 {
+        fill: none;
+        stroke-width: 1.5px;
+      }
+
+      .cls-1, .cls-3 {
+        stroke: #b4b4b4;
+      }
+
+      .cls-2 {
+        fill: #b4b4b4;
+      }
+
+      .cls-2, .cls-4 {
+        opacity: 0;
+      }
+
+      .cls-3, .cls-4 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        stroke: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Group_1" data-name="Group 1" transform="translate(-705 152)">
+    <path id="ellipse" class="cls-1" d="M13,0A13,13,0,1,1,0,13,13,13,0,0,1,13,0Z" transform="translate(817 118)"/>
+    <g id="Group_597" data-name="Group 597" transform="translate(310 45)">
+      <rect id="Rectangle_108" data-name="Rectangle 108" class="cls-2" width="16" height="16" transform="translate(512 78)"/>
+      <g id="Group_596" data-name="Group 596" transform="translate(514.618 78.75)">
+        <g id="Group_595" data-name="Group 595" transform="translate(0.132 0)">
+          <g id="Group_594" data-name="Group 594">
+            <g id="Group_593" data-name="Group 593">
+              <path id="Path_411" data-name="Path 411" class="cls-3" d="M.8.8H9.423L11.3,2.758V15.3H.8Z" transform="translate(-0.8 -0.8)"/>
+            </g>
+            <path id="Path_412" data-name="Path 412" class="cls-3" d="M11.6,1V3.6h2.365" transform="translate(-3.743 -0.855)"/>
+          </g>
+        </g>
+        <line id="Line_154" data-name="Line 154" class="cls-4" x2="5.5" transform="translate(2.634 5.5)"/>
+        <line id="Line_155" data-name="Line 155" class="cls-4" x2="5.5" transform="translate(2.634 8.251)"/>
+        <line id="Line_156" data-name="Line 156" class="cls-4" x2="5.5" transform="translate(2.634 11.001)"/>
+      </g>
+    </g>
+  </g>
+</svg>

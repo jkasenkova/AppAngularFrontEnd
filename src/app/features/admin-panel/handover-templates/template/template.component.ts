@@ -273,14 +273,6 @@ export class TemplateComponent implements OnInit {
     
     }
 
-    canselAddTopicForm(index: number){
-
-    }
-
-    addTopic(index: number){
-
-    }
-
     selectReference(reference: Reference) {
         this.enableAddTopicBtn = true;
       }

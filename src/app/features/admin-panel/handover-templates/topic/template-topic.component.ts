@@ -77,6 +77,7 @@ export class TemplateTopicComponent implements OnInit {
         this.templateTopicList = topics
     );
 
+    if( this.templateTopicList != undefined ){
         this.templateTopicList.map(topic => {
             topic.references.map(reference => {
                 this.topicsData.push(
@@ -91,6 +92,7 @@ export class TemplateTopicComponent implements OnInit {
                     });
             });
         });
+    }
    }
 
   displayTemplatesName(templates:Template[]): string {

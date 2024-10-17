@@ -14,7 +14,7 @@ export class MyTeamService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/myTeam';  //!!!!set correct url
+    url = configurl.apiServer.url + '/userManagement'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTeamUser(teamUserId: Guid): Observable<MyTeamModel> {

@@ -106,10 +106,11 @@
                                           type="text"
                                           placeholder="Create/Select Template"
                                           matInput
-                                          formControlName="templateName"
+                                          formControlName="template"
                                           [matAutocomplete]="auto"
                                         />
-                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" 
+                                        [displayWith]="displayFn"  formControlName="template">
                                             @for (template of templates; track template) {
                                                 <mat-option [value]="template">{{template.templateName}}</mat-option>
                                             }
