@@ -25,6 +25,7 @@ import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-r
 import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
 import { HandoverService } from "src/app/services/handoverService";
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-my-handover',
@@ -38,7 +39,8 @@ import { HandoverService } from "src/app/services/handoverService";
         FormsModule,
         MatInputModule,
         MatAutocompleteModule,
-        MatTooltipModule
+        MatTooltipModule,
+        CommonModule
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
@@ -57,6 +59,7 @@ export class MyHandoverComponent implements OnInit {
     recipient: UserModel;
     expandAll: boolean = false;
     isMyRotation: boolean = false;
+    countShare: number;
 
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -211,7 +214,8 @@ export class MyHandoverComponent implements OnInit {
                             }]
                       }]
                 }
-            ]
+            ],
+            shareEmails: ["jkasenkova@gmail.com", "peter@gmail.com", "vlad@gmail.com"]
         };
 
     constructor(
@@ -232,6 +236,14 @@ export class MyHandoverComponent implements OnInit {
 
     ngOnInit(): void {
         this.handover = this.handoverTmp;
+
+        if(this.handover.shareEmails){
+            this.countShare = this.handover.shareEmails.length;
+        }
+
+        if(this.handover.shareUsers){
+            this.countShare += this.handover.shareEmails.length;
+        }
     }
 
     expandCollapseItems(event:any){
@@ -428,5 +440,19 @@ export class MyHandoverComponent implements OnInit {
               this.handoverService.updateHandover(result);
             }
         });
+    }
+
+    shareUserInfo(): string{
+        var title = 'Shared with: ';
+        var arr = [""];
+        
+        if(this.handover.shareEmails){
+            arr = arr.concat(this.handover.shareEmails);
+        }
+        if(this.handover.shareUsers){
+            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.ownerName));
+        }
+
+        return title + arr.toString().split(",").join('\n');
     }
 }

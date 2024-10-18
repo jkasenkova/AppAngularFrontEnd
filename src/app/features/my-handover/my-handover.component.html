@@ -36,8 +36,17 @@
             <div class="report-builder-controls">
                
                 @if(handover.liveRotation){
-                    <button type="button" class="share-report-icon-inactive btn-circle btn btn-link col-lg-1 col-md-1 col-xs-1 no-padding" (click)="shareReport()">
-                    </button>
+                    <div type="button" 
+                    
+                    [ngClass]="handover.shareEmails || handover.shareUsers ? 'share-report-icon-active' : 'share-report-icon-inactive'"
+                     class="btn-circle btn btn-link col-lg-1 col-md-1 col-xs-1 no-padding" 
+                     [matTooltip]="shareUserInfo()"
+                     (click)="shareReport()">
+                        @if(handover.shareEmails.length > 0 || handover.shareUsers.length > 0){
+                            <div class="count">{{countShare}}</div>
+                        }
+                    </div>
+                    
                     
                     <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" matTooltip="Finish Report">
                         <span class="glyphicon span"></span>
