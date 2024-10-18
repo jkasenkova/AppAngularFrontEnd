@@ -13,7 +13,7 @@ export class HandoverService {
         this.baseUrl = baseUrl;
     }
 
-    url = environment.routerUrl + '/template';
+    url = environment.routerUrl + '/handover';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getHandovers(): Observable<Handover[]> {

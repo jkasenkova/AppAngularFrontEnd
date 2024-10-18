@@ -26,6 +26,9 @@ import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
 import { HandoverService } from "src/app/services/handoverService";
 import { CommonModule } from '@angular/common';
+import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
+import { MyTeamModel } from "src/app/models/myTeamModel";
+import { CommentsService } from "src/app/services/commentsService";
 
 @Component({
     selector: 'app-my-handover',
@@ -66,6 +69,20 @@ export class MyHandoverComponent implements OnInit {
         month: 'long',
         day: 'numeric'
     };
+
+    teamUserTmp: MyTeamModel = {
+        ownerName: "Julia Kasenkova",
+        ownerEmail: "jkasenkova@gmail.com",
+        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        ownerRole: "Developer",
+        isActiveRotation: true, //get state from back by curentRotationId
+        recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        selected: false
+    };
+
     
     handoverTmp: Handover =
         {
@@ -221,6 +238,7 @@ export class MyHandoverComponent implements OnInit {
     constructor(
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
+        private commentsService: CommentsService,
         private fb: FormBuilder) 
         {
 
@@ -454,5 +472,19 @@ export class MyHandoverComponent implements OnInit {
         }
 
         return title + arr.toString().split(",").join('\n');
+    }
+
+    reportComments(){
+        const dialogRef = this.dialog.open(ReportCommentsDialogComponent, { 
+            data: { 
+                handoverId: this.handover.handoverId
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.commentsService.addComment(result);
+            }
+        });
     }
 }

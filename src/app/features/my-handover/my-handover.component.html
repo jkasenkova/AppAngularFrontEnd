@@ -54,8 +54,10 @@
                     <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster"  matTooltip="PDF Report Preview">
                         <span class='glyphicon span'></span>
                     </button>
-        
-                    <button type="button" class="active-report-comments btn-circle btn btn-link tooltipster" matTooltip="View Report Comments">
+                    
+
+                    <button type="button" [ngClass]="handover.reportComments ? 'active-report-comments' : 'inactive-report-comments'" 
+                    class="btn-circle btn btn-link tooltipster" matTooltip="View Report Comments" (click)="reportComments()">
                         <span class='glyphicon span'></span>
                     </button>
                 }
