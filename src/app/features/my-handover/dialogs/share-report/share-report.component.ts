@@ -101,9 +101,11 @@ export class ShareReportDialogComponent implements OnInit {
     ) {
         this.teamMembers = this.teamRotationsTmp;
 
+        data.shareEmails = ["jkasenkova@gmail.com", "peter@gmail.com", "vlad@gmail.com"]
+
         this.shareForm = this.fb.group({
             handoverId: [data.handoverId],
-            sharedUsers: ["jkasenkova@gmail.com", "vgurov@gmail.com", "peter@gmail.com"], // for test
+            sharedUsers: [data.shareUsers], // for test
             emails: [data.shareEmails]
         });
     }
