@@ -25,7 +25,7 @@
         padding: 15px;
         border: none;
         width: 600px !important;
-        height: 400px !important;
+        height: 450px !important;
         position: relative;
         display: block;
 
@@ -112,6 +112,7 @@
                     position: relative;
                     overflow: hidden;
                     z-index: 1;
+                    overflow-y: auto;
 
                     .swiper-wrapper {
                         -webkit-box-orient: vertical;
@@ -128,6 +129,94 @@
                             position: relative;
                             display: flex;
                             flex-wrap: wrap;
+                            border-bottom: 1px solid #787878;
+
+                            .recipient-save{
+                                display: table-cell;
+                                padding-top: 10px;
+                                padding-right: 60px;
+
+                                 [type=checkbox]::before {
+                                    content: '';
+                                    position: absolute;
+                                    width: 17px;
+                                    height: 17px;
+                                    border: 1px solid #000;
+                                    background: #fff;
+                                    border-radius: 3px;
+                                    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .3);
+                                } 
+
+                                [type="checkbox"]:checked::after {
+                                    content: "✔";
+                                    position: absolute;
+                                    font-size: 24px;
+                                    color: rgb(9, 173, 126);
+                                    transition: 0.2s;
+                                }
+                            }
+
+                            .recipient-image{
+                                padding-top: 5px;
+                                width: 35px;
+                                
+                                .icon-container {
+                                    float: left;
+                                    display: block;
+                                    margin-left: auto;
+                                    width: 30px;
+                                    height: 30px;
+                                    border-radius: 50%;
+                                    overflow: hidden;
+                                    background-position: 1px 0;
+                                    background: #464646;
+                                    cursor: pointer;
+                                    margin: 2px;
+                                  }
+                                  .name {
+                                    width: 100%;
+                                    text-align: center;
+                                    color: white;
+                                    font-size: 16px;
+                                    margin-top: 5px;
+                                  }
+                            }
+
+                            .recipient-email {
+                                display: table-cell;
+                                max-width: 200px;
+                                vertical-align: middle;
+                                overflow: hidden;
+                                word-wrap: normal;
+                                min-width: 200px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                padding: 10px;
+                            }
+
+                            .recipient-position{
+                                display: table-cell;
+                                max-width: 270px;
+                                vertical-align: middle;
+                                overflow: hidden;
+                                word-wrap: normal;
+                                min-width: 190px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                padding: 10px;
+                            }
+
+                            .recipient-remove-action {
+                                padding: 10px;
+                                width: 20px;
+                                display: table-cell;
+                                vertical-align: middle;
+                                font-size: 30px;
+                                cursor: pointer;
+                                color: #464646 !important;
+                                background: 0 0 !important;
+                                border: 0 !important;
+                            }
                         }
 
                         .empty-recipient{

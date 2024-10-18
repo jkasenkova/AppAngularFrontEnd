@@ -37,16 +37,6 @@
                                 <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
                                     <mat-form-field>
                                         <mat-chip-grid #chipList formArrayName="emails">
-                                          <!--   @for(email of emailList; track email){
-                                                <mat-chip 
-                                                    [selectable]="true" 
-                                                    [removable]="removable" 
-                                                    (removed)="removeEmail(email)" 
-                                                    required name="chips"> 
-                                                        {{displayEmailChip(email)}}
-                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                                </mat-chip>
-                                            } -->
                                             <input 
                                                 placeholder="Enter Email " 
                                                 [matChipInputFor]="chipList" 
@@ -55,7 +45,7 @@
                                                 (matChipInputTokenEnd)="add($event)" />
                                         </mat-chip-grid>
                                     </mat-form-field>
-                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email ID</mat-error>
+                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email</mat-error>
                                 </div>
                                 <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
                                     @for(email of emailList; track email){
@@ -82,8 +72,45 @@
                                 </div>
                                 <div class="swiper-container share-recipient swiper-container-vertical">
                                     <div class="swiper-wrapper swiper-recipient">
-                                        @if(sharedMember.length > 0 && emailList.length > 0){
-                                       
+                                       <!--  @if(sharedMember.length > 0 && emailList.length > 0){ -->
+                                        @if(teamRotationsTmp.length > 0){
+                                            @for (teamMember of teamMembers; track teamMember)
+                                            {
+                                                <div class="swiper-slide recipient-slide">
+                                                    <div class="recipient-save" (change)="setUserAlwaysShare(teamMember)">
+                                                        <input type="checkbox">
+                                                    </div>
+                                                    <div class="recipient-image">
+                                                        <div class="icon-container">
+                                                            <div class="name">{{ getLettersIcon(teamMember.ownerName) }}</div>
+                                                        </div> 
+                                                    </div>
+                                                    <div class="recipient-email">
+                                                       {{teamMember.ownerName}}
+                                                    </div>
+                                                    <div class="recipient-position">{{teamMember.ownerRole}}</div>
+                                                    <div class="recipient-remove-action">×</div>
+                                                </div>
+                                            }
+                                            @if(emailList.length > 0) 
+                                            {
+                                                @for (email of emailList; track email)
+                                                {
+                                                    <div class="swiper-slide recipient-slide">
+                                                        <div class="recipient-save" (change)="setEmailAlwaysShare(email)">
+                                                            <input type="checkbox">
+                                                        </div>
+                                                        <div class="recipient-image">
+                                                            <mat-icon> email</mat-icon> 
+                                                        </div>
+                                                        <div class="recipient-email">
+                                                            {{email}}
+                                                        </div>
+                                                        <div class="recipient-position"></div>
+                                                        <div class="recipient-remove-action">×</div>
+                                                    </div>
+                                                }
+                                            }
                                         }
                                         @else{
                                             <div class="empty-recipient">

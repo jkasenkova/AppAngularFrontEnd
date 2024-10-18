@@ -25,6 +25,7 @@ import { HandoverSectionService } from "src/app/services/handoverSectionService"
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
 import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
+import { HandoverService } from "src/app/services/handoverService";
 
 @Component({
     selector: 'app-my-handover',
@@ -216,6 +217,7 @@ export class MyHandoverComponent implements OnInit {
 
     constructor(
         private handoverSectionService: HandoverSectionService, 
+        private handoverService: HandoverService,
         private fb: FormBuilder) 
         {
 
@@ -394,7 +396,7 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
+                this.handoverService.updateHandover(result);
             }
         });
     }
@@ -408,7 +410,7 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               
+                this.handoverService.updateHandover(result);
             }
         });
     }
@@ -416,13 +418,15 @@ export class MyHandoverComponent implements OnInit {
     shareReport(){
         const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
             data: { 
-                handoverId: this.handover.handoverId
+                handoverId: this.handover.handoverId,
+                shareUsers: [],
+                shareEmails: []
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               
+              this.handoverService.updateHandover(result);
             }
         });
     }

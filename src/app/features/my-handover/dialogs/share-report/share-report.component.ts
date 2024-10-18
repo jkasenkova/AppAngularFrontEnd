@@ -53,6 +53,7 @@ export class ShareReportDialogComponent implements OnInit {
     removable = true;
     public separatorKeysCodes = [ENTER, COMMA];
 
+    //for test
     teamRotationsTmp: MyTeamModel[] = [
         {
             ownerName: "Julia Kasenkova",
@@ -102,24 +103,25 @@ export class ShareReportDialogComponent implements OnInit {
 
         this.shareForm = this.fb.group({
             handoverId: [data.handoverId],
-            sharedUsers: [],
-            emails: [this.emailList, [Validators.required, Validators.email]],
+            sharedUsers: ["jkasenkova@gmail.com", "vgurov@gmail.com", "peter@gmail.com"], // for test
+            emails: [data.shareEmails]
         });
     }
 
     ngOnInit(): void {
-    }
-    
-    onNoClick(): void {
-        this.dialogRef.close();
-
         this.myTeamService.getTeamUsers().subscribe(teams =>{
             this.teamMembers = teams
         });
     }
+    
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
 
     onSave(): void {
-        if (this.shareForm.valid) {
+        if (!this.shareForm.errors) {
+            this.data.shareUsers = this.shareForm.get('sharedUsers').value;
+            this.data.shareEmails = this.shareForm.get('emails').value;
             this.dialogRef.close(this.shareForm.value);
         }
     }
@@ -132,6 +134,7 @@ export class ShareReportDialogComponent implements OnInit {
         if (event.value) {
             if (this.validateEmail(event.value)) {
               this.emailList.push(event.value);
+              this.shareForm.controls['emails'].setErrors({'incorrectEmail': false});
             } else {
               this.shareForm.controls['emails'].setErrors({'incorrectEmail': true});
             }
@@ -155,4 +158,21 @@ export class ShareReportDialogComponent implements OnInit {
       displayEmailChip(email:string): string{
         return email.split('@')[0];
       }
+
+      getLettersIcon(ownerName: string): string {
+        var getLetters = ownerName
+        .split(" ")
+        .map(n => n[0])
+        .join("");
+
+        return getLetters;
+    }
+
+    setUserAlwaysShare(user: MyTeamModel){
+        this.data.shareUsers.push(user);
+    }
+
+    setEmailAlwaysShare(email:string){
+        this.data.shareEmails.push(email);
+    }
 }
