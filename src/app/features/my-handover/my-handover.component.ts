@@ -11,7 +11,6 @@ import { Guid } from "guid-typescript";
 import { Handover } from "src/app/models/handover";
 import { Reference } from "src/app/models/reference";
 import { RotationTopic } from "src/app/models/rotationTopic";
-import { Section } from "src/app/models/section";
 import { SectionType } from "src/app/models/sectionType";
 import { SortType } from "src/app/models/sortType";
 import { CreateSectionDialogComponent } from "./dialogs/sections/create-section/create-section.component";
