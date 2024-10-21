@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { Handover } from "src/app/models/handover";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { Guid } from "guid-typescript";
+import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
 
 @Component({
     selector: 'report-comments',
@@ -34,6 +35,9 @@ import { Guid } from "guid-typescript";
 
 export class ReportCommentsDialogComponent implements OnInit {
     commentsForm: FormGroup;
+    expandLines: boolean = false;
+    addBtnVisible: boolean = true;
+
     teamUserTmp: MyTeamModel = {
         ownerName: "Julia Kasenkova",
         ownerEmail: "jkasenkova@gmail.com",
@@ -47,26 +51,45 @@ export class ReportCommentsDialogComponent implements OnInit {
         selected: false
     };
 
+    commentsTmp: ReportCommentsModel[] = [
+        {
+            owner: this.teamUserTmp,
+            comment: "Comment 1",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        },
+        {
+            owner: this.teamUserTmp,
+            comment: "2222222222222222222222222222222222222222",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        },
+    ]
+
+
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<ReportCommentsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Handover
     ) {
+        data.reportComments = this.commentsTmp;
         
         this.commentsForm = this.fb.group({
             handoverId: [data.handoverId],
-            comment: [],
-            owner: this.teamUserTmp, // as log in 
-            createDate: Date().toString()
+            owner: this.teamUserTmp, // authorized user
+            createDate: Date().toString(),
+            reportComments: [data.reportComments]
         });
+
     }
 
     ngOnInit(): void {
      
     }
 
-    addComment(comment: string){
-        this.commentsForm.get('comment').setValue(comment);
+    expandCommentLines(){
+        this.addBtnVisible = false;
+        this.expandLines = true;
     }
     
     onNoClick(): void {
@@ -74,9 +97,33 @@ export class ReportCommentsDialogComponent implements OnInit {
     }
 
     onSave(): void {
-        debugger;
         if (!this.commentsForm.errors) {
             this.dialogRef.close(this.commentsForm.value);
         }
     }
+
+    uploadComment(){
+        this.expandLines = false;
+        this.addBtnVisible = true;
+        var value =  this.commentsForm.get('comment').value;
+
+        const comment = Object.assign( new ReportCommentsModel(), {
+            owner: this.teamUserTmp,
+            comment: value,
+            handoverId: this.data.handoverId,
+            createDate: new Date().toString()
+        });
+        this.commentsForm.get('reportComments').setValue([comment]);
+        ///save oт server ???
+    }
+
+    getLettersIcon(ownerName: string): string {
+        var getLetters = ownerName
+        .split(" ")
+        .map(n => n[0])
+        .join("");
+
+        return getLetters;
+    }
+
 }

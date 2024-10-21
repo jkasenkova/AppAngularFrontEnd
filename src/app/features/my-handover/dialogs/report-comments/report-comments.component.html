@@ -15,7 +15,62 @@
             <form [formGroup]="commentsForm">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="new-report-comments">
+                                @if(addBtnVisible){
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="btn-plus-white center-block add-report-comments-btn"
+                                            (click)="expandCommentLines()">
+                                            Add
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if(expandLines){
+                                    <div class="add-report-comments">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea matInput
+                                                cdkTextareaAutosize
+                                                placeholder="Enter Text (max. 500 characters)"
+                                                #autosize="cdkTextareaAutosize"
+                                                cdkAutosizeMinRows="5"
+                                                formControlName="comment" 
+                                                cdkAutosizeMaxRows="10"></textarea>
+                                        </mat-form-field>
+                                        <div class="upload-comment">
+                                            <button class="btn-upload" (click)="uploadComment()"></button>
+                                        </div>
+                                    </div>
+                                }
+                                @if(commentsForm.controls['reportComments'].value){
+                                    <div class="swiper-container swiper-container-vertical">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide">
+                                                @for (reportComment of commentsForm.controls['reportComments'].value; track reportComment)
+                                                {
+                                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-top-20">
+                                                        <div class="creator-block">
+                                                            <div class="icon-container">
+                                                                <div class="name">{{ getLettersIcon(reportComment.owner.ownerName) }}</div>
+                                                            </div> 
+                                                        </div>
+                                                        <div class="comment-block">
+                                                            <p class="text">{{reportComment.comment}}</p>
+                                                        </div>
+                                                        <div class="date-block">
+                                                            {{reportComment.createDate}}
+                                                        </div>
+                                                        <div class="delete-block">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
