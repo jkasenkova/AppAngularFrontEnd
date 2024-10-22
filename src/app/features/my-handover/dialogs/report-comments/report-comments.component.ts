@@ -192,9 +192,7 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     deleteComment(reportComment: ReportCommentsModel){
         this.commentsService.deleteCommentById(reportComment.commentId);
-
-        let indexToUpdate = this.data.reportComments.findIndex(item => item.commentId === reportComment.commentId);
-        this.data.reportComments.splice(indexToUpdate, 1);
+        this.data.reportComments = this.data.reportComments.filter(item => item.commentId != reportComment.commentId);
     }
 
 }

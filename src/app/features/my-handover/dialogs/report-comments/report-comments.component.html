@@ -44,11 +44,11 @@
                                         </div>
                                     </div>
                                 }
-                                @if(commentsForm.controls['reportComments'].value){
+                                @if(data.reportComments){
                                     <div class="swiper-container swiper-container-vertical">
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
-                                                @for (reportComment of commentsForm.controls['reportComments'].value; track reportComment)
+                                                @for (reportComment of data.reportComments; track reportComment)
                                                 {
                                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-top-20">
                                                         <div class="creator-block">
