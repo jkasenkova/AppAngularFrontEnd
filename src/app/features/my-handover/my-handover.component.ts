@@ -11,7 +11,6 @@ import { Guid } from "guid-typescript";
 import { Handover } from "src/app/models/handover";
 import { Reference } from "src/app/models/reference";
 import { RotationTopic } from "src/app/models/rotationTopic";
-import { Section } from "src/app/models/section";
 import { SectionType } from "src/app/models/sectionType";
 import { SortType } from "src/app/models/sortType";
 import { CreateSectionDialogComponent } from "./dialogs/sections/create-section/create-section.component";
@@ -24,6 +23,12 @@ import { RotationReference } from "src/app/models/rotationReference";
 import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
 import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
+import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
+import { HandoverService } from "src/app/services/handoverService";
+import { CommonModule } from '@angular/common';
+import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
+import { MyTeamModel } from "src/app/models/myTeamModel";
+import { CommentsService } from "src/app/services/commentsService";
 
 @Component({
     selector: 'app-my-handover',
@@ -37,7 +42,8 @@ import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
         FormsModule,
         MatInputModule,
         MatAutocompleteModule,
-        MatTooltipModule
+        MatTooltipModule,
+        CommonModule
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
@@ -56,12 +62,27 @@ export class MyHandoverComponent implements OnInit {
     recipient: UserModel;
     expandAll: boolean = false;
     isMyRotation: boolean = false;
+    countShare: number;
 
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     };
+
+    teamUserTmp: MyTeamModel = {
+        ownerName: "Julia Kasenkova",
+        ownerEmail: "jkasenkova@gmail.com",
+        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        ownerRole: "Developer",
+        isActiveRotation: true, //get state from back by curentRotationId
+        recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        selected: false
+    };
+
     
     handoverTmp: Handover =
         {
@@ -210,11 +231,14 @@ export class MyHandoverComponent implements OnInit {
                             }]
                       }]
                 }
-            ]
+            ],
+            shareEmails: ["jkasenkova@gmail.com", "peter@gmail.com", "vlad@gmail.com"]
         };
 
     constructor(
         private handoverSectionService: HandoverSectionService, 
+        private handoverService: HandoverService,
+        private commentsService: CommentsService,
         private fb: FormBuilder) 
         {
 
@@ -230,6 +254,14 @@ export class MyHandoverComponent implements OnInit {
 
     ngOnInit(): void {
         this.handover = this.handoverTmp;
+
+        if(this.handover.shareEmails){
+            this.countShare = this.handover.shareEmails.length;
+        }
+
+        if(this.handover.shareUsers){
+            this.countShare += this.handover.shareEmails.length;
+        }
     }
 
     expandCollapseItems(event:any){
@@ -393,7 +425,7 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
+                this.handoverService.updateHandover(result);
             }
         });
     }
@@ -407,7 +439,51 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               
+                this.handoverService.updateHandover(result);
+            }
+        });
+    }
+
+    shareReport(){
+        const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
+            data: { 
+                handoverId: this.handover.handoverId,
+                shareUsers: [],
+                shareEmails: []
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.handoverService.updateHandover(result);
+            }
+        });
+    }
+
+    shareUserInfo(): string{
+        var title = 'Shared with: ';
+        var arr = [""];
+        
+        if(this.handover.shareEmails){
+            arr = arr.concat(this.handover.shareEmails);
+        }
+        if(this.handover.shareUsers){
+            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.ownerName));
+        }
+
+        return title + arr.toString().split(",").join('\n');
+    }
+
+    reportComments(){
+        const dialogRef = this.dialog.open(ReportCommentsDialogComponent, { 
+            data: { 
+                handoverId: this.handover.handoverId
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.commentsService.addComment(result);
             }
         });
     }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="4503 262 30 30" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #00aff0;
+      }
+
+      .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-3 {
+        stroke: #fff;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+        stroke-width: 1.5px;
+      }
+    </style>
+    <linearGradient id="color-0" gradientUnits="userSpaceOnUse" bx:pinned="true">
+      <stop style="stop-color: #d8d8d8;"/>
+    </linearGradient>
+    <linearGradient id="color-1" gradientUnits="userSpaceOnUse" bx:pinned="true">
+      <stop style="stop-color: rgb(240, 240, 240)"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_742" data-name="Group 742" transform="translate(4367 238)">
+    <circle id="ellipse" class="cls-1" cx="15" cy="15" r="15" transform="translate(136 24)" style="paint-order: fill; fill: url(&quot;#color-0&quot;);"/>
+    <g id="Group_741" data-name="Group 741" transform="translate(141.769 29.769)">
+      <g id="Group_738" data-name="Group 738">
+        <rect id="Rectangle_204" data-name="Rectangle 204" class="cls-2" width="17.308" height="17.308" transform="translate(0 0)"/>
+      </g>
+      <g id="Group_739" data-name="Group 739">
+        <rect id="Rectangle_205" data-name="Rectangle 205" class="cls-1" width="18.462" height="18.462" transform="translate(0 0)" style="fill: url(&quot;#color-0&quot;);"/>
+      </g>
+      <g id="Group_740" data-name="Group 740" transform="translate(1.154 2.307)">
+        <rect id="Rectangle_206" data-name="Rectangle 206" class="cls-3" width="16.154" height="3.462" transform="translate(0 0)"/>
+        <rect id="Rectangle_207" data-name="Rectangle 207" class="cls-3" width="13.846" height="10.385" transform="translate(1.154 3.462)"/>
+        <path id="Path_577" data-name="Path 577" class="cls-3" d="M27.846,20.154H22.077a.571.571,0,0,1-.577-.577h0A.571.571,0,0,1,22.077,19h5.769a.571.571,0,0,1,.577.577h0A.571.571,0,0,1,27.846,20.154Z" transform="translate(-16.885 -12.654)"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,85 @@
+<div class="modal-dialog">
+    <div class="theme">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row vertical-center">
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="modal-title">Report Comments</div>
+                    </div>
+                    <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                        <button type="submit" class="btn btn-save" (click)="onSave()">Save</button>
+                        <button type="button" mat-dialog-close aria-hidden="true" class="btn btn-close"></button>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="commentsForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="new-report-comments">
+                                @if(addBtnVisible){
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="btn-plus-white center-block add-report-comments-btn"
+                                            (click)="expandCommentLines()">
+                                            Add
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if(expandLines){
+                                    <div class="add-report-comments">
+                                        <mat-form-field class="example-full-width">
+                                            <textarea
+                                                matInput 
+                                                cdkTextareaAutosize
+                                                placeholder="Enter Text (max. 500 characters)"
+                                                #autosize="cdkTextareaAutosize"
+                                                cdkAutosizeMinRows="5"
+                                                formControlName="comment" 
+                                                cdkAutosizeMaxRows="10"></textarea>
+                                        </mat-form-field>
+                                        <div class="upload-comment">
+                                            <button class="btn-upload" (click)="uploadComment()"></button>
+                                        </div>
+                                    </div>
+                                }
+                                @if(commentsForm.controls['reportComments'].value){
+                                    <div class="swiper-container swiper-container-vertical">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide">
+                                                @for (reportComment of commentsForm.controls['reportComments'].value; track reportComment)
+                                                {
+                                                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-top-20">
+                                                        <div class="creator-block">
+                                                            <div class="icon-container">
+                                                                <div class="name">{{ getLettersIcon(reportComment.owner.ownerName) }}</div>
+                                                            </div> 
+                                                        </div>
+                                                        <div class="comment-block">
+                                                            <p class="text">{{reportComment.comment}}</p>
+                                                        </div>
+                                                        <div class="date-block">
+                                                            {{reportComment.createDate}}
+                                                        </div>
+                                                        <div class="delete-block" (click)="deleteComment(reportComment)">
+                                                            <mat-icon>delete</mat-icon>
+                                                        </div>
+
+                                                        <div class="edit-block" (click)="editComment(reportComment)">
+                                                            <span class="pencil"></span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

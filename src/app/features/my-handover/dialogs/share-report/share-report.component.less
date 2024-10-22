@@ -1,0 +1,300 @@
+.share-report{
+    color: #464646;
+    padding: 10px 5px 15px 10px;
+    border: none;
+    letter-spacing: normal;
+
+}
+
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 600px;
+        margin: 30px auto;
+    }
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 10px;
+
+    .modal-content {
+        background-color: #fff;
+        font-family: Proxima-Nova-Regular;
+        padding: 15px;
+        border: none;
+        width: 600px !important;
+        height: 450px !important;
+        position: relative;
+        display: block;
+
+        .modal-header {
+            color: #464646 !important;
+            text-align: left;
+            padding: 0 !important;
+            border: none;
+            display: block;
+
+            .vertical-center {
+                display: flex;
+                align-items: center;
+            }
+
+            .modal-title{
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .btn-save {
+                font-size: 14px;
+                font-weight: 700;
+                background: 0 0;
+                border: none;
+                color: #b4b4b4;
+                padding-right: 8px;
+            }
+
+           .btn-save:hover {
+                opacity: .55;
+                color: #0096C8 !important;
+                -webkit-text-stroke-width: .2px;
+                -webkit-text-stroke-color: #0096C8;
+            }
+
+        }
+
+        .modal-body {
+            padding-top: 15px !important;
+            color: #464646;
+            padding: 20px 15px;
+            position: relative;
+
+
+           .share-report-container {
+                margin-top: 10px;
+                border-bottom: 1px solid #464646;
+
+                .title-container {
+                    font-weight: 600;
+                    display: table-row;
+
+                    .title-save-recipient{
+                        display: table-cell;
+                        width: 90px;
+                        font-size: 14px;
+                    }
+
+                    .title-email{
+                        display: table-cell;
+                        width: 250px;
+                        font-size: 14px;
+                    }
+
+                    .title-position{
+                        display: table-cell;
+                        width: 290px;
+                        padding-left: 25px;
+                        font-size: 14px;
+                    }
+                }
+
+                .share-recipient{
+                    width: 100%;
+                    border-bottom: 2px solid #787878;
+                    border-top: 2px solid #787878;
+                    height: 200px !important;
+                }
+
+                .swiper-container {
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: relative;
+                    overflow: hidden;
+                    z-index: 1;
+                    overflow-y: auto;
+
+                    .swiper-wrapper {
+                        -webkit-box-orient: vertical;
+                        display: block;
+                        transform: translate3d(0, 0, 0);
+                        position: relative;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 1;
+                        box-sizing: content-box;
+                        transition-property: transform;
+
+                        .swiper-slide {
+                            position: relative;
+                            display: flex;
+                            flex-wrap: wrap;
+                            border-bottom: 1px solid #787878;
+
+                            .recipient-save{
+                                display: table-cell;
+                                padding-top: 10px;
+                                padding-right: 60px;
+
+                                 [type=checkbox]::before {
+                                    content: '';
+                                    position: absolute;
+                                    width: 17px;
+                                    height: 17px;
+                                    border: 1px solid #000;
+                                    background: #fff;
+                                    border-radius: 3px;
+                                    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .3);
+                                } 
+
+                                [type="checkbox"]:checked::after {
+                                    content: "✔";
+                                    position: absolute;
+                                    font-size: 24px;
+                                    color: rgb(9, 173, 126);
+                                    transition: 0.2s;
+                                }
+                            }
+
+                            .recipient-image{
+                                padding-top: 5px;
+                                width: 35px;
+                                
+                                .icon-container {
+                                    float: left;
+                                    display: block;
+                                    margin-left: auto;
+                                    width: 30px;
+                                    height: 30px;
+                                    border-radius: 50%;
+                                    overflow: hidden;
+                                    background-position: 1px 0;
+                                    background: #464646;
+                                    cursor: pointer;
+                                    margin: 2px;
+                                  }
+                                  .name {
+                                    width: 100%;
+                                    text-align: center;
+                                    color: white;
+                                    font-size: 16px;
+                                    margin-top: 5px;
+                                  }
+                            }
+
+                            .recipient-email {
+                                display: table-cell;
+                                max-width: 200px;
+                                vertical-align: middle;
+                                overflow: hidden;
+                                word-wrap: normal;
+                                min-width: 200px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                padding: 10px;
+                            }
+
+                            .recipient-position{
+                                display: table-cell;
+                                max-width: 270px;
+                                vertical-align: middle;
+                                overflow: hidden;
+                                word-wrap: normal;
+                                min-width: 190px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                padding: 10px;
+                            }
+
+                            .recipient-remove-action {
+                                padding: 10px;
+                                width: 20px;
+                                display: table-cell;
+                                vertical-align: middle;
+                                font-size: 30px;
+                                cursor: pointer;
+                                color: #464646 !important;
+                                background: 0 0 !important;
+                                border: 0 !important;
+                            }
+                        }
+
+                        .empty-recipient{
+                            padding-top: 10px;
+                        }
+                    }
+                }
+            }
+
+            .full-width {
+                width: 100%;
+              }
+              ​
+              .chip-list-wrapper {
+                min-height: 3em;
+              }
+              ​
+              .msac-colors {
+                background-color: var(--primary-color);
+                color: white;
+              }
+        }
+
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    }
+}
+
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+.text-right {
+    text-align: right;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 8px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
+  .mat-mdc-dialog-surface{
+    overflow-y: hidden;
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .mat-mdc-form-field-focus-overlay, .mdc-text-field--filled:not(.mdc-text-field--disabled) { 
+    background-color: white !important; 
+} 
+
+.mat-mdc-chip.mat-mdc-standard-chip {
+    height: 20px;
+    margin-right: 5px;
+}
+
+.mat-mdc-standard-chip .mdc-evolution-chip__text-label{
+    font-size: 12px !important;
+}
