@@ -138,10 +138,10 @@ export class ReportCommentsDialogComponent implements OnInit {
     uploadComment(){
         this.expandLines = false;
         this.addBtnVisible = true;
-        debugger;
+
         var value =  this.commentsForm.get('comment').value;
 
-        if(this.commentsForm.get('handoverId').value){
+        if(this.commentsForm.get('commentId').value){
 
             var reportComment = this.commentsForm.value as ReportCommentsModel;
 
@@ -178,14 +178,6 @@ export class ReportCommentsDialogComponent implements OnInit {
     editComment(reportComment: ReportCommentsModel){
         this.addBtnVisible = false;
         this.expandLines = true;
-
-       /*  this.commentsForm.get('comment').setValue(reportComment.comment);
-        this.commentsForm.get('handoverId').setValue(reportComment.handoverId);
-        this.commentsForm.get('commentId').setValue(reportComment.commentId);
-        this.commentsForm.get('owner').setValue(reportComment.owner);
-         */
-        debugger;
-
 
         this.commentsForm.setValue({
             comment: reportComment.comment,
