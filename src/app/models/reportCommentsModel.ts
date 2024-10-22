@@ -6,4 +6,5 @@ export class ReportCommentsModel {
     public comment: string;
     public handoverId: Guid;
     public createDate: string;
+    public commentId?: Guid;
 }

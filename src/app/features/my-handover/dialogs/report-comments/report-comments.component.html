@@ -30,7 +30,8 @@
                                 @if(expandLines){
                                     <div class="add-report-comments">
                                         <mat-form-field class="example-full-width">
-                                            <textarea matInput
+                                            <textarea
+                                                matInput 
                                                 cdkTextareaAutosize
                                                 placeholder="Enter Text (max. 500 characters)"
                                                 #autosize="cdkTextareaAutosize"
@@ -61,8 +62,12 @@
                                                         <div class="date-block">
                                                             {{reportComment.createDate}}
                                                         </div>
-                                                        <div class="delete-block">
+                                                        <div class="delete-block" (click)="deleteComment(reportComment)">
                                                             <mat-icon>delete</mat-icon>
+                                                        </div>
+
+                                                        <div class="edit-block" (click)="editComment(reportComment)">
+                                                            <span class="pencil"></span>
                                                         </div>
                                                     </div>
                                                 }

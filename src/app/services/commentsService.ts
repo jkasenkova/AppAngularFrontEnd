@@ -29,11 +29,11 @@ export class CommentsService {
         return this.http.put<ReportCommentsModel>(this.url, comment, this.httpHeaders);
     }
 
-    deleteCommentById(id: string): Observable<string> {
+    deleteCommentById(id: Guid): Observable<string> {
         return this.http.delete<string>(this.url + '/' + id);
     }
 
-    getCommentById(id: string): Observable<ReportCommentsModel> {
+    getCommentById(id: Guid): Observable<ReportCommentsModel> {
         return this.http.get<ReportCommentsModel>(this.url + '/' + id);
     }
 }

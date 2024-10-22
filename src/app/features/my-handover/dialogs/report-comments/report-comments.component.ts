@@ -10,6 +10,7 @@ import { Handover } from "src/app/models/handover";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { Guid } from "guid-typescript";
 import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
+import { CommentsService } from "src/app/services/commentsService";
 
 @Component({
     selector: 'report-comments',
@@ -53,31 +54,63 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     commentsTmp: ReportCommentsModel[] = [
         {
+            commentId: Guid.parse("df668eef-9275-4194-bb45-4c5e282a4d34"),
             owner: this.teamUserTmp,
             comment: "Comment 1",
             handoverId: this.data.handoverId,
             createDate: new Date().toLocaleDateString()
         },
         {
+            commentId: Guid.parse("bda98ec1-1e0f-45f9-be50-e01563232685"),
             owner: this.teamUserTmp,
-            comment: "2222222222222222222222222222222222222222",
+            comment: "Comment 2",
             handoverId: this.data.handoverId,
             createDate: new Date().toLocaleDateString()
         },
+        {
+            commentId: Guid.parse("68c1c31c-0a1a-4bbf-922a-9f5096b8ae98"),
+            owner: this.teamUserTmp,
+            comment: "Comment 3",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        },
+        {
+            commentId: Guid.parse("951afc76-e33b-481e-a2d9-923c70ac388c"),
+            owner: this.teamUserTmp,
+            comment: "Comment 4",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        },
+        {
+            commentId: Guid.parse("83fdf091-031e-40ed-866b-18aebcbdb733"),
+            owner: this.teamUserTmp,
+            comment: "Comment 5",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        },
+        {
+            commentId: Guid.parse("e8465f20-0866-4753-b3bd-12219a185726"),
+            owner: this.teamUserTmp,
+            comment: "Comment 6",
+            handoverId: this.data.handoverId,
+            createDate: new Date().toLocaleDateString()
+        }
     ]
-
 
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<ReportCommentsDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Handover
+        @Inject(MAT_DIALOG_DATA) public data: Handover,
+        private commentsService: CommentsService
     ) {
         data.reportComments = this.commentsTmp;
         
         this.commentsForm = this.fb.group({
+            commentId: '',
             handoverId: [data.handoverId],
             owner: this.teamUserTmp, // authorized user
-            createDate: Date().toString(),
+            createDate: new Date().toLocaleDateString(),
+            comment: '',
             reportComments: [data.reportComments]
         });
 
@@ -105,17 +138,33 @@ export class ReportCommentsDialogComponent implements OnInit {
     uploadComment(){
         this.expandLines = false;
         this.addBtnVisible = true;
+        debugger;
         var value =  this.commentsForm.get('comment').value;
 
-        const comment = Object.assign( new ReportCommentsModel(), {
-            owner: this.teamUserTmp,
-            comment: value,
-            handoverId: this.data.handoverId,
-            createDate: new Date().toString()
-        });
-        this.commentsForm.get('reportComments').setValue([comment]);
-        ///save oт server ???
+        if(this.commentsForm.get('handoverId').value){
+
+            var reportComment = this.commentsForm.value as ReportCommentsModel;
+
+            let indexToUpdate = this.data.reportComments.findIndex(item => item.commentId === reportComment.commentId);
+            this.data.reportComments[indexToUpdate] = reportComment;
+            this.data.reportComments = Object.assign([], this.data.reportComments);
+    
+            this.commentsService.updateComment(reportComment); 
+        }
+        else{
+          
+            const comment = Object.assign( new ReportCommentsModel(), {
+                owner: this.teamUserTmp,
+                comment: value,
+                handoverId: this.data.handoverId,
+                createDate: new Date().toLocaleDateString()
+            });
+
+            this.data.reportComments.push(comment);
+            this.commentsService.addComment(comment);
+        }
     }
+
 
     getLettersIcon(ownerName: string): string {
         var getLetters = ownerName
@@ -124,6 +173,36 @@ export class ReportCommentsDialogComponent implements OnInit {
         .join("");
 
         return getLetters;
+    }
+
+    editComment(reportComment: ReportCommentsModel){
+        this.addBtnVisible = false;
+        this.expandLines = true;
+
+       /*  this.commentsForm.get('comment').setValue(reportComment.comment);
+        this.commentsForm.get('handoverId').setValue(reportComment.handoverId);
+        this.commentsForm.get('commentId').setValue(reportComment.commentId);
+        this.commentsForm.get('owner').setValue(reportComment.owner);
+         */
+        debugger;
+
+
+        this.commentsForm.setValue({
+            comment: reportComment.comment,
+            handoverId: reportComment.handoverId,
+            commentId: reportComment.commentId,
+            owner: reportComment.owner,
+            createDate: reportComment.createDate,
+            reportComments: this.data.reportComments
+         });
+
+    }
+
+    deleteComment(reportComment: ReportCommentsModel){
+        this.commentsService.deleteCommentById(reportComment.commentId);
+
+        let indexToUpdate = this.data.reportComments.findIndex(item => item.commentId === reportComment.commentId);
+        this.data.reportComments.splice(indexToUpdate, 1);
     }
 
 }
