@@ -1,7 +1,7 @@
 @if(urlActive == "my-team"){
     <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
         <mat-tab label="My Team"><app-my-team></app-my-team></mat-tab>
-        <mat-tab label="Handover"></mat-tab>
+        <mat-tab label="Handover"><app-my-handover [handoverAdmin]="true"></app-my-handover></mat-tab>
     </mat-tab-group>
 }
 @if(urlActive == "admin-panel"){

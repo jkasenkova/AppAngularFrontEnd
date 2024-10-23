@@ -12,6 +12,7 @@ import { SignUpComponent } from './app/sign-up/sign-up.component';
 import { SubscriptionManagementComponent } from './app/subscriptions-management/subscriptions-management.component';
 import { FooterComponent } from './app/features/footer/footer.component';
 import { register as registerSwiperElements } from 'swiper/element/bundle';
+import { MyTeamTabComponent } from './app/features/my-team-tab/my-team-tab.component';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -30,6 +31,9 @@ const routes: Routes =
         },
         {
             path: 'my-handover', component: MyHandoverComponent
+        },
+        {
+            path: 'my-team-tab', component: MyTeamTabComponent
         },
         {
             path: 'my-team', component: MyTeamComponent

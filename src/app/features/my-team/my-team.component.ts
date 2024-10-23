@@ -1,6 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Guid } from 'guid-typescript';
 import { MyTeamModel } from 'src/app/models/myTeamModel';
 import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
 import { MyTeamService } from 'src/app/services/myTeamService';

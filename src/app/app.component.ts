@@ -20,6 +20,7 @@ import { Guid } from 'guid-typescript';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { TabsMenuComponent } from './features/tabs-menu/tabs-menu.component';
+import { MyTeamTabComponent } from './features/my-team-tab/my-team-tab.component';
 
 @Component({
     selector: 'app-root',
@@ -40,7 +41,8 @@ import { TabsMenuComponent } from './features/tabs-menu/tabs-menu.component';
         MatFormFieldModule,
         SignInComponent,
         FooterComponent,
-        TabsMenuComponent
+        TabsMenuComponent,
+        MyTeamTabComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']

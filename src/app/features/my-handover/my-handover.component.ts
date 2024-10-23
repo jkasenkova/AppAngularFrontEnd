@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnInit, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -22,7 +22,7 @@ import { HandoverSection } from "src/app/models/handoverSection";
 import { RotationReference } from "src/app/models/rotationReference";
 import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
-import { EditShiftDialogComponent } from "./dialogs/dates/edit-shift.component";
+import { DatesShiftDialogComponent } from "./dialogs/dates/dates-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
 import { HandoverService } from "src/app/services/handoverService";
 import { CommonModule } from '@angular/common';
@@ -63,6 +63,8 @@ export class MyHandoverComponent implements OnInit {
     expandAll: boolean = false;
     isMyRotation: boolean = false;
     countShare: number;
+
+    @Input() handoverAdmin: boolean; 
 
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -241,7 +243,6 @@ export class MyHandoverComponent implements OnInit {
         private commentsService: CommentsService,
         private fb: FormBuilder) 
         {
-
             this.topicForm = this.fb.group({
                 topic: null,
                 reference: null,
@@ -253,14 +254,19 @@ export class MyHandoverComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.handover = this.handoverTmp;
+      //  this.handover = this.handoverTmp;
+      this.initilizeHandover(this.handover);
+    }
 
-        if(this.handover.shareEmails){
-            this.countShare = this.handover.shareEmails.length;
-        }
+    initilizeHandover(handover: Handover){
+        if(this.handover){
+            if(this.handover.shareEmails){
+                this.countShare = this.handover.shareEmails.length;
+            }
 
-        if(this.handover.shareUsers){
-            this.countShare += this.handover.shareEmails.length;
+            if(this.handover.shareUsers){
+                this.countShare += this.handover.shareEmails.length;
+            }
         }
     }
 
@@ -431,8 +437,9 @@ export class MyHandoverComponent implements OnInit {
     }
 
     editDates(){
-        const dialogRef = this.dialog.open(EditShiftDialogComponent, { 
+        const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
             data: { 
+                ownerId: this.teamUserTmp.userId, // get logn user id
                 handover: this.handover
             }
         });
@@ -440,6 +447,7 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.handoverService.updateHandover(result);
+                this.handover.endDate = result.endDate;
             }
         });
     }
@@ -484,6 +492,23 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
               this.commentsService.addComment(result);
+            }
+        });
+    }
+
+    startHandover(){
+        const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
+            data: { 
+                ownerId: this.teamUserTmp.userId, // get logn user id
+                handover: this.handover
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.handover = this.handoverTmp;
+                this.handoverService.addHandover(result);
+                this.initilizeHandover(this.handover);
             }
         });
     }

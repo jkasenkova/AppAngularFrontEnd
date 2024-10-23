@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container app-my-handover">
 
-   @if(!isMyRotation) {
+   @if(isMyRotation == true && handoverAdmin == false) {
     <div id="viewUserPanel" class="user-panel margin-top-40">
         <div class="panel-body">
             <div class="user-view-block row vertical-center">
@@ -23,7 +23,7 @@
         </div>
     </div>
     }
-
+@if(handover){
     <div Id="templatePanel" class="panel panel-primary">
         
         <div class="panel-heading clearfix">
@@ -282,5 +282,27 @@
             </div>
         </div>
     </div>
+}
+@else{
+   <div class="panel panel-default text-center margin-top-40">
+        <div class="panel-body message">
+            <div class="row">
+                <div class="col col-lg-12 col-sm-12 col-md-12 col-xs-12 text-center">
+
+                    <div class="row">
+                        <div class="col col-lg-8 col-sm-8 col-md-8 col-xs-8">
+                            <span class="title">
+                                Click the button on the right to start first handover.
+                            </span>
+                        </div>
+                        <div class="col col-lg-4 col-sm-4 col-md-4 col-xs-4">
+                            <span class="start-new-handover" (click)="startHandover()">Start New Handover</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
+}
 </div>
 
