@@ -29,6 +29,7 @@ import { CommonModule } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { CommentsService } from "src/app/services/commentsService";
+import { UserService } from "src/app/services/userService";
 
 @Component({
     selector: 'app-my-handover',
@@ -72,6 +73,46 @@ export class MyHandoverComponent implements OnInit {
         day: 'numeric'
     };
 
+    
+    userTmp: MyTeamModel[] = [
+        {
+            ownerName: "Julia Kasenkova",
+            ownerEmail: "jkasenkova@gmail.com",
+            userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            ownerRole: "Developer",
+            isActiveRotation: true, //get state from back by curentRotationId
+            recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
+        },
+        {
+            ownerName: "Peter Hlazunov",
+            ownerEmail: "peter_hlazunov@gmail.com",
+            userId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+            ownerRole: "Team Lead",
+            isActiveRotation: true, //get state from back by curentRotationId
+            recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
+        },
+        {
+            ownerName: "Vlad Gurov",
+            ownerEmail: "vlad_gurov@gmail.com",
+            userId: Guid.parse("f06e7c51-43e7-4c8d-b7dd-42c668384bc3"),
+            ownerRole: "Product Manager",
+            isActiveRotation: true, //get state from back by curentRotationId
+            recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            selected: false
+        }
+    ]
+
     teamUserTmp: MyTeamModel = {
         ownerName: "Julia Kasenkova",
         ownerEmail: "jkasenkova@gmail.com",
@@ -90,8 +131,8 @@ export class MyHandoverComponent implements OnInit {
         {
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            ownerId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            recipientId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            ownerId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             createDate: new Date().toLocaleDateString(undefined, this.options),
             endDate: new Date().toLocaleDateString(undefined, this.options),
             liveRotation: true,
@@ -241,6 +282,7 @@ export class MyHandoverComponent implements OnInit {
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private commentsService: CommentsService,
+        private userService: UserService,
         private fb: FormBuilder) 
         {
             this.topicForm = this.fb.group({
@@ -254,20 +296,23 @@ export class MyHandoverComponent implements OnInit {
 
 
     ngOnInit(): void {
-      //  this.handover = this.handoverTmp;
-      this.initilizeHandover(this.handover);
+    //  this.handover = this.handoverTmp;
+      this.handover = this.initilizeHandover(this.handover);
     }
 
-    initilizeHandover(handover: Handover){
-        if(this.handover){
-            if(this.handover.shareEmails){
+    initilizeHandover(handover: Handover):Handover{
+        debugger;
+        if(handover){
+            if(handover.shareEmails){
                 this.countShare = this.handover.shareEmails.length;
             }
 
-            if(this.handover.shareUsers){
+            if(handover.shareUsers){
                 this.countShare += this.handover.shareEmails.length;
             }
         }
+
+        return handover;
     }
 
     expandCollapseItems(event:any){
@@ -416,13 +461,30 @@ export class MyHandoverComponent implements OnInit {
         return reference ? reference.name : undefined;
       }
 
-      getLettersIcon(name: string, surname: string): string {
-        if(Boolean(name) && Boolean( surname)){
-            var getLetters = [ name[0] +  surname[0]].join("");
+      getLettersIcon(userId: Guid): string {
+        //for test
+        var user = this.userTmp.find(u=> u.userId.toString() == userId.toString());
+        if(user){
+            var getLetters = user.ownerName
+                .split(" ")
+                .map(n => n[0])
+                .join("");
+
             return getLetters;
         }
         return "";
+
+        //for related API
+       /*  this.userService.getUser(userId).subscribe(user => {
+            if(Boolean(user.userName) && Boolean(user.userSurname)){
+                var getLetters = [user.userName[0] +  user.userSurname[0]].join("");
+                return getLetters;
+            }
+            return "";
+        });
+        return ""; */
     }
+
 
     editRecipient(){
         const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, { 
@@ -431,7 +493,11 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+               
                 this.handoverService.updateHandover(result);
+                this.handover.recipientId = result.recipientId;
+
+                this.initilizeHandover(this.handover);
             }
         });
     }
@@ -439,7 +505,7 @@ export class MyHandoverComponent implements OnInit {
     editDates(){
         const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
             data: { 
-                ownerId: this.teamUserTmp.userId, // get logn user id
+                ownerId: this.teamUserTmp.userId, // get login user id
                 handover: this.handover
             }
         });
@@ -508,7 +574,7 @@ export class MyHandoverComponent implements OnInit {
             if (result) {
                 this.handover = this.handoverTmp;
                 this.handoverService.addHandover(result);
-                this.initilizeHandover(this.handover);
+                this.editRecipient();
             }
         });
     }

@@ -58,10 +58,10 @@ export class ShareReportDialogComponent implements OnInit {
         {
             ownerName: "Julia Kasenkova",
             ownerEmail: "jkasenkova@gmail.com",
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
             ownerRole: "Developer",
             isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -70,10 +70,10 @@ export class ShareReportDialogComponent implements OnInit {
         {
             ownerName: "Peter Hlazunov",
             ownerEmail: "peter_hlazunov@gmail.com",
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            userId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             ownerRole: "Team Lead",
             isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -82,7 +82,7 @@ export class ShareReportDialogComponent implements OnInit {
         {
             ownerName: "Vlad Gurov",
             ownerEmail: "vlad_gurov@gmail.com",
-            userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            userId: Guid.parse("f06e7c51-43e7-4c8d-b7dd-42c668384bc3"),
             ownerRole: "Product Manager",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
