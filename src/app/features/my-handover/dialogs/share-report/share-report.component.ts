@@ -1,5 +1,5 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -13,9 +13,10 @@ import { MyTeamService } from "src/app/services/myTeamService";
 import { Guid } from "guid-typescript";
 import { CommonModule } from "@angular/common";
 import { MatSelectModule } from "@angular/material/select";
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipsModule, MatChipInputEvent} from '@angular/material/chips';
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatChipsModule} from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ShareRecipient } from "src/app/models/shareRecipientModel";
 
 @Component({
     selector: 'share-report',
@@ -48,9 +49,10 @@ export class ShareReportDialogComponent implements OnInit {
     shareForm: FormGroup;
     teamMembers: MyTeamModel[] = [];
     sharedMember: MyTeamModel[] = [];
-
+    handoverOwner: MyTeamModel;
     emailList: string[] = [];
     removable = true;
+    shareRecipient: ShareRecipient;
     public separatorKeysCodes = [ENTER, COMMA];
 
     //for test
@@ -97,23 +99,23 @@ export class ShareReportDialogComponent implements OnInit {
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<ShareReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Handover,
-        private myTeamService: MyTeamService
+        private myTeamService: MyTeamService,
     ) {
         this.teamMembers = this.teamRotationsTmp;
-
-        data.shareEmails = ["jkasenkova@gmail.com", "peter@gmail.com", "vlad@gmail.com"]
-
         this.shareForm = this.fb.group({
+            ownerId: [data.ownerId],
             handoverId: [data.handoverId],
-            sharedUsers: [data.shareUsers], // for test
+            sharedUsers: [data.shareUsers],
             emails: [data.shareEmails]
         });
     }
 
     ngOnInit(): void {
         this.myTeamService.getTeamUsers().subscribe(teams =>{
-            this.teamMembers = teams
+            this.handoverOwner = teams.find(u => u.userId.toString() == this.data.ownerId.toString());
         });
+        //for test
+        this.handoverOwner = this.teamMembers.find(u=>u.userId.toString() == this.data.ownerId.toString());
     }
     
     onNoClick(): void {
@@ -122,21 +124,29 @@ export class ShareReportDialogComponent implements OnInit {
 
     onSave(): void {
         if (!this.shareForm.errors) {
+
+            this.myTeamService.updateTeamUser(this.handoverOwner);
             this.data.shareUsers = this.shareForm.get('sharedUsers').value;
             this.data.shareEmails = this.shareForm.get('emails').value;
             this.dialogRef.close(this.shareForm.value);
         }
     }
 
-    displayFn(email?: string): string | undefined {
-        return email ? email : undefined;
-    }
-
     add(event: any): void {
         if (event.value) {
             if (this.validateEmail(event.value)) {
-              this.emailList.push(event.value);
-              this.shareForm.controls['emails'].setErrors({'incorrectEmail': false});
+
+                if(!this.emailList.includes(event.value)){
+
+                    this.data.shareEmails.push(event.value);
+                    this.shareForm.controls['emails'].setValue(this.data.shareEmails);
+                    this.shareForm.controls['emails'].setErrors({'incorrectEmail': false});
+                }
+                else{
+                    this.shareForm.controls['emails'].setErrors({'duplicateEmail': true});
+                }
+
+              
             } else {
               this.shareForm.controls['emails'].setErrors({'incorrectEmail': true});
             }
@@ -157,6 +167,21 @@ export class ShareReportDialogComponent implements OnInit {
         }
       }
 
+      deleteUser(data: any): void {
+        this.data.shareUsers = this.shareForm.get('sharedUsers').value;
+
+        if (this.data.shareUsers.indexOf(data) >= 0) {
+            this.data.shareUsers.splice(this.data.shareUsers.indexOf(data), 1);
+        }
+        this.shareForm.controls['sharedUsers'].setValue(this.data.shareUsers);
+      }
+
+      deleteEmail(data: any): void {
+        if (this.data.shareEmails.indexOf(data) >= 0) {
+            this.data.shareEmails.splice(this.data.shareEmails.indexOf(data), 1);
+        }
+      }
+
       displayEmailChip(email:string): string{
         return email.split('@')[0];
       }
@@ -171,10 +196,12 @@ export class ShareReportDialogComponent implements OnInit {
     }
 
     setUserAlwaysShare(user: MyTeamModel){
-        this.data.shareUsers.push(user);
+        this.handoverOwner.shareRecipient.usersIds.push(user.userId);
+        this.shareForm.get('handoverOwner').setValue(this.handoverOwner);
     }
 
-    setEmailAlwaysShare(email:string){
-        this.data.shareEmails.push(email);
+    setEmailAlwaysShare(email: string){
+        this.handoverOwner.shareRecipient.emails.push(email);
+        this.shareForm.get('handoverOwner').setValue(this.handoverOwner);
     }
 }

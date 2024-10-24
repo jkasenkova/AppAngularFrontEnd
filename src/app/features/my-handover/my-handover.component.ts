@@ -30,6 +30,7 @@ import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { CommentsService } from "src/app/services/commentsService";
 import { UserService } from "src/app/services/userService";
+import { MyTeamService } from "src/app/services/myTeamService";
 
 @Component({
     selector: 'app-my-handover',
@@ -275,14 +276,14 @@ export class MyHandoverComponent implements OnInit {
                       }]
                 }
             ],
-            shareEmails: ["jkasenkova@gmail.com", "peter@gmail.com", "vlad@gmail.com"]
+            shareEmails: ['user1@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
         };
 
     constructor(
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private commentsService: CommentsService,
-        private userService: UserService,
+
         private fb: FormBuilder) 
         {
             this.topicForm = this.fb.group({
@@ -301,14 +302,13 @@ export class MyHandoverComponent implements OnInit {
     }
 
     initilizeHandover(handover: Handover):Handover{
-        debugger;
         if(handover){
             if(handover.shareEmails){
                 this.countShare = this.handover.shareEmails.length;
             }
 
             if(handover.shareUsers){
-                this.countShare += this.handover.shareEmails.length;
+                this.countShare += this.handover.shareUsers.length;
             }
         }
 
@@ -519,17 +519,21 @@ export class MyHandoverComponent implements OnInit {
     }
 
     shareReport(){
+        this.handover.shareUsers = [];
+        this.handover.shareUsers.push(this.teamUserTmp);
+
         const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
             data: { 
+                ownerId: this.handover.ownerId,
                 handoverId: this.handover.handoverId,
-                shareUsers: [],
-                shareEmails: []
+                shareUsers: this.handover.shareUsers,
+                shareEmails: this.handover.shareEmails
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              this.handoverService.updateHandover(result);
+                this.handoverService.updateHandover(result);
             }
         });
     }
@@ -537,10 +541,11 @@ export class MyHandoverComponent implements OnInit {
     shareUserInfo(): string{
         var title = 'Shared with: ';
         var arr = [""];
-        
+
         if(this.handover.shareEmails){
             arr = arr.concat(this.handover.shareEmails);
         }
+
         if(this.handover.shareUsers){
             arr = arr.concat(this.handover.shareUsers.flatMap(u => u.ownerName));
         }
@@ -557,6 +562,8 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+              this.handover.reportComments = [];
+              this.handover.reportComments.push(result);
               this.commentsService.addComment(result);
             }
         });

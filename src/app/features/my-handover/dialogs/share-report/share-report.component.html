@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                             <div class="row">
-                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                     <mat-form-field>
                                         <mat-label>Users</mat-label>
                                         <mat-select 
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
+                                <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                     <mat-form-field>
                                         <mat-chip-grid #chipList formArrayName="emails">
                                             <input 
@@ -45,20 +45,10 @@
                                                 (matChipInputTokenEnd)="add($event)" />
                                         </mat-chip-grid>
                                     </mat-form-field>
-                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email</mat-error>
+                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email!</mat-error>
+                                  <mat-error *ngIf="shareForm.get('emails').hasError('duplicateEmail')">Duplicate email!</mat-error>
                                 </div>
-                                <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 no-padding">
-                                    @for(email of emailList; track email){
-                                        <mat-chip 
-                                            [selectable]="true" 
-                                            [removable]="removable" 
-                                            (removed)="removeEmail(email)" 
-                                            required name="chips"> 
-                                                {{displayEmailChip(email)}}
-                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                        </mat-chip>
-                                    }
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -74,8 +64,9 @@
                                     <div class="swiper-wrapper swiper-recipient">
                                         @if(data.shareUsers.length > 0)
                                         {
-                                            @for (teamMember of  data.shareUsers; track teamMember)
+                                            @for (teamMember of shareForm.get('sharedUsers').value; track teamMember)
                                             {
+                                                @if(teamMember != undefined){
                                                 <div class="swiper-slide recipient-slide">
                                                     <div class="recipient-save" (change)="setUserAlwaysShare(teamMember)">
                                                         <input type="checkbox">
@@ -89,8 +80,9 @@
                                                        {{teamMember.ownerName}}
                                                     </div>
                                                     <div class="recipient-position">{{teamMember.ownerRole}}</div>
-                                                    <div class="recipient-remove-action">×</div>
+                                                    <div class="recipient-remove-action" (click)="deleteUser(teamMember)">×</div>
                                                 </div>
+                                               }
                                             }
                                         }
                                         @if(data.shareEmails.length > 0) 
@@ -108,7 +100,7 @@
                                                         {{email}}
                                                     </div>
                                                     <div class="recipient-position"></div>
-                                                    <div class="recipient-remove-action">×</div>
+                                                    <div class="recipient-remove-action" (click)="deleteEmail(email)">×</div>
                                                 </div>
                                             }
                                         }

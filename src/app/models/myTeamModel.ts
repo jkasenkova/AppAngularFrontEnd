@@ -1,4 +1,5 @@
 import { Guid } from "guid-typescript";
+import { ShareRecipient } from "./shareRecipientModel";
 
 export class MyTeamModel {
     public ownerName: string;
@@ -12,4 +13,5 @@ export class MyTeamModel {
     public curentRotationId?: Guid;
     public contributors?: Guid[];
     public selected: boolean = false;
+    public shareRecipient?: ShareRecipient;
 }
