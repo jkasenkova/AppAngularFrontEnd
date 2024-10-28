@@ -23,8 +23,9 @@
                                         <mat-select 
                                             placeholder="Enter/Select User to add to List" 
                                             multiple
-                                            formControlName="sharedUsers">
-                                            @for (teamMember of teamMembers; track teamMember) {
+                                            formControlName="sharedUsers"
+                                            (selectionChange)="change($event)">
+                                            @for (teamMember of data.teamMembers; track teamMember) {
                                                 <mat-option [value]="teamMember">
                                                     {{ teamMember.ownerName}}
                                                 </mat-option>
@@ -36,7 +37,7 @@
                             <div class="row">
                                 <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                     <mat-form-field>
-                                        <mat-chip-grid #chipList formArrayName="emails">
+                                        <mat-chip-grid #chipList formArrayName="shareEmails">
                                             <input 
                                                 placeholder="Enter Email " 
                                                 [matChipInputFor]="chipList" 
@@ -45,8 +46,8 @@
                                                 (matChipInputTokenEnd)="add($event)" />
                                         </mat-chip-grid>
                                     </mat-form-field>
-                                  <mat-error *ngIf="shareForm.get('emails').hasError('incorrectEmail')">Invalid email!</mat-error>
-                                  <mat-error *ngIf="shareForm.get('emails').hasError('duplicateEmail')">Duplicate email!</mat-error>
+                                  <mat-error *ngIf="shareForm.get('shareEmails').hasError('incorrectEmail')">Invalid email!</mat-error>
+                                  <mat-error *ngIf="shareForm.get('shareEmails').hasError('duplicateEmail')">Duplicate email!</mat-error>
                                 </div>
 
                             </div>

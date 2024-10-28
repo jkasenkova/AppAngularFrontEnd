@@ -31,6 +31,7 @@ import { MyTeamModel } from "src/app/models/myTeamModel";
 import { CommentsService } from "src/app/services/commentsService";
 import { UserService } from "src/app/services/userService";
 import { MyTeamService } from "src/app/services/myTeamService";
+import { ShareReportModel } from "./models/sahareReportModel";
 
 @Component({
     selector: 'app-my-handover',
@@ -65,6 +66,7 @@ export class MyHandoverComponent implements OnInit {
     expandAll: boolean = false;
     isMyRotation: boolean = false;
     countShare: number;
+    teamMembers: MyTeamModel[] = [];
 
     @Input() handoverAdmin: boolean; 
 
@@ -75,7 +77,7 @@ export class MyHandoverComponent implements OnInit {
     };
 
     
-    userTmp: MyTeamModel[] = [
+    usersTmp: MyTeamModel[] = [
         {
             ownerName: "Julia Kasenkova",
             ownerEmail: "jkasenkova@gmail.com",
@@ -283,7 +285,7 @@ export class MyHandoverComponent implements OnInit {
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private commentsService: CommentsService,
-
+        private myTeamService: MyTeamService,
         private fb: FormBuilder) 
         {
             this.topicForm = this.fb.group({
@@ -298,7 +300,12 @@ export class MyHandoverComponent implements OnInit {
 
     ngOnInit(): void {
     //  this.handover = this.handoverTmp;
-      this.handover = this.initilizeHandover(this.handover);
+        this.teamMembers = this.usersTmp;
+        this.handover = this.initilizeHandover(this.handover);
+
+        this.myTeamService.getTeamUsers().subscribe(teams =>{
+            this.teamMembers = teams;
+        });
     }
 
     initilizeHandover(handover: Handover):Handover{
@@ -463,7 +470,7 @@ export class MyHandoverComponent implements OnInit {
 
       getLettersIcon(userId: Guid): string {
         //for test
-        var user = this.userTmp.find(u=> u.userId.toString() == userId.toString());
+        var user = this.teamMembers.find(u=> u.userId.toString() == userId.toString());
         if(user){
             var getLetters = user.ownerName
                 .split(" ")
@@ -519,21 +526,30 @@ export class MyHandoverComponent implements OnInit {
     }
 
     shareReport(){
-        this.handover.shareUsers = [];
-        this.handover.shareUsers.push(this.teamUserTmp);
+        this.handover.shareUsers = []; //for test
+        this.handover.shareUsers.push(this.teamMembers[1]); //for test
 
+        this.teamMembers = this.teamMembers.filter(u=> !this.handover.shareUsers.includes(u));
+
+        let sharReportModel: ShareReportModel = {
+            ownerId: this.handover.ownerId,
+            handoverId: this.handover.handoverId,
+            shareUsers: this.handover.shareUsers,
+            shareEmails: this.handover.shareEmails,
+            teamMembers: this.teamMembers
+        };
+
+        
         const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
-            data: { 
-                ownerId: this.handover.ownerId,
-                handoverId: this.handover.handoverId,
-                shareUsers: this.handover.shareUsers,
-                shareEmails: this.handover.shareEmails
-            }
+            data: sharReportModel
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                debugger;
                 this.handoverService.updateHandover(result);
+                this.handover.shareUsers = result.sharedUsers;
+                this.handover = this.initilizeHandover(this.handover);
             }
         });
     }

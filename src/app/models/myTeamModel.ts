@@ -13,5 +13,5 @@ export class MyTeamModel {
     public curentRotationId?: Guid;
     public contributors?: Guid[];
     public selected: boolean = false;
-    public shareRecipient?: ShareRecipient;
+    public alwaysShareRecipient?: ShareRecipient;
 }
