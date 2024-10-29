@@ -37,7 +37,8 @@
                                                 #autosize="cdkTextareaAutosize"
                                                 cdkAutosizeMinRows="5"
                                                 formControlName="comment" 
-                                                cdkAutosizeMaxRows="10"></textarea>
+                                                cdkAutosizeMaxRows="10"
+                                                (keyup.enter)="uploadComment()"></textarea>
                                         </mat-form-field>
                                         <div class="upload-comment">
                                             <button class="btn-upload" (click)="uploadComment()"></button>
@@ -53,7 +54,7 @@
                                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-top-20">
                                                         <div class="creator-block">
                                                             <div class="icon-container">
-                                                                <div class="name">{{ getLettersIcon(reportComment.owner.ownerName) }}</div>
+                                                                <div class="name">{{ getLettersIcon() }}</div>
                                                             </div> 
                                                         </div>
                                                         <div class="comment-block">

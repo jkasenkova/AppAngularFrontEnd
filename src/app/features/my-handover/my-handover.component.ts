@@ -28,8 +28,6 @@ import { HandoverService } from "src/app/services/handoverService";
 import { CommonModule } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
 import { MyTeamModel } from "src/app/models/myTeamModel";
-import { CommentsService } from "src/app/services/commentsService";
-import { UserService } from "src/app/services/userService";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { ShareReportModel } from "./models/sahareReportModel";
 
@@ -128,7 +126,6 @@ export class MyHandoverComponent implements OnInit {
         curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         selected: false
     };
-
     
     handoverTmp: Handover =
         {
@@ -278,13 +275,56 @@ export class MyHandoverComponent implements OnInit {
                       }]
                 }
             ],
-            shareEmails: ['user1@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
+            shareEmails: ['user1@gmail.com', 'user2@gmail.com', 'user3@gmail.com'],
+            reportComments: [
+                {
+                    commentId: Guid.parse("df668eef-9275-4194-bb45-4c5e282a4d34"),
+                    ownerId:Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 1",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                    createDate: " 29.10.2024 22:10"
+                },
+                {
+                    commentId: Guid.parse("bda98ec1-1e0f-45f9-be50-e01563232685"),
+                    ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 2",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                     createDate: " 29.10.2024 22:10"
+                },
+                {
+                    commentId: Guid.parse("68c1c31c-0a1a-4bbf-922a-9f5096b8ae98"),
+                    ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 3",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                     createDate: " 29.10.2024 22:10"
+                },
+                {
+                    commentId: Guid.parse("951afc76-e33b-481e-a2d9-923c70ac388c"),
+                    ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 4",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                     createDate: " 29.10.2024 22:10"
+                },
+                {
+                    commentId: Guid.parse("83fdf091-031e-40ed-866b-18aebcbdb733"),
+                    ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 5",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                     createDate: " 29.10.2024 22:10"
+                },
+                {
+                    commentId: Guid.parse("e8465f20-0866-4753-b3bd-12219a185726"),
+                    ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+                    comment: "Comment 6",
+                    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                     createDate: " 29.10.2024 22:10"
+                }
+            ]
         };
 
     constructor(
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
-        private commentsService: CommentsService,
         private myTeamService: MyTeamService,
         private fb: FormBuilder) 
         {
@@ -546,7 +586,6 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
                 this.handoverService.updateHandover(result);
                 this.handover.shareUsers = result.sharedUsers;
                 this.handover = this.initilizeHandover(this.handover);
@@ -571,16 +610,14 @@ export class MyHandoverComponent implements OnInit {
 
     reportComments(){
         const dialogRef = this.dialog.open(ReportCommentsDialogComponent, { 
-            data: { 
-                handoverId: this.handover.handoverId
-            }
+            data: this.handover
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
               this.handover.reportComments = [];
               this.handover.reportComments.push(result);
-              this.commentsService.addComment(result);
+              this.handoverService.updateHandover(this.handover);
             }
         });
     }

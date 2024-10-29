@@ -15,6 +15,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatChipsModule} from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ShareRecipient } from "src/app/models/shareRecipientModel";
+import { ShareReportModel } from "../../models/sahareReportModel";
 
 @Component({
     selector: 'share-report',
@@ -57,7 +58,7 @@ export class ShareReportDialogComponent implements OnInit {
     constructor(
         fb: FormBuilder,
         public dialogRef: MatDialogRef<ShareReportDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
+        @Inject(MAT_DIALOG_DATA) public data: ShareReportModel,
         private myTeamService: MyTeamService) 
     {
         this.shareForm = fb.group(
@@ -70,14 +71,13 @@ export class ShareReportDialogComponent implements OnInit {
         });
     }
 
-    change(event:any){
+    selectionChange(){
         this.shareForm.get('sharedUsers').setValue(
             this.shareForm.get('sharedUsers').value
             .concat(this.data.shareUsers));
     }
 
     ngOnInit(): void {
-
         this.myTeamService.getTeamUser(this.data.ownerId).subscribe(handoverOwner =>{
             this.handoverOwner = handoverOwner;
         });
@@ -94,9 +94,6 @@ export class ShareReportDialogComponent implements OnInit {
                 this.handoverOwner.alwaysShareRecipient = this.alwaysHandoverRecipients;
                 this.myTeamService.updateTeamUser(this.handoverOwner);
             }
-            
-            this.data.shareUsers = this.shareForm.get('sharedUsers').value;
-            this.data.shareEmails = this.shareForm.get('shareEmails').value;
             this.dialogRef.close(this.shareForm.value);
         }
     }
@@ -106,7 +103,6 @@ export class ShareReportDialogComponent implements OnInit {
             if (this.validateEmail(event.value)) {
 
                 if(!this.emailList.includes(event.value)){
-
                     this.data.shareEmails.push(event.value);
                     this.shareForm.controls['shareEmails'].setValue(this.data.shareEmails);
                     this.shareForm.controls['shareEmails'].setErrors({'incorrectEmail': false});
@@ -130,11 +126,6 @@ export class ShareReportDialogComponent implements OnInit {
         return re.test(String(email).toLowerCase());
       }
 
-      removeEmail(data: any): void {
-        if (this.emailList.indexOf(data) >= 0) {
-          this.emailList.splice(this.emailList.indexOf(data), 1);
-        }
-      }
 
       deleteUser(data: any): void {
         this.data.shareUsers = this.shareForm.get('sharedUsers').value;
@@ -149,10 +140,6 @@ export class ShareReportDialogComponent implements OnInit {
         if (this.data.shareEmails.indexOf(data) >= 0) {
             this.data.shareEmails.splice(this.data.shareEmails.indexOf(data), 1);
         }
-      }
-
-      displayEmailChip(email:string): string{
-        return email.split('@')[0];
       }
 
       getLettersIcon(ownerName: string): string {

@@ -24,7 +24,7 @@
                                             placeholder="Enter/Select User to add to List" 
                                             multiple
                                             formControlName="sharedUsers"
-                                            (selectionChange)="change($event)">
+                                            (selectionChange)="selectionChange()">
                                             @for (teamMember of data.teamMembers; track teamMember) {
                                                 <mat-option [value]="teamMember">
                                                     {{ teamMember.ownerName}}
