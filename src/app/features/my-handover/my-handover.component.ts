@@ -73,7 +73,6 @@ export class MyHandoverComponent implements OnInit {
         month: 'long',
         day: 'numeric'
     };
-
     
     usersTmp: MyTeamModel[] = [
         {
@@ -336,7 +335,6 @@ export class MyHandoverComponent implements OnInit {
                 description: ""
             });
         }
-
 
     ngOnInit(): void {
     //  this.handover = this.handoverTmp;
