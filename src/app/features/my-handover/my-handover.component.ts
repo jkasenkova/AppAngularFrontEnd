@@ -30,6 +30,13 @@ import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { ShareReportModel } from "./models/sahareReportModel";
+import { Template } from "src/app/models/template";
+import { TemplateService } from "src/app/services/templateService";
+import { TemplateTopic } from "src/app/models/templateTopic";
+import { SectionService } from "src/app/services/sectionService";
+import { Section } from "src/app/models/section";
+import { RotationTopicService } from "src/app/services/rotationTopicService";
+import { RotationReferenceService } from "src/app/services/rotationReferenceService";
 
 @Component({
     selector: 'app-my-handover',
@@ -54,6 +61,7 @@ import { ShareReportModel } from "./models/sahareReportModel";
 
 export class MyHandoverComponent implements OnInit {
     handover: Handover;
+    userId: Guid; // authorized user
     @ViewChildren("addRowElement") addRowElement: QueryList<ElementRef>;
     topicForm: FormGroup;
     enableAddTopicBtn: boolean = true;
@@ -65,6 +73,7 @@ export class MyHandoverComponent implements OnInit {
     isMyRotation: boolean = false;
     countShare: number;
     teamMembers: MyTeamModel[] = [];
+    template: Template;
 
     @Input() handoverAdmin: boolean; 
 
@@ -144,6 +153,8 @@ export class MyHandoverComponent implements OnInit {
                     sectionType: SectionType.Other,
                     addBtnShow:true,
                     sortReferenceType: SortType.alphabetically,
+                    sortType: SortType.alphabetically,
+                    templateSection: false,
                     sectionTopics: [
                         {
                         sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
@@ -154,6 +165,8 @@ export class MyHandoverComponent implements OnInit {
                         editing:false,
                         isExpand:false,
                         isPinned: false,
+                        templateTopic: false,
+                        checked: false,
                         references:[
                             {
                                 id:Guid.parse("44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0"),
@@ -162,7 +175,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                templateReference: false,
+                                checked:false,
+                                isPinned: false
                             },
                             {
                                 id:Guid.parse("c79bf801-20ea-483a-adb5-de24c91397e7"),
@@ -171,7 +187,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                checked:false,
+                                templateReference: false,
+                                isPinned: false
                             }
                         ]
                       },
@@ -181,9 +200,11 @@ export class MyHandoverComponent implements OnInit {
                         name: "topic 2",
                         enabled: true,
                         isPinned: true,
+                        templateTopic: false,
                         index: 0,
                         editing:false,
                         isExpand:false,
+                        checked: false,
                         references:[ 
                         {
                             id:Guid.parse("20905156-1c40-49c5-a52e-46c6ea4a9094"),
@@ -192,7 +213,10 @@ export class MyHandoverComponent implements OnInit {
                             description: "description 1",
                             enabled: true,
                             index:0,
-                            editing:false
+                            editing:false,
+                            templateReference: false,
+                            checked:false,
+                            isPinned: false
                         },
                         {
                             id:Guid.parse("8cec9d77-7d57-4182-bfe8-c54fcd89d696"),
@@ -201,7 +225,10 @@ export class MyHandoverComponent implements OnInit {
                             description: "description 2",
                             enabled: true,
                             index:0,
-                            editing:false
+                            editing:false,
+                            templateReference: false,
+                            checked:false,
+                            isPinned: false
                         }]
                       }]
                 },
@@ -212,14 +239,18 @@ export class MyHandoverComponent implements OnInit {
                     iHandoverSection: false,
                     sectionType: SectionType.Other,
                     addBtnShow:true,
+                    sortType: SortType.alphabetically,
                     sortReferenceType: SortType.alphabetically,
+                    templateSection: false,
                     sectionTopics: [
                         {
                         sectionId: Guid.parse("dcb40955-4752-40a1-9291-ea3ddf707da1"),
                         id:  Guid.parse("6074e0af-b2d2-4d66-b3fd-b9e09377ba12"),
                         name: "topic 1",
                         enabled: true,
+                        templateTopic: false,
                         index: 0,
+                        checked: false,
                         editing:false,
                         isPinned: false,
                         isExpand:false,
@@ -231,7 +262,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                checked:false,
+                                templateReference: false,
+                                isPinned: false
                             },
                             {
                                 id:Guid.parse("c76780e5-0f12-48c1-9d5b-54249b1688c6"),
@@ -240,7 +274,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                checked:false,
+                                templateReference: false,
+                                isPinned: false
                             }]
                       },
                       {
@@ -250,6 +287,8 @@ export class MyHandoverComponent implements OnInit {
                         enabled: true,
                         index: 0,
                         editing:false,
+                        checked: false,
+                        templateTopic: false,
                         isPinned: false,
                         isExpand:false,
                         references:[ 
@@ -260,7 +299,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                checked:false,
+                                templateReference: false,
+                                isPinned: false
                             },
                             {
                                 id:Guid.parse("8687a1d0-3476-4995-ac8b-f83f968f47c9"),
@@ -269,7 +311,10 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false
+                                editing:false,
+                                checked:false,
+                                templateReference: false,
+                                isPinned: false
                             }]
                       }]
                 }
@@ -319,12 +364,143 @@ export class MyHandoverComponent implements OnInit {
                      createDate: " 29.10.2024 22:10"
                 }
             ]
-        };
+    };
+
+     templateTmp: Template = {
+        templateName: "Template 1",
+        templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+        sections: [
+            {
+                sectionName: "HSE",
+                sectionId:  Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                iHandoverSection: false,
+                sectionType: SectionType.HSE,
+                sortType: SortType.alphabetically,
+                sortReferenceType: SortType.alphabetically,
+                sectionTopics: [
+                    {
+                        sectionId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        name: "HSE",
+                        enabled: true,
+                        editing: false,
+                        isExpand: false,
+                        index: 0,
+                        references: [
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "hse ref 1",
+                                description: "hse description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            },
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "hseref 2",
+                                description: "hse description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionName: "Core",
+                sectionId:  Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                iHandoverSection: false,
+                sectionType: SectionType.Core,
+                sortType: SortType.alphabetically,
+                sortReferenceType: SortType.alphabetically,
+                sectionTopics: [
+                    {
+                        sectionId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        name: "Core",
+                        enabled: true,
+                        editing: false,
+                        isExpand: false,
+                        index: 0,
+                        references: [
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "core ref 1",
+                                description: "core description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            },
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "core ref 2",
+                                description: "core description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                sectionName: "Template Section",
+                sectionId:  Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                iHandoverSection: false,
+                sectionType: SectionType.Other,
+                sortType: SortType.alphabetically,
+                sortReferenceType: SortType.alphabetically,
+                sectionTopics: [
+                    {
+                        sectionId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                        name: "AAAAA",
+                        enabled: true,
+                        editing: false,
+                        isExpand: false,
+                        index: 0,
+                        references: [
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "aaaa ref 1",
+                                description: "aaaa description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            },
+                            {
+                                id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+                                name: "aaaaa ref 2",
+                                description: "aaaaa description",
+                                enabled: true,
+                                index: 0,
+                                editing: false
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        isHandoverTemplate: false
+    }; 
 
     constructor(
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private myTeamService: MyTeamService,
+        private templateService: TemplateService,
+        private rotationTopicService: RotationTopicService,
+        private rotationReferenceService: RotationReferenceService,
         private fb: FormBuilder) 
         {
             this.topicForm = this.fb.group({
@@ -337,16 +513,99 @@ export class MyHandoverComponent implements OnInit {
         }
 
     ngOnInit(): void {
-    //  this.handover = this.handoverTmp;
-        this.teamMembers = this.usersTmp;
-        this.handover = this.initilizeHandover(this.handover);
+   //   this.handover = this.handoverTmp; // for test
 
-        this.myTeamService.getTeamUsers().subscribe(teams =>{
+       this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
+         this.handover = rotation;
+       });
+
+        this.teamMembers = this.usersTmp;
+        this.handover = this.setShareCounter(this.handover);
+
+        this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;
         });
     }
 
-    initilizeHandover(handover: Handover):Handover{
+    initilizeTemplateSection(template: Template, handover: Handover):Handover {
+
+        template.sections.forEach(section => {
+
+            var convertedSection: HandoverSection = { 
+                sectionId: section.sectionId,
+                sectionName: section.sectionName,
+                handoverId: handover.handoverId,
+                iHandoverSection: false,
+                sectionType: section.sectionType,
+                sortType: section.sortType,
+                addBtnShow: true,
+                sortReferenceType: section.sortReferenceType,
+                templateSection: true,
+                sectionTopics: this.initilizeRotationTopics(section)
+            };
+
+            handover.sections.push(convertedSection);
+
+            this.handoverSectionService.createSection(convertedSection);
+        });
+
+        handover.sections = handover.sections.sort((a, b) => Number(b.templateSection) - Number(a.templateSection));
+        
+        return handover;
+    }
+
+    initilizeRotationTopics(sectionTemplate: Section): RotationTopic[] {
+
+        let rotationTopics: RotationTopic[] = [];
+        sectionTemplate.sectionTopics.filter(t => t.enabled).forEach(templateTopic => {
+
+            var convertedTopic = { 
+                sectionnId: sectionTemplate.sectionId,
+                isPinned: false,
+                id: templateTopic.id,
+                name: templateTopic.name,
+                enabled: templateTopic.enabled,
+                index: templateTopic.index,
+                editing: templateTopic.editing,
+                isExpand: templateTopic.isExpand,
+                templateTopic: true,
+                checked: false,
+                references: this.initilizeRotationReferences(templateTopic)
+            };
+
+            rotationTopics.push(convertedTopic);
+            this.rotationTopicService.addRotationTopic(convertedTopic);
+        });
+       return rotationTopics;
+    }
+
+    initilizeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
+
+        let rotationReferences: RotationReference[] = [];
+        templateTopic.references.filter(t => t.enabled).forEach(reference => {
+
+            var convertedReference = { 
+                id: Guid.create(),
+                rotationTopicId: templateTopic.id,
+                name: reference.name,
+                description: reference.description,
+                enabled: reference.enabled,
+                index: reference.index,
+                editing: reference.editing,
+                templateReference: true,
+                isPinned: false,
+                checked: false
+            };
+
+            rotationReferences.push(convertedReference);
+
+            this.rotationReferenceService.addRotationReference(convertedReference);
+        });
+
+        return rotationReferences;
+    }
+
+    setShareCounter(handover: Handover): Handover {
         if(handover){
             if(handover.shareEmails){
                 this.countShare = this.handover.shareEmails.length;
@@ -531,7 +790,7 @@ export class MyHandoverComponent implements OnInit {
     }
 
 
-    editRecipient(){
+    setRecipient(){
         const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, { 
             data: this.handover
         });
@@ -541,8 +800,16 @@ export class MyHandoverComponent implements OnInit {
                
                 this.handoverService.updateHandover(result);
                 this.handover.recipientId = result.recipientId;
+                this.setShareCounter(this.handover);
 
-                this.initilizeHandover(this.handover);
+                this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
+                    this.template = template;
+                    this.initilizeTemplateSection(this.template, this.handover);
+                });
+                
+                debugger;
+                this.template = this.templateTmp;//for test
+                this.initilizeTemplateSection(this.template, this.handover);//for test
             }
         });
     }
@@ -586,7 +853,7 @@ export class MyHandoverComponent implements OnInit {
             if (result) {
                 this.handoverService.updateHandover(result);
                 this.handover.shareUsers = result.sharedUsers;
-                this.handover = this.initilizeHandover(this.handover);
+                this.handover = this.setShareCounter(this.handover);
             }
         });
     }
@@ -630,10 +897,50 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handover = this.handoverTmp;
+                this.handover = this.handoverTmp;//for test
                 this.handoverService.addHandover(result);
-                this.editRecipient();
+                this.setRecipient();
             }
         });
+    }
+
+    checkedTopic(topic: RotationTopic, section: HandoverSection){
+        topic.checked = !topic.checked;
+
+        this.updateTopicInArray(topic, section);
+    }
+
+    checkedReference(reference: RotationReference, topic: RotationTopic){
+        reference.checked = !reference.checked;
+
+        this.updateReferenceInArray(reference, topic);
+    }
+
+    pinnedReference(reference: RotationReference, topic: RotationTopic){
+        reference.isPinned = !reference.isPinned;
+
+        this.updateReferenceInArray(reference, topic);
+    }
+
+    topicPinned(topic: RotationTopic, section: HandoverSection){
+        topic.isPinned = !topic.isPinned;
+
+       this.updateTopicInArray(topic, section);
+    }
+
+    updateTopicInArray(topic: RotationTopic, section: HandoverSection){
+        let updateTopic = section.sectionTopics.find(t=> t.id == topic.id);
+        let index = section.sectionTopics.indexOf(updateTopic);
+        section.sectionTopics[index] = topic;
+
+        this.rotationTopicService.updateTopic(topic);
+    }
+
+    updateReferenceInArray(reference: RotationReference, topic: RotationTopic){
+        let updateReference = topic.references.find(t=> t.id == reference.id);
+        let index = topic.references.indexOf(updateReference);
+        topic.references[index] = reference;
+
+        this.rotationReferenceService.updateRotationReference(reference);
     }
 }

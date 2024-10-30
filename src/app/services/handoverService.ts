@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Handover } from '../models/handover';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
     providedIn: 'root'
@@ -28,11 +29,11 @@ export class HandoverService {
         return this.http.put<Handover>(this.url, handover, this.httpHeaders);
     }
 
-    deleteHandoverById(id: string): Observable<string> {
+    deleteHandoverById(id: Guid): Observable<string> {
         return this.http.delete<string>(this.url + '/' + id);
     }
 
-    getHandoverById(id: string): Observable<Handover> {
+    getHandoverById(id: Guid): Observable<Handover> {
         return this.http.get<Handover>(this.url + '/' + id);
     }
 }

@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <div class="recipient-block" matTooltip="Edit Recipient" (click)="editRecipient()"></div>
+                    <div class="recipient-block" matTooltip="Edit Recipient" (click)="setRecipient()"></div>
                     <div class="dates-block" matTooltip="Edit Dates" (click)="editDates()"></div>
                   
                 </div>
@@ -142,12 +142,49 @@
                                             <div class="btn btn-circle draganddrop"  matTooltip="Reorder">
                                                 <mat-icon class="dragCursor">reorder</mat-icon>
                                             </div>
-                                            <div class="btn btn-circle remove-btn" matTooltip="Remove Topic">
-                                                <span class="glyphicon span"></span>
-                                            </div>
-                                            <div class="btn btn-circle edit-btn" matTooltip="Edit Topic">
-                                                <span class="glyphicon span"></span>
-                                            </div>
+                                            @if(topic.templateTopic){
+                                                @if(topic.checked){
+                                                    <div class="btn btn-circle checked-topic" matTooltip="Uncheck"
+                                                (click)="checkedTopic(topic, section)">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
+                                                }
+                                                @else{
+                                                    <div class="btn btn-circle unchecked-topic" matTooltip="Check"
+                                                    (click)="checkedTopic(topic, section)">
+                                                        <span class="glyphicon span"></span>
+                                                    </div>
+                                                }
+                                                
+                                            }
+                                            @else{
+                                                <div class="btn btn-circle remove-btn" matTooltip="Remove">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
+                                            }
+                                            @if(topic.templateTopic){
+                                                <div class="btn btn-circle white-pin" matTooltip="Pinned">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
+                                            }
+                                            @else{
+                                                <div class="btn btn-circle edit-btn" matTooltip="Edit">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
+                                                @if(topic.isPinned){
+                                                    <div class="btn btn-circle active-pin" matTooltip="Pin"
+                                                    (click)="topicPinned(topic, section)">
+                                                        <span class="glyphicon span"></span>
+                                                    </div>
+                                                }
+                                                @else{
+                                                    <div class="btn btn-circle inactive-pin"  matTooltip="Pin"
+                                                    (click)="topicPinned(topic, section)">
+                                                        <span class="glyphicon span"></span>
+                                                    </div>
+                                                }
+                                              
+                                            }
                                         </div>
                                         <div class="type-body">
                                           <span>{{topic.name}}</span>
@@ -175,12 +212,45 @@
                                                     <div class="btn btn-circle draganddrop">
                                                         <mat-icon class="dragCursor">reorder</mat-icon>
                                                     </div>
-                                                    <div class="btn btn-circle remove-btn">
-                                                        <span class="glyphicon span"></span>
-                                                    </div>
-                                                    <div class="btn btn-circle edit-btn">
-                                                        <span class="glyphicon span"></span>
-                                                    </div>
+                                                    @if(reference.templateReference){
+                                                        @if(reference.checked){
+                                                            <div class="btn btn-circle checked-topic" matTooltip="Unheck"
+                                                            (click)="checkedReference(reference, topic)">
+                                                                <span class="glyphicon span"></span>
+                                                            </div>
+                                                        }
+                                                        @else{
+                                                            <div class="btn btn-circle unchecked-topic" matTooltip="Check"
+                                                            (click)="checkedReference(reference, topic)">
+                                                                <span class="glyphicon span"></span>
+                                                            </div>
+                                                        }
+                                                       
+                                                        <div class="btn btn-circle white-pin" matTooltip="Pinned">
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
+                                                    }
+                                                    @else{
+                                                        <div class="btn btn-circle remove-btn" matTooltip="Remove">
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
+                                                        <div class="btn btn-circle edit-btn" matTooltip="Edit">
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
+                                                        @if(reference.isPinned){
+                                                            <div class="btn btn-circle active-pin" matTooltip="Pin"
+                                                            (click)="pinnedReference(reference, topic)">
+                                                                <span class="glyphicon span"></span>
+                                                            </div>
+                                                        }
+                                                        @else{
+                                                            <div class="btn btn-circle inactive-pin" matTooltip="Pin"
+                                                            (click)="pinnedReference(reference, topic)">
+                                                                <span class="glyphicon span"></span>
+                                                            </div>
+                                                        }
+                                                    }
+                                                   
                                                 </div>
                                                 <div class="type-body"></div>
                                                 <div class="reference-body tr-blue-text">

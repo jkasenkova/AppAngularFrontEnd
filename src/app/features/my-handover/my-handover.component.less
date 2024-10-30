@@ -642,6 +642,7 @@
                                   width: 25px;
                                   height: 25px;
                                   padding: 0;
+                                  cursor: pointer;
                                   background-image: url("/assets/img/remove.svg");
                                   background-repeat: no-repeat;
                                   background-position: center;
@@ -652,12 +653,77 @@
                                     background-position: center;
                                   }
                                 }
+
+                                .unchecked-topic{
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/unchecked-topic.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+
+                                  &:hover {
+                                    text-decoration: none;
+                                    border: none !important;
+                                    background-image: url("/assets/img/checked-topic.svg");
+                                    background-repeat: no-repeat;
+                                  }
+                                }
+
+                                .checked-topic{
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/checked-topic.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                }
+
+                                .white-pin{
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/white-pin.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                }
+
+                                .inactive-pin{
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/inactive-pin.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+
+                                    &:hover {
+                                      text-decoration: none;
+                                      border: none !important;
+                                      background-image: url("/assets/img/active-pin.svg");
+                                      background-repeat: no-repeat;
+                                    }
+                                }
+
+                                .active-pin{
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/active-pin.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                }
                 
                                 .edit-btn {
                                   width: 25px;
                                   height: 25px;
                                   padding: 0;
                                   margin-top: 5px;
+                                  cursor: pointer;
                                   background-image: url("/assets/img/pencil_dark.svg");
                                   background-repeat: no-repeat;
                                   background-position: center;

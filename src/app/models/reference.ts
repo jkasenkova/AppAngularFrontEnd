@@ -5,7 +5,6 @@ export class Reference {
     public id!: Guid;
     public templateTopicId?: Guid;
     public templateTopic?: TemplateTopic;
-    public rotationTopicId?: Guid;
     public name!: string;
     public description?: string;
     public enabled: boolean = false;

@@ -9,7 +9,7 @@ import { AddTopic } from '../models/addTopic';
 @Injectable({
   providedIn: 'root'
 })
-export class TopicService {
+export class TemplateTopicService {
 
   url = configurl.apiServer.url + '/topic';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
