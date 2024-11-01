@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -33,10 +33,10 @@ import { ShareReportModel } from "./models/sahareReportModel";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
 import { TemplateTopic } from "src/app/models/templateTopic";
-import { SectionService } from "src/app/services/sectionService";
 import { Section } from "src/app/models/section";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
+import { MatAccordion } from "@angular/material/expansion";
 
 @Component({
     selector: 'app-my-handover',
@@ -74,6 +74,8 @@ export class MyHandoverComponent implements OnInit {
     countShare: number;
     teamMembers: MyTeamModel[] = [];
     template: Template;
+
+    @ViewChild(MatAccordion) accordion: MatAccordion;
 
     @Input() handoverAdmin: boolean; 
 
@@ -162,11 +164,11 @@ export class MyHandoverComponent implements OnInit {
                         name: "topic 1",
                         enabled: true,
                         index: 0,
-                        editing:false,
                         isExpand:false,
                         isPinned: false,
                         templateTopic: false,
                         checked: false,
+                        editing: false,
                         references:[
                             {
                                 id:Guid.parse("44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0"),
@@ -175,9 +177,9 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false,
                                 templateReference: false,
                                 checked:false,
+                                editing: false,
                                 isPinned: false
                             },
                             {
@@ -187,8 +189,8 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false,
                                 checked:false,
+                                editing: false,
                                 templateReference: false,
                                 isPinned: false
                             }
@@ -201,8 +203,8 @@ export class MyHandoverComponent implements OnInit {
                         enabled: true,
                         isPinned: true,
                         templateTopic: false,
+                        editing: false,
                         index: 0,
-                        editing:false,
                         isExpand:false,
                         checked: false,
                         references:[ 
@@ -211,9 +213,9 @@ export class MyHandoverComponent implements OnInit {
                             rotationTopicId:Guid.parse("4df7c851-d6be-4a51-8b08-eddea4a1f03c"),
                             name:"reference 1",
                             description: "description 1",
+                            editing: false,
                             enabled: true,
                             index:0,
-                            editing:false,
                             templateReference: false,
                             checked:false,
                             isPinned: false
@@ -225,8 +227,8 @@ export class MyHandoverComponent implements OnInit {
                             description: "description 2",
                             enabled: true,
                             index:0,
-                            editing:false,
                             templateReference: false,
+                            editing: false,
                             checked:false,
                             isPinned: false
                         }]
@@ -248,10 +250,10 @@ export class MyHandoverComponent implements OnInit {
                         id:  Guid.parse("6074e0af-b2d2-4d66-b3fd-b9e09377ba12"),
                         name: "topic 1",
                         enabled: true,
+                        editing: false,
                         templateTopic: false,
                         index: 0,
                         checked: false,
-                        editing:false,
                         isPinned: false,
                         isExpand:false,
                         references:[ 
@@ -262,7 +264,7 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false,
+                                editing: false,
                                 checked:false,
                                 templateReference: false,
                                 isPinned: false
@@ -274,8 +276,8 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false,
                                 checked:false,
+                                editing: false,
                                 templateReference: false,
                                 isPinned: false
                             }]
@@ -286,9 +288,9 @@ export class MyHandoverComponent implements OnInit {
                         name: "topic 2",
                         enabled: true,
                         index: 0,
-                        editing:false,
                         checked: false,
                         templateTopic: false,
+                        editing: false,
                         isPinned: false,
                         isExpand:false,
                         references:[ 
@@ -299,7 +301,7 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 1",
                                 enabled: true,
                                 index:0,
-                                editing:false,
+                                editing: false,
                                 checked:false,
                                 templateReference: false,
                                 isPinned: false
@@ -311,9 +313,9 @@ export class MyHandoverComponent implements OnInit {
                                 description: "description 2",
                                 enabled: true,
                                 index:0,
-                                editing:false,
                                 checked:false,
                                 templateReference: false,
+                                editing: false,
                                 isPinned: false
                             }]
                       }]
@@ -504,8 +506,6 @@ export class MyHandoverComponent implements OnInit {
         private fb: FormBuilder) 
         {
             this.topicForm = this.fb.group({
-                topic: null,
-                reference: null,
                 topicName: "",
                 referenceName: "",
                 description: ""
@@ -658,6 +658,10 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                let updateSection = this.handover.sections.find(t=> t.sectionId == result.sectionId);
+                let index = this.handover.sections.indexOf(updateSection);
+                this.handover.sections[index] = result;
+        
                 this.handoverSectionService.updateSection(result);
             }
         });
@@ -745,7 +749,9 @@ export class MyHandoverComponent implements OnInit {
         var topic = event.option.value;
         this.references = topic.references;
 
-        this.topicForm.controls['topic'].setValue(topic);
+        if(this.topicForm.controls['topic']){
+            this.topicForm.controls['topic'].setValue(topic);
+        }
 
       }
 
@@ -807,7 +813,6 @@ export class MyHandoverComponent implements OnInit {
                     this.initilizeTemplateSection(this.template, this.handover);
                 });
                 
-                debugger;
                 this.template = this.templateTmp;//for test
                 this.initilizeTemplateSection(this.template, this.handover);//for test
             }
@@ -942,5 +947,40 @@ export class MyHandoverComponent implements OnInit {
         topic.references[index] = reference;
 
         this.rotationReferenceService.updateRotationReference(reference);
+    }
+
+    editTopic(topic: RotationTopic){
+        topic.editing = !topic.editing;
+    }
+
+    editReference(reference: RotationReference){
+        reference.editing = !reference.editing;
+    }
+
+    updateTopic(topic: RotationTopic, section: HandoverSection){
+        debugger;
+
+        topic.editing = !topic.editing;
+        this.updateTopicInArray(topic, section);
+        this.rotationTopicService.updateTopic(topic);
+    }
+
+    updateReference(reference: RotationReference, topic: RotationTopic){
+        debugger;
+        reference.editing = !reference.editing;
+        this.updateReferenceInArray(reference, topic);
+        this.rotationReferenceService.updateRotationReference(reference);
+    }
+
+    cancelTopicEdit(topic: RotationTopic){
+        topic.editing = !topic.editing;
+    }
+
+    cancelReferenceEdit(reference: RotationReference){
+        reference.editing = !reference.editing;
+    }
+
+    editNotes(reference: RotationReference){
+
     }
 }

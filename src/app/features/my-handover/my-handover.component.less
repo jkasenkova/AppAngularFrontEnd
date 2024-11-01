@@ -638,7 +638,7 @@
                                   }
                                 }
 
-                                .remove-btn, .cancel-btn {
+                                .remove-btn {
                                   width: 25px;
                                   height: 25px;
                                   padding: 0;
@@ -750,7 +750,37 @@
                                 overflow: hidden;
                                 padding: 6px 0px;
                                 cursor: pointer;
-                
+
+                                .edit-type{
+                                  display: inline-block;
+                                  min-width: 8rem !important;
+                                  max-width: 8rem !important;
+                                  width: 8rem !important;
+
+                                  .mat-mdc-form-field{
+                                  //  width: 60%;
+                                    text-overflow: ellipsis;
+                                    overflow: hidden;
+                                    cursor: text;
+                                  }
+  
+                                  .mat-mdc-text-field-wrapper {
+                                    height: 40px;
+                                  }
+                                  .mat-mdc-form-field-subscript-wrapper{
+                                    height: 10px;
+                                  }
+                                }
+
+                               
+
+                                /* .mat-mdc-text-field-wrapper{
+                                  height: 40px;
+                                }
+                                .mat-mdc-form-field-subscript-wrapper{
+                                  height: 10px;
+                                }  */
+
                                 span {
                                   color: #0096C8;
                                 }
@@ -774,7 +804,7 @@
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
-                                padding: 6px 0px 0px 15px;
+                                padding: 6px 10px 0px 15px;
                                 cursor: pointer;
                 
                                 span {
@@ -788,15 +818,125 @@
                                 vertical-align: middle;
                                 color: #0096C8;
                                 font-weight: bold;
-                                min-width: 38rem !important;
-                                max-width: 38rem !important;
-                                width: 38rem !important;
+                                min-width: 35rem !important;
+                                max-width: 35rem !important;
+                                width: 35rem !important;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
                                 padding: 6px 0px;
                                 cursor: pointer;
                                 padding-left: 5px;
+
+                                .field-of-edit {
+                                  display: block;
+                                  height: 100px;
+                                  position: relative;
+                                  min-width: 30rem !important;
+                                  max-width: 30rem !important;
+                                  width: 30rem !important;
+
+                                  textarea {
+                                    color: #0096C8 !important;
+                                    width: 100%;
+                                    min-width: 100%;
+                                    height: 100%;
+                                    min-height: 100%;
+                                    resize: none;
+                                    padding: 5px;
+                                    border: none;
+                                    background-color: #F0F0F0;
+                                    border-radius: 5px;
+                                    outline: none;
+                                }
+                                }
+                              }
+
+                              .buttons-edit{
+                                width: 140px;
+                                display: inline-block;
+                                padding-left: 20px;
+
+                                .save-edit-btn{
+                                  display: inline-block;
+                                  width: 85px;
+                                  height: 26px;
+                                  border-radius: 13px;
+                                  text-align: center;
+                                  font-size: 16px;
+                                  padding-top: 1px;
+                                  cursor: pointer;
+                                  margin-right: auto;
+                                  margin-left: auto;
+                                  color: white;
+                                  background-color: #B4B4B4;
+
+                                  &:hover {
+                                    background-color: #0096C8;
+                                  }
+                                }
+
+                                .cancel-btn {
+                                  display: inline-block;
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/remove.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                  margin-right: 10px;
+                
+                                  &:hover {
+                                    background-image: url("/assets/img/remove_active.svg");
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                  }
+                                }
+                              }
+
+                              .buttons-body{
+                                width: 160px;
+                                display: inline-block;
+                                padding-left: 25px;
+
+
+                                .save-edit-btn{
+                                  display: inline-block;
+                                  width: 85px;
+                                  height: 26px;
+                                  border-radius: 13px;
+                                  text-align: center;
+                                  font-size: 16px;
+                                  padding-top: 1px;
+                                  cursor: pointer;
+                                  margin-right: auto;
+                                  margin-left: auto;
+                                  color: white;
+                                  background-color: #B4B4B4;
+
+                                  &:hover {
+                                    background-color: #0096C8;
+                                  }
+                                }
+
+                                .cancel-btn {
+                                  display: inline-block;
+                                  margin-right: 10px;
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/remove.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                
+                                  &:hover {
+                                    background-image: url("/assets/img/remove_active.svg");
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                  }
+                                }
                               }
                 
                               .intel-body {

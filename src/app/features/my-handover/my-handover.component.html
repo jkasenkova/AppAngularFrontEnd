@@ -143,19 +143,12 @@
                                                 <mat-icon class="dragCursor">reorder</mat-icon>
                                             </div>
                                             @if(topic.templateTopic){
-                                                @if(topic.checked){
-                                                    <div class="btn btn-circle checked-topic" matTooltip="Uncheck"
-                                                (click)="checkedTopic(topic, section)">
+                                                <div [ngClass]="topic.checked ? 'checked-topic' : 'unchecked-topic'" 
+                                                    class="btn btn-circle" 
+                                                    [matTooltip]="topic.checked ? 'Uncheck' : 'Check'"
+                                                    (click)="checkedTopic(topic, section)">
                                                     <span class="glyphicon span"></span>
                                                 </div>
-                                                }
-                                                @else{
-                                                    <div class="btn btn-circle unchecked-topic" matTooltip="Check"
-                                                    (click)="checkedTopic(topic, section)">
-                                                        <span class="glyphicon span"></span>
-                                                    </div>
-                                                }
-                                                
                                             }
                                             @else{
                                                 <div class="btn btn-circle remove-btn" matTooltip="Remove">
@@ -168,26 +161,35 @@
                                                 </div>
                                             }
                                             @else{
-                                                <div class="btn btn-circle edit-btn" matTooltip="Edit">
+                                                <div class="btn btn-circle edit-btn" 
+                                                     matTooltip="Edit" 
+                                                     (click)="editTopic(topic)">
                                                     <span class="glyphicon span"></span>
                                                 </div>
-                                                @if(topic.isPinned){
-                                                    <div class="btn btn-circle active-pin" matTooltip="Pin"
-                                                    (click)="topicPinned(topic, section)">
-                                                        <span class="glyphicon span"></span>
-                                                    </div>
-                                                }
-                                                @else{
-                                                    <div class="btn btn-circle inactive-pin"  matTooltip="Pin"
-                                                    (click)="topicPinned(topic, section)">
-                                                        <span class="glyphicon span"></span>
-                                                    </div>
-                                                }
-                                              
+
+                                                <div [ngClass]="topic.isPinned ? 'active-pin' : 'inactive-pin'" 
+                                                     class="btn btn-circle"
+                                                     [matTooltip]="topic.isPinned ? 'UnPin' : 'Pin'"
+                                                     (click)="topicPinned(topic, section)">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
                                             }
                                         </div>
                                         <div class="type-body">
-                                          <span>{{topic.name}}</span>
+                                            @if(topic.editing){
+                                                <div class="edit-type">
+                                                    <mat-form-field calss="edit-topic">
+                                                        <input matInput placeholder="Name" [(ngModel)]="topic.name"
+                                                        (keydown.enter)="updateTopic(topic, section)">
+                                                    </mat-form-field>
+                                                </div>
+                                               
+    
+                                            }
+                                            @else{
+                                                <span>{{topic.name}}</span>
+                                            }
+ 
                                          @if(expanded(topic)){
                                             <mat-icon class="mat-icon-rtl-mirror"
                                             (click)="topic.isExpand = !topic.isExpand">
@@ -200,6 +202,17 @@
                                           ({{getCountReferences(topic)}})
                                         </div>
                                         <div class="notes-body"></div>
+                                        @if(topic.editing){
+                                            <div class="buttons-body">
+                                                <div class="btn btn-circle cancel-btn" 
+                                                (click)="cancelTopicEdit(topic)"
+                                                matTooltip="Cancel">
+                                                    <span class="glyphicon span"></span>
+                                                </div>
+                                                <div type="button" class="btn btn-circle save-edit-btn"
+                                                (click)="updateTopic(topic, section)">Save</div>
+                                            </div>
+                                        }
                                     </div>
                                   @if(topic.isExpand){
                                         <div cdkDropList class="rowReferenceData"
@@ -207,25 +220,19 @@
 
                                             @for(reference of topic.references; track reference){
 
-                                                <div class="divTopicRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="reference">
+                                            <div class="divTopicRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="reference">
                                                 <div class="actions-body">
                                                     <div class="btn btn-circle draganddrop">
                                                         <mat-icon class="dragCursor">reorder</mat-icon>
                                                     </div>
                                                     @if(reference.templateReference){
-                                                        @if(reference.checked){
-                                                            <div class="btn btn-circle checked-topic" matTooltip="Unheck"
+                                                        <div [ngClass]="reference.checked ? 'checked-topic' : 'unchecked-topic'" 
+                                                            class="btn btn-circle"
+                                                            [matTooltip]="topic.checked ? 'Uncheck' : 'Check'"
                                                             (click)="checkedReference(reference, topic)">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                        }
-                                                        @else{
-                                                            <div class="btn btn-circle unchecked-topic" matTooltip="Check"
-                                                            (click)="checkedReference(reference, topic)">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                        }
-                                                       
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
+
                                                         <div class="btn btn-circle white-pin" matTooltip="Pinned">
                                                             <span class="glyphicon span"></span>
                                                         </div>
@@ -234,37 +241,58 @@
                                                         <div class="btn btn-circle remove-btn" matTooltip="Remove">
                                                             <span class="glyphicon span"></span>
                                                         </div>
-                                                        <div class="btn btn-circle edit-btn" matTooltip="Edit">
+                                                        <div class="btn btn-circle edit-btn"
+                                                        (click)="editReference(reference)" matTooltip="Edit">
                                                             <span class="glyphicon span"></span>
                                                         </div>
-                                                        @if(reference.isPinned){
-                                                            <div class="btn btn-circle active-pin" matTooltip="Pin"
+
+                                                        <div [ngClass]="reference.isPinned ? 'active-pin' : 'inactive-pin'" 
+                                                            class="btn btn-circle"
+                                                            [matTooltip]="topic.isPinned ? 'UnPin' : 'Pin'"
                                                             (click)="pinnedReference(reference, topic)">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                        }
-                                                        @else{
-                                                            <div class="btn btn-circle inactive-pin" matTooltip="Pin"
-                                                            (click)="pinnedReference(reference, topic)">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                        }
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
                                                     }
                                                    
                                                 </div>
                                                 <div class="type-body"></div>
                                                 <div class="reference-body tr-blue-text">
+                                                  <!--   <span>{{reference.name}}</span> -->
+                                                  @if(reference.editing){
+                                                    <mat-form-field calss="edit-topic">
+                                                        <input matInput placeholder="Name" [(ngModel)]="reference.name"
+                                                        (keydown.enter)="updateReference(reference, topic)">
+                                                    </mat-form-field>
+        
+                                                }
+                                                @else{
                                                     <span>{{reference.name}}</span>
+                                                }
                                                 </div>
-                                                <div class="notes-body">
+                                                <div class="notes-body" (click)="editNotes(reference)">
                                                     <span>{{reference.description}}</span>
+                                                   <!--  <div class="field-of-edit">
+                                                        <textarea class="change-note" maxlength="1000">
+                                                            {{reference.description}}
+                                                        </textarea>
+                                                    </div> -->
                                                 </div>
-                                                </div>
+                                                @if(reference.editing){
+                                                    <div class="buttons-edit">
+                                                        <div class="btn btn-circle cancel-btn" 
+                                                        (click)="cancelReferenceEdit(reference)"
+                                                        matTooltip="Cancel">
+                                                            <span class="glyphicon span"></span>
+                                                        </div>
+                                                        <div type="button" class="btn btn-circle save-edit-btn"
+                                                        (click)="updateReference(reference, topic)">Save</div>
+                                                    </div>
+                                                }
+                                            </div>
                                             }
                                         </div>
                                     }
                                 }
-            
                             </div>
                             
                             <div #addRowElement style="display:none;" class="rowTopicData">
@@ -272,7 +300,7 @@
                                     <div class="actions-body">
                                         <div class="btn btn-circle draganddrop">
                                         </div>
-                                        <div class="btn btn-circle cancel-btn" matTooltip="Cancel"
+                                        <div class="btn btn-circle remove-btn" matTooltip="Cancel"
                                          (click)="addHideRowTopicForm(section,i)">
                                             <span class="glyphicon span"></span>
                                         </div>
