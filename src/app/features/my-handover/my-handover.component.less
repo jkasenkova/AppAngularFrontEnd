@@ -572,9 +572,10 @@
                             .divRow, .divTopicRow {
                               border-bottom: 0.5px solid #DBDBDB;
                               font-size: 14px;
-                              line-height: 2.2em;
+                              line-height: 1.5em;
                               vertical-align: middle;
                               border-top: none;
+                              height: 30%;
                               color: #0096C8 !important;
                               
                               .add-topic-form{
@@ -803,52 +804,127 @@
                                 width: 12rem !important;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
-                                overflow: hidden;
                                 padding: 6px 10px 0px 15px;
                                 cursor: pointer;
+                               
                 
                                 span {
                                   color: #0096C8;
                                 }
 
                               }
+
+                              .add-notes-body {
+                                display: inline-block;
+                                vertical-align: middle;
+                                color: #0096C8;
+                                min-width: 38rem !important;
+                                max-width: 38rem !important;
+                                width: 38rem !important;
+                                max-height: 120px;
+                                min-height: 100px;
+                                height: auto;
+                                padding: 6px 0px;
+                                cursor: pointer;
+                                padding-left: 5px;
+                                position: relative;
+                                overflow-y: auto;
+                              }
                 
                               .notes-body {
                                 display: inline-block;
                                 vertical-align: middle;
                                 color: #0096C8;
-                                font-weight: bold;
-                                min-width: 35rem !important;
-                                max-width: 35rem !important;
-                                width: 35rem !important;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                overflow: hidden;
+                               /*  min-width: 45rem !important;
+                                max-width: 45rem !important;
+                                width: 45rem !important; */
+                                width: 50%;
                                 padding: 6px 0px;
                                 cursor: pointer;
                                 padding-left: 5px;
+                                position: relative;
+
+                                .icon-text{
+                                  width: 20px;
+                                  height: 25px;
+                                  background-repeat: no-repeat;
+                                  background-image: url("/assets/img/icon-text.svg");
+                                  cursor: pointer;
+                                  display: inline-block;
+                                  position: absolute;
+                                  left: 0;
+                                }
+
+                                .note-short{
+                                  background-color: #F0F0F0;
+                                  color: #464646;
+                                  border-radius: 5px;
+                                  padding: 5px;
+                                  cursor: pointer;
+                                  overflow: hidden;
+                                  text-overflow: ellipsis;
+                                  white-space: nowrap;
+                                  width: 43rem !important;
+                                  display: inline-block;
+                                }
 
                                 .field-of-edit {
-                                  display: block;
-                                  height: 100px;
+                                  margin-left: 15px;
+                                  display: inline-block;
+                                  height: auto;
+                                  min-height: 80px;
+                                  max-height: 100px;
                                   position: relative;
-                                  min-width: 30rem !important;
-                                  max-width: 30rem !important;
-                                  width: 30rem !important;
+                                  border-radius: 5px;
+                                  min-width: 42rem !important;
+                                  max-width: 42rem !important;
+                                  width: 42rem !important;
+                                  background-color: #F0F0F0;
+                                  color: #464646;
+                                  border-radius: 5px;
+                                  cursor: pointer;
+                                
 
-                                  textarea {
-                                    color: #0096C8 !important;
-                                    width: 100%;
-                                    min-width: 100%;
-                                    height: 100%;
-                                    min-height: 100%;
+                                  .change-note {
+                                    color: grey !important;
                                     resize: none;
                                     padding: 5px;
                                     border: none;
                                     background-color: #F0F0F0;
                                     border-radius: 5px;
-                                    outline: none;
+                                    display: inline-block;
+                                    width: 100%;
+                                    max-height: 100px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+
+                                    .save-note{
+                                      font-size: 18px !important;
+                                      margin-top: 3px;
+                                    }
+
+                                    .textarea-note{
+                                      background-color: #F0F0F0;
+                                      color: #464646;
+                                      cursor: text;
+                                      width: 100%;
+                                      border: none;
+                                      outline: none;
+                                      resize: none;
+                                    }
+                                    
+                                    .text-grey-notes * {
+                                      color: grey !important;
+                                    }
+                                  }
                                 }
+
+                                 .mat-icon-rtl-mirror{
+                                  float: right;
+                                }
+
+                                .text-blue {
+                                  color: #0096C8 !important;
                                 }
                               }
 
@@ -967,7 +1043,7 @@
                                 padding: 0px !important;
                               }
                             }
-                
+
                             .addDataRow {
                               font-size: 14px;
                               line-height: 1.3em;
@@ -1032,7 +1108,7 @@
                                 cursor: pointer;
                                 padding-left: 5px;
                               }
-                
+
                               .intel-body {
                                 display: inline-block;
                                 width: 10rem !important;

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 23">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #787878;
+        font-size: 20px;
+        font-family: Cambria-Bold, Cambria;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #707070;
+      }
+    </style>
+  </defs>
+  <g id="Group_31886" data-name="Group 31886" transform="translate(-512.5 -594)">
+    <text id="T" class="cls-1" transform="translate(513 594)"><tspan x="0" y="19">T</tspan></text>
+    <line id="Line_6655" data-name="Line 6655" class="cls-2" x2="14" transform="translate(512.5 615.5)"/>
+  </g>
+</svg>

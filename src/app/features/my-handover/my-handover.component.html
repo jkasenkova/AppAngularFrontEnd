@@ -220,7 +220,11 @@
 
                                             @for(reference of topic.references; track reference){
 
-                                            <div class="divTopicRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="reference">
+                                            <div class="divTopicRow" 
+                                                cdkDrag 
+                                                cdkDragLockAxis="y" 
+                                                [cdkDragData]="reference"
+                                                (click)=" reference.expand = !reference.expand">
                                                 <div class="actions-body">
                                                     <div class="btn btn-circle draganddrop">
                                                         <mat-icon class="dragCursor">reorder</mat-icon>
@@ -241,6 +245,7 @@
                                                         <div class="btn btn-circle remove-btn" matTooltip="Remove">
                                                             <span class="glyphicon span"></span>
                                                         </div>
+                                                        
                                                         <div class="btn btn-circle edit-btn"
                                                         (click)="editReference(reference)" matTooltip="Edit">
                                                             <span class="glyphicon span"></span>
@@ -257,7 +262,7 @@
                                                 </div>
                                                 <div class="type-body"></div>
                                                 <div class="reference-body tr-blue-text">
-                                                  <!--   <span>{{reference.name}}</span> -->
+
                                                   @if(reference.editing){
                                                     <mat-form-field calss="edit-topic">
                                                         <input matInput placeholder="Name" [(ngModel)]="reference.name"
@@ -269,13 +274,31 @@
                                                     <span>{{reference.name}}</span>
                                                 }
                                                 </div>
-                                                <div class="notes-body" (click)="editNotes(reference)">
-                                                    <span>{{reference.description}}</span>
-                                                   <!--  <div class="field-of-edit">
-                                                        <textarea class="change-note" maxlength="1000">
-                                                            {{reference.description}}
-                                                        </textarea>
-                                                    </div> -->
+                                                <div class="notes-body"
+                                                    (click)="editNotes($event)">
+                                                    @if(reference.expand == false){
+                                                        <div class="note-short">
+                                                            @if(reference.templateDescription){
+                                                                {{reference.templateDescription}}
+                                                            }
+                                                            @else{
+                                                                {{reference.description}}
+                                                            }
+                                                        </div>
+                                                    }
+                                                    @if(reference.expand){
+                                                        <span class="icon-text"></span>
+                                                        <div class="field-of-edit">
+                                                            <div class="change-note">
+                                                                @if(reference.templateDescription){
+                                                                    <div class="template-note text-grey-notes" disabled>Template notes: {{reference.templateDescription}}</div>
+                                                                }
+                                                                <textarea autfocus maxlength="1000" class="textarea-note">
+                                                                    {{reference.description}}
+                                                                </textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
                                                 @if(reference.editing){
                                                     <div class="buttons-edit">
@@ -341,7 +364,7 @@
                                           </mat-autocomplete>
                                           </mat-form-field>
                                         </div>
-                                        <div class="notes-body">
+                                        <div class="add-notes-body">
                                           <mat-form-field class="example-full-width">
                                               <textarea matInput
                                                     cdkTextareaAutosize

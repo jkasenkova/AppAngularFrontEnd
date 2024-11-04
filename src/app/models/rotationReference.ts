@@ -11,8 +11,10 @@ export class RotationReference {
     public index: number = 0;
     public parentReferenceId?: string;
     public templateReference: boolean = false;
+    public templateDescription?: string;
     public childReferences?: RotationReference[];
     public isPinned: boolean = false;
     public checked: boolean = false;
     public editing: boolean = false;
+    public expand: boolean = false;
 }

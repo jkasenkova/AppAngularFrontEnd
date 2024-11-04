@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation, ChangeDetectionStrategy, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,7 +36,7 @@ import { TemplateTopic } from "src/app/models/templateTopic";
 import { Section } from "src/app/models/section";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
-import { MatAccordion } from "@angular/material/expansion";
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
     selector: 'app-my-handover',
@@ -51,12 +51,14 @@ import { MatAccordion } from "@angular/material/expansion";
         MatInputModule,
         MatAutocompleteModule,
         MatTooltipModule,
-        CommonModule
+        CommonModule,
+        MatExpansionModule
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
     styleUrls: ['./my-handover.component.less'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class MyHandoverComponent implements OnInit {
@@ -75,7 +77,7 @@ export class MyHandoverComponent implements OnInit {
     teamMembers: MyTeamModel[] = [];
     template: Template;
 
-    @ViewChild(MatAccordion) accordion: MatAccordion;
+    @ViewChild('notes') notes: ElementRef;
 
     @Input() handoverAdmin: boolean; 
 
@@ -180,7 +182,8 @@ export class MyHandoverComponent implements OnInit {
                                 templateReference: false,
                                 checked:false,
                                 editing: false,
-                                isPinned: false
+                                isPinned: false,
+                                expand:false
                             },
                             {
                                 id:Guid.parse("c79bf801-20ea-483a-adb5-de24c91397e7"),
@@ -190,6 +193,7 @@ export class MyHandoverComponent implements OnInit {
                                 enabled: true,
                                 index:0,
                                 checked:false,
+                                expand:false,
                                 editing: false,
                                 templateReference: false,
                                 isPinned: false
@@ -216,6 +220,7 @@ export class MyHandoverComponent implements OnInit {
                             editing: false,
                             enabled: true,
                             index:0,
+                            expand:false,
                             templateReference: false,
                             checked:false,
                             isPinned: false
@@ -227,6 +232,7 @@ export class MyHandoverComponent implements OnInit {
                             description: "description 2",
                             enabled: true,
                             index:0,
+                            expand:false,
                             templateReference: false,
                             editing: false,
                             checked:false,
@@ -263,6 +269,7 @@ export class MyHandoverComponent implements OnInit {
                                 name:"reference 1",
                                 description: "description 1",
                                 enabled: true,
+                                expand:false,
                                 index:0,
                                 editing: false,
                                 checked:false,
@@ -278,6 +285,7 @@ export class MyHandoverComponent implements OnInit {
                                 index:0,
                                 checked:false,
                                 editing: false,
+                                expand:false,
                                 templateReference: false,
                                 isPinned: false
                             }]
@@ -303,6 +311,7 @@ export class MyHandoverComponent implements OnInit {
                                 index:0,
                                 editing: false,
                                 checked:false,
+                                expand:false,
                                 templateReference: false,
                                 isPinned: false
                             },
@@ -316,6 +325,7 @@ export class MyHandoverComponent implements OnInit {
                                 checked:false,
                                 templateReference: false,
                                 editing: false,
+                                expand:false,
                                 isPinned: false
                             }]
                       }]
@@ -394,7 +404,7 @@ export class MyHandoverComponent implements OnInit {
                                 id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
                                 templateTopicId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
                                 name: "hse ref 1",
-                                description: "hse description",
+                                description: "hse description hse description",
                                 enabled: true,
                                 index: 0,
                                 editing: false
@@ -513,18 +523,22 @@ export class MyHandoverComponent implements OnInit {
         }
 
     ngOnInit(): void {
-   //   this.handover = this.handoverTmp; // for test
+      this.handover = this.handoverTmp; // for test
+      this.template = this.templateTmp;//for test
+      
 
        this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
          this.handover = rotation;
        });
 
-        this.teamMembers = this.usersTmp;
+        this.teamMembers = this.usersTmp;// for test
         this.handover = this.setShareCounter(this.handover);
 
         this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;
         });
+
+        this.handover = this.initilizeTemplateSection(this.template, this.handover);//for test
     }
 
     initilizeTemplateSection(template: Template, handover: Handover):Handover {
@@ -588,13 +602,14 @@ export class MyHandoverComponent implements OnInit {
                 id: Guid.create(),
                 rotationTopicId: templateTopic.id,
                 name: reference.name,
-                description: reference.description,
                 enabled: reference.enabled,
                 index: reference.index,
                 editing: reference.editing,
                 templateReference: true,
+                templateDescription: reference.description,
                 isPinned: false,
-                checked: false
+                checked: false,
+                expand:false
             };
 
             rotationReferences.push(convertedReference);
@@ -803,18 +818,19 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               
+
+                this.template = this.templateTmp;//for test
+                
                 this.handoverService.updateHandover(result);
                 this.handover.recipientId = result.recipientId;
-                this.setShareCounter(this.handover);
+                this.handover = this.setShareCounter(this.handover);
 
-                this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
+                 this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
                     this.template = template;
-                    this.initilizeTemplateSection(this.template, this.handover);
-                });
+                    this.handover = this.initilizeTemplateSection(this.template, this.handover);
+                }); 
                 
-                this.template = this.templateTmp;//for test
-                this.initilizeTemplateSection(this.template, this.handover);//for test
+                this.handover = this.initilizeTemplateSection(this.template, this.handover);//for test
             }
         });
     }
@@ -902,8 +918,11 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handover = this.handoverTmp;//for test
-                this.handoverService.addHandover(result);
+                 this.handoverService.addHandover(result).subscribe(handover=>{
+                    this.handover = handover
+                }); 
+
+                this.handover = this.handoverTmp;
                 this.setRecipient();
             }
         });
@@ -958,16 +977,14 @@ export class MyHandoverComponent implements OnInit {
     }
 
     updateTopic(topic: RotationTopic, section: HandoverSection){
-        debugger;
-
         topic.editing = !topic.editing;
         this.updateTopicInArray(topic, section);
         this.rotationTopicService.updateTopic(topic);
     }
 
     updateReference(reference: RotationReference, topic: RotationTopic){
-        debugger;
-        reference.editing = !reference.editing;
+        reference.editing = false;
+      //  reference.expand = false;
         this.updateReferenceInArray(reference, topic);
         this.rotationReferenceService.updateRotationReference(reference);
     }
@@ -980,7 +997,9 @@ export class MyHandoverComponent implements OnInit {
         reference.editing = !reference.editing;
     }
 
-    editNotes(reference: RotationReference){
-
+    editNotes(event: any){
+        debugger;
+        //reference.expand = true;
     }
+
 }
