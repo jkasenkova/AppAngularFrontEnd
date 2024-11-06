@@ -15,7 +15,7 @@ export class RotationTopic {
     public parentTopicId?: Guid;
     public parentTopic?: RotationTopic;
     public childTopics?: RotationTopic[] = [];
-    public references: RotationReference[] = [];
+    public references?: RotationReference[] = [];
     public checked: boolean = false;
     public editing: boolean = false;
 }

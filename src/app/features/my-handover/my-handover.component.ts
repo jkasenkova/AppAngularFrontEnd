@@ -1,6 +1,6 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation, ChangeDetectionStrategy, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from "@angular/material/dialog";
@@ -9,13 +9,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { Guid } from "guid-typescript";
 import { Handover } from "src/app/models/handover";
-import { Reference } from "src/app/models/reference";
 import { RotationTopic } from "src/app/models/rotationTopic";
 import { SectionType } from "src/app/models/sectionType";
 import { SortType } from "src/app/models/sortType";
-import { CreateSectionDialogComponent } from "./dialogs/sections/create-section/create-section.component";
-import { EditSectionDialogComponent } from "./dialogs/sections/edit-section/edit-section.component";
-import { DeleteSectionDialogComponent } from "./dialogs/sections/delete-section/delete-section.component";
 import { UserModel } from "src/app/models/user";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HandoverSection } from "src/app/models/handoverSection";
@@ -36,7 +32,11 @@ import { TemplateTopic } from "src/app/models/templateTopic";
 import { Section } from "src/app/models/section";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { UserService } from "src/app/services/userService";
+import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
+import { TopicComponent } from "./topic/topic.component";
+import { expand } from "rxjs";
 
 @Component({
     selector: 'app-my-handover',
@@ -44,7 +44,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     imports: [
         MatIconModule,
         MatButtonModule,
-        DragDropModule,
         MatFormFieldModule,
         ReactiveFormsModule,
         FormsModule,
@@ -52,24 +51,20 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatAutocompleteModule,
         MatTooltipModule,
         CommonModule,
-        MatExpansionModule
+        MatExpansionModule,
+        ViewUserPanelComponent,
+        TopicComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
     styleUrls: ['./my-handover.component.less'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    encapsulation: ViewEncapsulation.None
 })
 
 export class MyHandoverComponent implements OnInit {
     handover: Handover;
-    userId: Guid; // authorized user
-    @ViewChildren("addRowElement") addRowElement: QueryList<ElementRef>;
-    topicForm: FormGroup;
-    enableAddTopicBtn: boolean = true;
-    references: Reference[];
     readonly dialog = inject(MatDialog);
-    owner: UserModel;
+    owner: MyTeamModel;
     recipient: UserModel;
     expandAll: boolean = false;
     isMyRotation: boolean = false;
@@ -77,14 +72,28 @@ export class MyHandoverComponent implements OnInit {
     teamMembers: MyTeamModel[] = [];
     template: Template;
 
-    @ViewChild('notes') notes: ElementRef;
-
+    @Output() ownerHandoverName = new EventEmitter<string>();
+    @Output() handoverOut: Handover;
+    
     @Input() handoverAdmin: boolean; 
 
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
+    };
+
+    handoverOwner: MyTeamModel = {
+        ownerName: "Julia Kasenkova",
+        ownerEmail: "jkasenkova@gmail.com",
+        userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+        ownerRole: "Developer",
+        isActiveRotation: true, //get state from back by curentRotationId
+        recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        selected: false
     };
     
     usersTmp: MyTeamModel[] = [
@@ -512,31 +521,28 @@ export class MyHandoverComponent implements OnInit {
         private myTeamService: MyTeamService,
         private templateService: TemplateService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService,
-        private fb: FormBuilder) 
+        private rotationReferenceService: RotationReferenceService) 
         {
-            this.topicForm = this.fb.group({
-                topicName: "",
-                referenceName: "",
-                description: ""
-            });
+            this.owner = this.handoverOwner;//for test
+            this.ownerHandoverName.emit(this.owner.ownerName);
         }
 
     ngOnInit(): void {
-      this.handover = this.handoverTmp; // for test
+      this.handover = this.handoverTmp;// for test
       this.template = this.templateTmp;//for test
-      
+      this.handoverOut = this.handover;//for test
+      this.teamMembers = this.usersTmp;// for test
 
        this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
          this.handover = rotation;
+         this.handoverOut = rotation
        });
 
-        this.teamMembers = this.usersTmp;// for test
         this.handover = this.setShareCounter(this.handover);
 
         this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;
-        });
+        }); 
 
         this.handover = this.initilizeTemplateSection(this.template, this.handover);//for test
     }
@@ -590,7 +596,29 @@ export class MyHandoverComponent implements OnInit {
             rotationTopics.push(convertedTopic);
             this.rotationTopicService.addRotationTopic(convertedTopic);
         });
+        
+        if(rotationTopics.find(t => t.name == "Other") == null){
+            rotationTopics.push(this.addOtherTopic());
+        }
+
        return rotationTopics;
+    }
+
+    addOtherTopic(): RotationTopic{
+        var otherTopic = { 
+            id: Guid.create(),
+            isPinned: false,
+            name: "Other",
+            enabled: false,
+            index: 0,
+            editing: false,
+            isExpand: false,
+            templateTopic: false,
+            checked: false
+        };
+
+        this.rotationTopicService.addRotationTopic(otherTopic);
+        return  otherTopic;
     }
 
     initilizeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
@@ -649,165 +677,24 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-     //---------Section Dialogs------------
-
-    createSectionDialog(handoverId: Guid): void {
-        const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
-             data: { handoverId: handoverId },
-             panelClass: 'section-dialog'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              this.handoverSectionService.createSection(result);
-            }
-        });
-    }
-
-    editSectionDialog(section: HandoverSection): void {
-
-        const dialogRef = this.dialog.open(EditSectionDialogComponent, {
-            data: { sectionId: section.sectionId, sectionName: section.sectionName },
-             panelClass: 'section-dialog'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                let updateSection = this.handover.sections.find(t=> t.sectionId == result.sectionId);
-                let index = this.handover.sections.indexOf(updateSection);
-                this.handover.sections[index] = result;
-        
-                this.handoverSectionService.updateSection(result);
-            }
-        });
-    }
-
-    deleteSectionDialog(section: HandoverSection): void {
-        const dialogRef = this.dialog.open(DeleteSectionDialogComponent, {
-            data: { sectionId: section.sectionId, sectionName: section.sectionName },
-             panelClass: 'section-dialog'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.handoverSectionService.deleteSection(result.sectionId)
-            }
-        });
-    }
-
-     ///-----------Topics------------------
-    
-    addHideRowTopicForm(section: HandoverSection, index: number){
-        let nativeElement = this.addRowElement.toArray()[index].nativeElement;
-        
-        nativeElement.style.display =
-          nativeElement.style.display === "none" || !nativeElement.style.display
-          ? "inline-block"
-            : "none";
-
-             if(nativeElement.style.display !== "none"){
-                this.enableAddTopicBtn = false;
-                section.addBtnShow = false;
-            }else{
-                this.enableAddTopicBtn = true;
-                section.addBtnShow = true;
-            }
-    
-    }
-
-    selectReference(reference: Reference) {
-        this.enableAddTopicBtn = true;
-      }
-
-
-    getCountReferences(topic: RotationTopic): number {
-        return topic.references != null ? topic.references.filter(t => t.enabled).length : 0;
-      }
-    
-      expanded(topic: RotationTopic): boolean {
-        return topic.references != null ? topic.references.filter(t => t.enabled).length > 0 : false;
-      }
-
-      dropTopic(event: CdkDragDrop<RotationTopic[]>, topics: RotationTopic[], section: HandoverSection) {
-   
-        moveItemInArray(topics, event.previousIndex, event.currentIndex);
-    
-        topics.forEach((x, index) => {
-          x.index = index
-        });
-    
-        if(section.sortType == SortType.alphabetically){
-            section.sortType = SortType.index;
-            this.handoverSectionService.updateSection(section);
-        }
-
-        //update index for topics
-      }
-    
-      dropReference(event: CdkDragDrop<RotationReference[]>, references: RotationReference[], section: HandoverSection) {
-    
-        moveItemInArray(references, event.previousIndex, event.currentIndex);
-    
-        references.forEach((x, index) => {
-          x.index = index
-        });
-
-        if(section.sortReferenceType == SortType.alphabetically){
-            section.sortReferenceType = SortType.index;
-            this.handoverSectionService.updateSection(section);
-        }
-            //update index for references
-      }
-
-
-      onSelectAddTopic(event: any){
-        var topic = event.option.value;
-        this.references = topic.references;
-
-        if(this.topicForm.controls['topic']){
-            this.topicForm.controls['topic'].setValue(topic);
-        }
-
-      }
-
-      onSelectAddReference(event: any){
-        var reference = event.option.value;
-
-        this.topicForm.controls['reference'].setValue(reference);
-
-        this.topicForm.controls['description'].setValue(reference.description);
-      }
-
-      displayFn(topic?: RotationTopic): string | undefined {
-        return topic ? topic.name : undefined;
-      }
-
-      displayRefFn(reference?: RotationReference): string | undefined {
-        return reference ? reference.name : undefined;
-      }
-
       getLettersIcon(userId: Guid): string {
-        //for test
-        var user = this.teamMembers.find(u=> u.userId.toString() == userId.toString());
-        if(user){
-            var getLetters = user.ownerName
-                .split(" ")
-                .map(n => n[0])
-                .join("");
-
-            return getLetters;
-        }
+        this.myTeamService.getTeamUser(userId).pipe(
+            expand(user => 
+                {
+                    return user.ownerName.split(" ").map((n)=>n[0]).join("");
+                }
+            ));
         return "";
+    }
 
-        //for related API
-       /*  this.userService.getUser(userId).subscribe(user => {
-            if(Boolean(user.userName) && Boolean(user.userSurname)){
-                var getLetters = [user.userName[0] +  user.userSurname[0]].join("");
-                return getLetters;
-            }
-            return "";
-        });
-        return ""; */
+    getNameByUserId(userId: Guid): string {
+        this.myTeamService.getTeamUser(userId).pipe(
+            expand(user => 
+                {
+                    return user.ownerName;
+                }
+            ));
+        return "";
     }
 
 
@@ -927,79 +814,4 @@ export class MyHandoverComponent implements OnInit {
             }
         });
     }
-
-    checkedTopic(topic: RotationTopic, section: HandoverSection){
-        topic.checked = !topic.checked;
-
-        this.updateTopicInArray(topic, section);
-    }
-
-    checkedReference(reference: RotationReference, topic: RotationTopic){
-        reference.checked = !reference.checked;
-
-        this.updateReferenceInArray(reference, topic);
-    }
-
-    pinnedReference(reference: RotationReference, topic: RotationTopic){
-        reference.isPinned = !reference.isPinned;
-
-        this.updateReferenceInArray(reference, topic);
-    }
-
-    topicPinned(topic: RotationTopic, section: HandoverSection){
-        topic.isPinned = !topic.isPinned;
-
-       this.updateTopicInArray(topic, section);
-    }
-
-    updateTopicInArray(topic: RotationTopic, section: HandoverSection){
-        let updateTopic = section.sectionTopics.find(t=> t.id == topic.id);
-        let index = section.sectionTopics.indexOf(updateTopic);
-        section.sectionTopics[index] = topic;
-
-        this.rotationTopicService.updateTopic(topic);
-    }
-
-    updateReferenceInArray(reference: RotationReference, topic: RotationTopic){
-        let updateReference = topic.references.find(t=> t.id == reference.id);
-        let index = topic.references.indexOf(updateReference);
-        topic.references[index] = reference;
-
-        this.rotationReferenceService.updateRotationReference(reference);
-    }
-
-    editTopic(topic: RotationTopic){
-        topic.editing = !topic.editing;
-    }
-
-    editReference(reference: RotationReference){
-        reference.editing = !reference.editing;
-    }
-
-    updateTopic(topic: RotationTopic, section: HandoverSection){
-        topic.editing = !topic.editing;
-        this.updateTopicInArray(topic, section);
-        this.rotationTopicService.updateTopic(topic);
-    }
-
-    updateReference(reference: RotationReference, topic: RotationTopic){
-        reference.editing = false;
-      //  reference.expand = false;
-        this.updateReferenceInArray(reference, topic);
-        this.rotationReferenceService.updateRotationReference(reference);
-    }
-
-    cancelTopicEdit(topic: RotationTopic){
-        topic.editing = !topic.editing;
-    }
-
-    cancelReferenceEdit(reference: RotationReference){
-        reference.editing = !reference.editing;
-    }
-
-    editNotes(event: any){
-        debugger;
-        //reference.expand = true;
-    }
-
 }

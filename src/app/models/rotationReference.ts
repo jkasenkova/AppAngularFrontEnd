@@ -2,7 +2,7 @@ import { Guid } from "guid-typescript";
 import { RotationTopic } from "./rotationTopic";
 
 export class RotationReference {
-    public id: Guid;
+    public id?: Guid;
     public rotationTopicId?: Guid;
     public rotationTopic?: RotationTopic;
     public name: string;

@@ -1,61 +1,32 @@
 <div class="container app-my-handover">
 
-   @if(isMyRotation == true && handoverAdmin == false) {
-    <div id="viewUserPanel" class="user-panel margin-top-40">
-        <div class="panel-body">
-            <div class="user-view-block row vertical-center">
-                <div class="col col-lg-3 col-sm-3 col-md-3 col-xs-12 text-left">
-                    <span class="text">
-                        Viewing User
-                    </span>
-                </div>
-                <div class="col col-lg-6 col-sm-6 col-md-6 col-xs-12 text-center">
-                    <span class="title">
-                    <!--  {{owner.userName}} {{owner.userSurname}}  -->
-                        Julia Kasenkova
-                    </span>
-                </div>
+ <!-- set condition for view this panel -->
+<view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
 
-                <div class="col col-lg-3 col-sm-3 col-md-3 col-xs-12 text-right">
-                    <a href="/" class="exit-rotation-btn">Exit View User</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    }
-@if(handover){
+@if(handover) {
     <div Id="templatePanel" class="panel panel-primary">
-        
         <div class="panel-heading clearfix">
-
             <div class="handover-title">
                 <span class="title">Handover Report</span>
             </div>
-            
-                
             <div class="report-builder-controls">
-               
-                @if(handover.liveRotation){
-                    <div type="button" 
-                    
-                    [ngClass]="handover.shareEmails || handover.shareUsers ? 'share-report-icon-active' : 'share-report-icon-inactive'"
-                     class="btn-circle btn btn-link col-lg-1 col-md-1 col-xs-1 no-padding" 
-                     [matTooltip]="shareUserInfo()"
-                     (click)="shareReport()">
+                @if(handover.liveRotation) {
+                    <div 
+                        type="button" 
+                        [ngClass]="handover.shareEmails || handover.shareUsers ? 'share-report-icon-active' : 'share-report-icon-inactive'"
+                        class="btn-circle btn btn-link col-lg-1 col-md-1 col-xs-1 no-padding" 
+                        [matTooltip]="shareUserInfo()"
+                        (click)="shareReport()">
                         @if(handover.shareEmails.length > 0 || handover.shareUsers.length > 0){
                             <div class="count">{{countShare}}</div>
                         }
                     </div>
-                    
-                    
                     <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" matTooltip="Finish Report">
                         <span class="glyphicon span"></span>
                     </button>
                     <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster"  matTooltip="PDF Report Preview">
                         <span class='glyphicon span'></span>
                     </button>
-                    
-
                     <button type="button" [ngClass]="handover.reportComments ? 'active-report-comments' : 'inactive-report-comments'" 
                     class="btn-circle btn btn-link tooltipster" matTooltip="View Report Comments" (click)="reportComments()">
                         <span class='glyphicon span'></span>
@@ -68,9 +39,7 @@
                 }
                 
             </div>
-
         </div>
-       
         <div class="panel-body main-panel">
             <div class="navbar navbar-brown navbar-white">
                 <div class="row-block col col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -78,18 +47,16 @@
                         {{handover.endDate}}
                     </div>
                     <div class="from-to-block">
-                        <div class="icon-container" matTooltip="Julia Kasenkova">
+                        <div class="icon-container" [matTooltip]="getNameByUserId(handover.ownerId)">
                             <div class="name"> {{ getLettersIcon(handover.ownerId) }}</div>
                         </div>
                         <div class="arrow-left">&#10230;</div>
-                         <div class="icon-container" matTooltip="User Test">
+                         <div class="icon-container" [matTooltip]="getNameByUserId(handover.recipientId)">
                             <div class="name"> {{ getLettersIcon(handover.recipientId) }}</div>
                         </div>
                     </div>
-
                     <div class="recipient-block" matTooltip="Edit Recipient" (click)="setRecipient()"></div>
                     <div class="dates-block" matTooltip="Edit Dates" (click)="editDates()"></div>
-                  
                 </div>
 
                 <div class="row-block col col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -103,305 +70,10 @@
                         Expand All
                     </div>
                 </div>
+
             </div>
         </div>
-
-
-        <div class="report-panel">
-            <div Id="section">
-                @for (section of handover.sections; track section; let i = $index) {
-                    <div class="panel-body grey-panel">
-                        <div class="navbar navbar-blue">
-                            <div class="navbar-inline">
-                                <span class="label">{{section.sectionName}}</span>
-                                @if(!section.iHandoverSection){
-                                    <span class="editSection" (click)="editSectionDialog(section)"></span>
-                                    <span class="removeSection" (click)="deleteSectionDialog(section)"></span>
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="navbar navbar-white">
-                        <div class="table-block">
-                            <div class="table">
-                                <div class="headRow">
-                                    <div class="actions-title">Actions</div>
-                                    <div class="type-title">Topic</div>
-                                    <div class="reference-title">Reference</div>
-                                    <div class="notes-title">Notes</div>
-                                </div>  
-
-                                <div class="rowTopicData" cdkDropList
-                                (cdkDropListDropped)="dropTopic($event,  section.sectionTopics, section)">
-            
-                                @for (topic of section.sectionTopics; track topic) {
-
-                                    <div class="divRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="topic">
-                                        <div class="actions-body">
-                                            <div class="btn btn-circle draganddrop"  matTooltip="Reorder">
-                                                <mat-icon class="dragCursor">reorder</mat-icon>
-                                            </div>
-                                            @if(topic.templateTopic){
-                                                <div [ngClass]="topic.checked ? 'checked-topic' : 'unchecked-topic'" 
-                                                    class="btn btn-circle" 
-                                                    [matTooltip]="topic.checked ? 'Uncheck' : 'Check'"
-                                                    (click)="checkedTopic(topic, section)">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                            }
-                                            @else{
-                                                <div class="btn btn-circle remove-btn" matTooltip="Remove">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                            }
-                                            @if(topic.templateTopic){
-                                                <div class="btn btn-circle white-pin" matTooltip="Pinned">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                            }
-                                            @else{
-                                                <div class="btn btn-circle edit-btn" 
-                                                     matTooltip="Edit" 
-                                                     (click)="editTopic(topic)">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-
-                                                <div [ngClass]="topic.isPinned ? 'active-pin' : 'inactive-pin'" 
-                                                     class="btn btn-circle"
-                                                     [matTooltip]="topic.isPinned ? 'UnPin' : 'Pin'"
-                                                     (click)="topicPinned(topic, section)">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                            }
-                                        </div>
-                                        <div class="type-body">
-                                            @if(topic.editing){
-                                                <div class="edit-type">
-                                                    <mat-form-field calss="edit-topic">
-                                                        <input matInput placeholder="Name" [(ngModel)]="topic.name"
-                                                        (keydown.enter)="updateTopic(topic, section)">
-                                                    </mat-form-field>
-                                                </div>
-                                               
-    
-                                            }
-                                            @else{
-                                                <span>{{topic.name}}</span>
-                                            }
- 
-                                         @if(expanded(topic)){
-                                            <mat-icon class="mat-icon-rtl-mirror"
-                                            (click)="topic.isExpand = !topic.isExpand">
-                                            {{topic.isExpand ? 'expand_more' : 'chevron_right'}}
-                                            </mat-icon>
-                                         }
-                                         
-                                        </div>
-                                        <div class="reference-body">
-                                          ({{getCountReferences(topic)}})
-                                        </div>
-                                        <div class="notes-body"></div>
-                                        @if(topic.editing){
-                                            <div class="buttons-body">
-                                                <div class="btn btn-circle cancel-btn" 
-                                                (click)="cancelTopicEdit(topic)"
-                                                matTooltip="Cancel">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                                <div type="button" class="btn btn-circle save-edit-btn"
-                                                (click)="updateTopic(topic, section)">Save</div>
-                                            </div>
-                                        }
-                                    </div>
-                                  @if(topic.isExpand){
-                                        <div cdkDropList class="rowReferenceData"
-                                        (cdkDropListDropped)="dropReference($event, topic.references, section)">
-
-                                            @for(reference of topic.references; track reference){
-
-                                            <div class="divTopicRow" 
-                                                cdkDrag 
-                                                cdkDragLockAxis="y" 
-                                                [cdkDragData]="reference"
-                                                (click)=" reference.expand = !reference.expand">
-                                                <div class="actions-body">
-                                                    <div class="btn btn-circle draganddrop">
-                                                        <mat-icon class="dragCursor">reorder</mat-icon>
-                                                    </div>
-                                                    @if(reference.templateReference){
-                                                        <div [ngClass]="reference.checked ? 'checked-topic' : 'unchecked-topic'" 
-                                                            class="btn btn-circle"
-                                                            [matTooltip]="topic.checked ? 'Uncheck' : 'Check'"
-                                                            (click)="checkedReference(reference, topic)">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-
-                                                        <div class="btn btn-circle white-pin" matTooltip="Pinned">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-                                                    }
-                                                    @else{
-                                                        <div class="btn btn-circle remove-btn" matTooltip="Remove">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-                                                        
-                                                        <div class="btn btn-circle edit-btn"
-                                                        (click)="editReference(reference)" matTooltip="Edit">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-
-                                                        <div [ngClass]="reference.isPinned ? 'active-pin' : 'inactive-pin'" 
-                                                            class="btn btn-circle"
-                                                            [matTooltip]="topic.isPinned ? 'UnPin' : 'Pin'"
-                                                            (click)="pinnedReference(reference, topic)">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-                                                    }
-                                                   
-                                                </div>
-                                                <div class="type-body"></div>
-                                                <div class="reference-body tr-blue-text">
-
-                                                  @if(reference.editing){
-                                                    <mat-form-field calss="edit-topic">
-                                                        <input matInput placeholder="Name" [(ngModel)]="reference.name"
-                                                        (keydown.enter)="updateReference(reference, topic)">
-                                                    </mat-form-field>
-        
-                                                }
-                                                @else{
-                                                    <span>{{reference.name}}</span>
-                                                }
-                                                </div>
-                                                <div class="notes-body"
-                                                    (click)="editNotes($event)">
-                                                    @if(reference.expand == false){
-                                                        <div class="note-short">
-                                                            @if(reference.templateDescription){
-                                                                {{reference.templateDescription}}
-                                                            }
-                                                            @else{
-                                                                {{reference.description}}
-                                                            }
-                                                        </div>
-                                                    }
-                                                    @if(reference.expand){
-                                                        <span class="icon-text"></span>
-                                                        <div class="field-of-edit">
-                                                            <div class="change-note">
-                                                                @if(reference.templateDescription){
-                                                                    <div class="template-note text-grey-notes" disabled>Template notes: {{reference.templateDescription}}</div>
-                                                                }
-                                                                <textarea autfocus maxlength="1000" class="textarea-note">
-                                                                    {{reference.description}}
-                                                                </textarea>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                </div>
-                                                @if(reference.editing){
-                                                    <div class="buttons-edit">
-                                                        <div class="btn btn-circle cancel-btn" 
-                                                        (click)="cancelReferenceEdit(reference)"
-                                                        matTooltip="Cancel">
-                                                            <span class="glyphicon span"></span>
-                                                        </div>
-                                                        <div type="button" class="btn btn-circle save-edit-btn"
-                                                        (click)="updateReference(reference, topic)">Save</div>
-                                                    </div>
-                                                }
-                                            </div>
-                                            }
-                                        </div>
-                                    }
-                                }
-                            </div>
-                            
-                            <div #addRowElement style="display:none;" class="rowTopicData">
-                                <div class="divRow">
-                                    <div class="actions-body">
-                                        <div class="btn btn-circle draganddrop">
-                                        </div>
-                                        <div class="btn btn-circle remove-btn" matTooltip="Cancel"
-                                         (click)="addHideRowTopicForm(section,i)">
-                                            <span class="glyphicon span"></span>
-                                        </div>
-                                    </div>
-
-                                    <form [formGroup]="topicForm" class="add-topic-form">
-                                        <div class="type-body">
-                                            <mat-form-field class="example-full-width">
-                                                <input
-                                                  type="text"
-                                                  placeholder="Select/Add Topic"
-                                                  matInput
-                                                  formControlName="topicName"
-                                                  [matAutocomplete]="autoRef"
-                                                />
-                                                <mat-autocomplete autoActiveFirstOption #autoRef="matAutocomplete"
-                                                [displayWith]="displayFn" (optionSelected)="onSelectAddTopic($event)">
-                                                    @for (topic of section.sectionTopics; track topic) {
-                                                        <mat-option [value]="topic">{{topic.name}}</mat-option>
-                                                    }
-                                                </mat-autocomplete>
-                                              </mat-form-field>
-                                        </div>
-                                        <div class="reference-body">
-                                          <mat-form-field class="example-full-width">
-                                            <input
-                                            type="text"
-                                            placeholder="Select/Add Reference"
-                                            matInput
-                                            formControlName="referenceName"
-                                            [matAutocomplete]="auto"
-                                          />
-                                          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
-                                          [displayWith]="displayRefFn" (optionSelected)="onSelectAddReference($event)">
-                                              @for (reference of references; track reference) {
-                                                  <mat-option [value]="reference">{{reference.name}}</mat-option>
-                                              }
-                                          </mat-autocomplete>
-                                          </mat-form-field>
-                                        </div>
-                                        <div class="add-notes-body">
-                                          <mat-form-field class="example-full-width">
-                                              <textarea matInput
-                                                    cdkTextareaAutosize
-                                                    placeholder="Notes"
-                                                    #autosize="cdkTextareaAutosize"
-                                                    cdkAutosizeMinRows="1"
-                                                    formControlName="description" 
-                                                    cdkAutosizeMaxRows="5"></textarea>
-                                          </mat-form-field>
-                                        </div>
-                                        <div class="intel-body">
-                                            <button type="button" class="inline-add-btn" trigger="hover focus" side="top" delay="1000">
-                                                Add
-                                            </button>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                                
-                                @if(section.addBtnShow){
-                                    <div class="navbar navbar-white">
-                                        <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div> 
-                }
-                    <div class="panel-body grey-panel">
-                        <div class="navbar navbar-blue"></div>
-                    </div>
-                    <div class="navbar navbar-white">
-                        <div type="button" class="add-section center-block">Add Section</div>
-                    </div>
-            </div>
-        </div>
+        <topic [handoverOut]="handover"></topic>
     </div>
 }
 @else{
