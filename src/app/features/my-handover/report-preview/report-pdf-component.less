@@ -1,0 +1,437 @@
+
+*{
+    font-family: "Proxima-Nova-Regular";
+    word-wrap: break-word;
+    letter-spacing: normal;
+    font-size: 16px;
+  }
+
+.handover-portrait {
+    background-color: white !important;
+    width: 1140px;
+    margin: 0 auto;
+    padding: 40px;
+
+    .report-page {
+        .report-head {
+            width: 100%;
+
+            td {
+                &.logo-td {
+                    width: 232px;
+                    text-align: center;
+
+                    .company-logo {
+                        background-image: url("/assets/img/companyLogoBox.svg");
+                        border: none;
+                        background-repeat: no-repeat;
+                        width: 196px;
+                        height: 105px;
+                        margin-left: 25%;
+                    }
+                }
+
+                &.report-title {
+                    .title {
+                       // font-size: 14pt;
+                        font-weight: bold;
+                        color: #464646;
+                        border-bottom: solid 1px #464646;
+                        max-width: 390px;
+                        width: auto;
+                        min-width: 245px;
+                        margin: 10px 0;
+                    }
+
+                    .report-date {
+                     //   font-size: 14pt;
+                        font-weight: normal;
+                        color: #464646;
+                        margin: 10px 0;
+                    }
+
+                    .report-type {
+                        margin: 10px 0;
+
+                        .type {
+                            background-color: #F0F0F0;
+                            border-radius: 13px;
+                            color: #464646;
+                          //  font-size: 12pt;
+                            font-weight: normal;
+                            width: 150px;
+                            height: 26px;
+                            text-align: center;
+                            padding-top: 1px;
+
+                            &.draft {
+                                width: 150px;
+                            }
+
+                            &.received {
+                                width: 180px;
+                            }
+                        }
+                    }
+                }
+
+                &.report-info {
+                    text-align: right;
+                    padding-right: 5%;
+
+                    .from, .to, .shared, .contributors {
+                        margin: 10px 0;
+
+                        .title {
+                          //  font-size: 14pt;
+                            font-weight: normal;
+                            color: #464646;
+                            display: inline-block;
+                        }
+
+                        .name {
+                            display: inline-block;
+                         //   font-size: 14pt;
+                            font-weight: normal;
+                            color: #464646;
+                        }
+                    }
+                }
+            }
+        }
+
+        .modules {
+            margin-top: 10px;
+        }
+
+        .module-block {
+            border-top: solid 4px #F29105;
+
+            .module-title {
+              //  font-size: 14pt;
+                color: #F29105;
+                font-weight: bold;
+            }
+
+            .simple-topic {
+                &:last-child {
+                    .topic-body {
+                        border-bottom: none;
+                    }
+                }
+            }
+
+            .topic-body {
+                border-bottom: solid 1px #B4B4B4;
+                padding-bottom: 5px;
+                padding-top: 5px;
+                page-break-inside: avoid !important;
+
+                &.text-grey {
+                    .topic-name, span, .topic-reference, .topic-notes {
+                        color: #B4B4B4 !important;
+                    }
+                }
+
+                &.text-black {
+                    .topic-name, span, .topic-reference, .topic-notes {
+                        color: black !important;
+                    }
+                }
+
+                .action {
+                    display: inline-block;
+                    padding-right: 20px;
+                    vertical-align: top;
+                }
+
+                .body {
+                    display: inline-block;
+                    vertical-align: top;
+                }
+
+                .information {
+                    display: inline-block;
+                    vertical-align: top;
+
+                    .has-tasks {
+                        width: 20px;
+                        height: 20px;
+                        background-repeat: no-repeat;
+                        float: right;
+                        margin-top: 5px;
+                    }
+
+                    .topic-tag {
+                        display: inline-block;
+                        margin-top: 10px;
+
+                        .tag {
+                            background-color: #464646;
+                            color: #fff;
+                          //  font-size: 12pt;
+                            font-weight: bold;
+                            border-radius: 15px;
+                            height: 25px;
+                            width: auto;
+                            min-width: 50px;
+                            max-width: 90px;
+                            text-align: center;
+                            padding-top: 1px !important;
+                            float: right;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                        }
+
+                        .more-btn-tags {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 50%;
+                          //  font-size: 12pt;
+                            font-weight: bold;
+                            color: #fff;
+                            line-height: 15px;
+                            text-align: center;
+                            background: #464646;
+                            float: right;
+                            padding-left: 4px;
+                            padding-right: 3px;
+                            margin-left: 3px;
+                            margin-top: 3px;
+                        }
+                    }
+                }
+
+                .topic-icon {
+                    width: 30px;
+                    height: 30px;
+
+                    &.blue-pin {
+                    }
+
+                    &.grey-pin {
+                    }
+
+                    &.white-pin {
+                    }
+
+                    &.null-report {
+                    }
+                }
+
+                .first-row {
+                    margin: 0;
+
+                    .topic-name {
+                        display: inline-block;
+                        color: #464646;
+                        //font-size: 12pt;
+                        font-weight: bold;
+                    }
+
+                    span {
+                        margin-left: 4px;
+                        margin-right: 4px;
+                    }
+
+                    .topic-reference {
+                        display: inline-block;
+                        color: #464646;
+                       // font-size: 12pt;
+                        font-weight: bold;
+                    }
+                }
+
+                .second-row {
+                    margin: 0;
+
+                    .topic-notes {
+                        display: inline-block;
+                        color: #464646;
+                       // font-size: 12pt;
+                        font-weight: normal;
+
+                        div {
+                            word-wrap: break-word;
+                            max-width: 950px;
+                            word-break: break-word;
+                        }
+                    }
+                }
+
+                .third-row {
+                    margin: 0;
+
+                    span {
+                        margin-left: 4px;
+                        margin-right: 4px;
+                    }
+
+                    display: inline-block;
+                    margin: 0;
+                    color: #464646;
+                    font-size: 12pt;
+                    font-weight: normal;
+                }
+            }
+
+            .task {
+                &:last-child {
+                    .task-body {
+                        border-bottom: none;
+                    }
+                }
+
+                .task-body {
+                    border-bottom: solid 1px #B4B4B4;
+                    padding-bottom: 5px;
+                    padding-top: 5px;
+                    page-break-inside: avoid !important;
+
+                    &.text-grey {
+                        .task-name, .task-reference, span, .task-notes, .task-due-date {
+                            color: #B4B4B4 !important;
+                        }
+                    }
+
+                    .action {
+                        display: inline-block;
+                        padding-right: 20px;
+                        vertical-align: top;
+                    }
+
+                    .body {
+                        display: inline-block;
+                        vertical-align: top;
+                    }
+
+                    .information {
+                        display: inline-block;
+                        padding-top: 15px;
+
+                        .taks-priority {
+                            display: inline-block;
+
+                            .priority {
+                                width: 106px;
+                                height: 24px;
+                                border-radius: 13px;
+                                text-align: center;
+                             //   font-size: 12pt;
+                                font-weight: bold;
+                                color: #fff;
+                                padding-bottom: 2px;
+
+                                &.low {
+                                    background-color: #787878;
+                                }
+
+                                &.normal {
+                                    background-color: #009982;
+                                }
+
+                                &.important {
+                                    background-color: #0096C8;
+                                }
+
+                                &.critical {
+                                    background-color: #F29105;
+                                }
+
+                                &.urgent {
+                                    background-color: #BE005A;
+                                }
+                            }
+                        }
+
+                        .task-due-date {
+                            display: inline-block;
+
+                            .date {
+                                display: inline-block;
+                             //   font-size: 12pt;
+                                font-weight: normal;
+                                color: #464646;
+                                padding-right: 30px;
+                            }
+                        }
+                    }
+
+                    .task-icon {
+                        width: 30px;
+                        height: 30px;
+
+                        &.blue-pin {
+                        }
+
+                        &.grey-pin {
+                        }
+
+                        &.white-pin {
+                        }
+                    }
+
+                    .first-row {
+                        margin: 0;
+
+                        .task-name {
+                            display: inline-block;
+                            color: #464646;
+                          //  font-size: 12pt;
+                            font-weight: bold;
+                        }
+
+                        span {
+                            margin-left: 4px;
+                            margin-right: 4px;
+                        }
+
+                        .task-reference {
+                            display: inline-block;
+                            color: #464646;
+                         //   font-size: 12pt;
+                            font-weight: bold;
+                        }
+                    }
+
+                    .second-row {
+                        margin: 0;
+
+                        .task-notes {
+                            display: inline-block;
+                            color: #464646;
+                          //  font-size: 12pt;
+                            font-weight: normal;
+                            display: inline-block;
+                            max-width: 870px;
+
+                            div {
+                                word-wrap: break-word;
+                                max-width: 840px;
+                                word-break: break-word;
+                            }
+                        }
+                    }
+
+                    .third-row {
+                        margin: 0;
+
+                        span {
+                            margin-left: 4px;
+                            margin-right: 4px;
+                        }
+
+                        display: inline-block;
+                        margin: 0;
+                        color: #464646;
+                      //  font-size: 12pt;
+                        font-weight: normal;
+                    }
+                }
+            }
+        }
+    }
+}

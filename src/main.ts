@@ -13,6 +13,7 @@ import { SubscriptionManagementComponent } from './app/subscriptions-management/
 import { FooterComponent } from './app/features/footer/footer.component';
 import { register as registerSwiperElements } from 'swiper/element/bundle';
 import { MyTeamTabComponent } from './app/features/my-team-tab/my-team-tab.component';
+import { ReportPDFPreviewComponent } from './app/features/my-handover/report-preview/report-pdf-component';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
@@ -52,6 +53,9 @@ const routes: Routes =
         },
         {
             path: 'footer', component: FooterComponent
+        },
+        {
+            path: 'pdf-preview/:id', component: ReportPDFPreviewComponent
         }
       /*   {
             path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)

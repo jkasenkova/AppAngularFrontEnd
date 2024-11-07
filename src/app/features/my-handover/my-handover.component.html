@@ -24,8 +24,10 @@
                     <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" matTooltip="Finish Report">
                         <span class="glyphicon span"></span>
                     </button>
-                    <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster"  matTooltip="PDF Report Preview">
-                        <span class='glyphicon span'></span>
+                    <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster"  
+                            matTooltip="PDF Report Preview"
+                            (click)="reportPreview(handover)">
+                            <span class='glyphicon span'></span>
                     </button>
                     <button type="button" [ngClass]="handover.reportComments ? 'active-report-comments' : 'inactive-report-comments'" 
                     class="btn-circle btn btn-link tooltipster" matTooltip="View Report Comments" (click)="reportComments()">
@@ -98,4 +100,3 @@
    </div>
 }
 </div>
-

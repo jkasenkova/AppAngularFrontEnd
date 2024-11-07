@@ -33,10 +33,11 @@ import { Section } from "src/app/models/section";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
 import { MatExpansionModule } from '@angular/material/expansion';
-import { UserService } from "src/app/services/userService";
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
 import { expand } from "rxjs";
+import {Router, RouterModule} from '@angular/router';
+import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
 
 @Component({
     selector: 'app-my-handover',
@@ -53,7 +54,9 @@ import { expand } from "rxjs";
         CommonModule,
         MatExpansionModule,
         ViewUserPanelComponent,
-        TopicComponent
+        TopicComponent,
+        RouterModule,
+        ReportPDFPreviewComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
@@ -521,7 +524,8 @@ export class MyHandoverComponent implements OnInit {
         private myTeamService: MyTeamService,
         private templateService: TemplateService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService) 
+        private rotationReferenceService: RotationReferenceService,
+        private router: Router) 
         {
             this.owner = this.handoverOwner;//for test
             this.ownerHandoverName.emit(this.owner.ownerName);
@@ -824,4 +828,8 @@ export class MyHandoverComponent implements OnInit {
             }
         });
     }
+
+     reportPreview(handover: Handover){
+        this.router.navigate(['/pdf-preview', handover.handoverId.toString()]);
+    } 
 }

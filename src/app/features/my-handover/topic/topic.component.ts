@@ -131,7 +131,6 @@ export class TopicComponent implements OnInit {
 
     addTopic(section: HandoverSection, index: number){
         var newTopic: RotationTopic;
-        debugger;
 
         if(this.addTopicForm.value.topic){
             newTopic = this.addTopicForm.value.topic as RotationTopic;
@@ -348,7 +347,6 @@ export class TopicComponent implements OnInit {
     }
 
     clickOutside(reference: RotationReference, topic: RotationTopic, description: any) {
-        debugger;
         reference.description = description.trim();
         reference.expand = false;
         this.updateReference(reference);
