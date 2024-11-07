@@ -532,6 +532,7 @@ export class MyHandoverComponent implements OnInit {
       this.template = this.templateTmp;//for test
       this.handoverOut = this.handover;//for test
       this.teamMembers = this.usersTmp;// for test
+    
 
        this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
          this.handover = rotation;
@@ -571,6 +572,9 @@ export class MyHandoverComponent implements OnInit {
 
         handover.sections = handover.sections.sort((a, b) => Number(b.templateSection) - Number(a.templateSection));
         
+        this.initilizeForEachSectionTopics(this.handover);// for test
+
+
         return handover;
     }
 
@@ -596,12 +600,18 @@ export class MyHandoverComponent implements OnInit {
             rotationTopics.push(convertedTopic);
             this.rotationTopicService.addRotationTopic(convertedTopic);
         });
-        
-        if(rotationTopics.find(t => t.name == "Other") == null){
-            rotationTopics.push(this.addOtherTopic());
-        }
 
        return rotationTopics;
+    }
+
+    initilizeForEachSectionTopics(handover: Handover): void{
+
+        handover.sections.forEach(section => {
+            if(section.sectionTopics.find(t => t.name == "Other") == null){
+                section.sectionTopics.push(this.addOtherTopic());
+            }
+        });
+        
     }
 
     addOtherTopic(): RotationTopic{

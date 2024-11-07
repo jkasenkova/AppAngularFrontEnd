@@ -242,7 +242,7 @@
                                           [matAutocomplete]="autoRef"
                                         />
                                         <mat-autocomplete autoActiveFirstOption #autoRef="matAutocomplete"
-                                        [displayWith]="displayFn" (optionSelected)="onSelectAddTopic($event)">
+                                         (optionSelected)="onSelectAddTopic($event)">
                                             @for (topic of section.sectionTopics; track topic) {
                                                 <mat-option [value]="topic">{{topic.name}}</mat-option>
                                             }

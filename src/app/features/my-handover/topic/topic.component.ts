@@ -66,9 +66,9 @@ export class TopicComponent implements OnInit {
             });
 
             this.addTopicForm = this.fb.group({
-                topicId: new FormControl(),
+                topic: new FormControl(),
                 referenceId: new FormControl(),
-                topicName: "",
+                topicName: new FormControl(), // ""
                 referenceName: new FormControl(),
                 description: new FormControl()
             });
@@ -130,21 +130,30 @@ export class TopicComponent implements OnInit {
     //-----------------------------Topics--------------------------------
 
     addTopic(section: HandoverSection, index: number){
+        var newTopic: RotationTopic;
         debugger;
 
-        var newTopic: RotationTopic = {
-            id: this.addTopicForm.value.topicId ?? Guid.create(),
-            isPinned: false,
-            name: this.addTopicForm.value.topicName,
-            enabled: true,
-            index: section.sectionTopics.length ?? 0,
-            editing: false,
-            isExpand: false,
-            templateTopic: false,
-            checked: false,
-            sectionId: section.sectionId,
-            references: []
-        };
+        if(this.addTopicForm.value.topic){
+            newTopic = this.addTopicForm.value.topic as RotationTopic;
+            newTopic.enabled = true;
+            newTopic.sectionId = section.sectionId;
+            newTopic.index = section.sectionTopics.length ?? 0;
+        }
+        else{
+            newTopic = {
+                id: Guid.create(),
+                isPinned: false,
+                name: this.addTopicForm.value.topicName,
+                enabled: true,
+                index: section.sectionTopics.length ?? 0,
+                editing: false,
+                isExpand: false,
+                templateTopic: false,
+                checked: false,
+                sectionId: section.sectionId,
+                references: []
+            };
+        }
 
         var newReference: RotationReference = {
             id: this.addTopicForm.value.referenceId ?? Guid.create(),
@@ -161,6 +170,8 @@ export class TopicComponent implements OnInit {
         };
 
         newTopic.references.push(newReference);
+       
+        newTopic.references = newTopic.references.sort((a, b) => a.name.localeCompare(b.name))
 
         var otherTopic = section.sectionTopics.find(t => t.id == newTopic.id);
 
@@ -229,14 +240,10 @@ export class TopicComponent implements OnInit {
     
     onSelectAddTopic(event: any): void {
         var topic = event.option.value;
-        debugger;
         this.addTopicForm.get('topicName').setValue(topic.name);
-        this.addTopicForm.get('topicId').setValue(topic.id);
+        this.addTopicForm.get('topic').setValue(topic);
     }
 
-    displayFn(topic: RotationTopic): string | null{
-        return topic ? topic.name : null;
-    }
 
     updateTopic(topic: RotationTopic){
         topic.editing = !topic.editing;
