@@ -1,0 +1,44 @@
+<div class="modules">
+    @for (section of sectionsOut; track section) {
+        <div class="module-block">
+            <span class="module-title">{{section.sectionName}}</span>
+            <div class="row no-margin">
+                @for (topic of section.sectionTopics; track topic)
+                {
+                    @for(reference of topic.references; track reference)
+                    {
+                        <div class="topic-body">
+                            <div class="action">
+                               @if (topic.isPinned)
+                               {
+                                   <div class="topic-icon blue-pin"></div>
+                               }
+                               @else
+                               {
+                                   @if (topic.templateTopic)
+                                   {
+                                       <div 
+                                           [ngClass]="topic.checked ? 'topic-icon checked-topic' : 'topic-icon white-pin'" 
+                                           class="btn btn-circle">
+                                               <span class="glyphicon span"></span>
+                                       </div>
+                                   }
+                                   @else
+                                   {
+                                       <div class="topic-icon grey-pin"></div>
+                                   }
+                               }
+                           </div>
+    
+                           <div class="topic-name">{{topic.name}}</div> 
+                           <span>|</span>
+                           <div class="topic-reference">{{reference.name}}</div>
+                           <div class="description">{{reference.description}}</div>
+                       </div>
+                    }
+                    
+                }
+            </div>
+        </div>
+    }
+</div>

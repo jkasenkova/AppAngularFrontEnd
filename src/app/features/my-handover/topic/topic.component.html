@@ -44,7 +44,8 @@
                                             </div>
                                         }
                                         @else{
-                                            <div class="btn btn-circle remove-btn" matTooltip="Remove">
+                                            <div class="btn btn-circle remove-btn" matTooltip="Remove"
+                                            (click)="removeTopic(topic, section)">
                                                 <span class="glyphicon span"></span>
                                             </div>
                                         }
@@ -219,7 +220,7 @@
                                  }
                             </div>
                        </form> 
-                    
+
                         <div #addRowElement style="display:none;" class="rowTopicData">
                             <div class="divRow">
                                 <div class="actions-body">

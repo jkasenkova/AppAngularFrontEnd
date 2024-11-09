@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AddTopic } from '../models/addTopic';
 import { RotationTopic } from '../models/rotationTopic';
 import { RotationReference } from '../models/rotationReference';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'

@@ -1,9 +1,9 @@
 <div class="container app-my-handover">
 
- <!-- set condition for view this panel -->
-<view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
-
 @if(handover) {
+     <!-- set condition for view this panel -->
+    <view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
+
     <div Id="templatePanel" class="panel panel-primary">
         <div class="panel-heading clearfix">
             <div class="handover-title">

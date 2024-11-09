@@ -56,7 +56,8 @@ const routes: Routes =
         },
         {
             path: 'pdf-preview/:id', component: ReportPDFPreviewComponent
-        }
+        } 
+
       /*   {
             path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)
         },  */

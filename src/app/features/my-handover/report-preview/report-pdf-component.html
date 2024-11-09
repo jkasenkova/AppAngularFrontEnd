@@ -13,17 +13,13 @@
         <table class="report-head">
             <tbody>
                 <tr>
-                    <td class="logo-td">
-                        <div class="company-logo">
-                        </div>
-                    </td>
                     <td class="report-title">
                         <div class="title">
                             Handover Report
                         </div>
                         <div class="report-date">
                             {{pdfReportModel.handoverDates}}
-                            {{pdfReportModel.handoverTimeZone}}
+                            <div> {{pdfReportModel.handoverTimeZone}}</div>
                         </div>
                         <div class="report-type">
                             <div class="type">{{pdfReportModel.handoverType}}</div>
@@ -42,29 +38,17 @@
                             <div class="title">Shared:</div>
                             <div class="name">{{pdfReportModel.handoverSharedReports}}</div>
                         </div>
-                        <div class="contributors">
-                            <div class="title">Contributors:</div>
-                            <div class="name">{{pdfReportModel.handoverContributors}}</div>
-                        </div>
+                        @if(pdfReportModel.handoverContributors){
+                            <div class="contributors">
+                                <div class="title">Contributors:</div>
+                                <div class="name">{{pdfReportModel.handoverContributors}}</div>
+                            </div>
+                        }
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div class="modules">
-            @for (section of pdfReportModel.handoverSections; track section) {
-                <div class="module-block">
-                    <span class="module-title">{{section.sectionName}}</span>
-                    <div class="row no-margin">
-                        @for (topic of section.sectionTopics; track topic)
-                        {
-                            <div class="col-xs-12 simple-topic no-padding">
-                               {{topic.name}}
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-        </div>
+      <topic-model [sectionsOut]="handover.sections"></topic-model>
     </div>
 </body>
 </html>

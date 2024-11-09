@@ -68,7 +68,7 @@ export class TopicComponent implements OnInit {
             this.addTopicForm = this.fb.group({
                 topic: new FormControl(),
                 referenceId: new FormControl(),
-                topicName: new FormControl(), // ""
+                topicName: new FormControl(),
                 referenceName: new FormControl(),
                 description: new FormControl()
             });
@@ -167,8 +167,9 @@ export class TopicComponent implements OnInit {
             editing: false,
             expand: false
         };
-
-        newTopic.references.push(newReference);
+        debugger;
+      // newTopic.references = [];
+        newTopic.references.push(newReference); // check array
        
         newTopic.references = newTopic.references.sort((a, b) => a.name.localeCompare(b.name))
 
@@ -181,6 +182,7 @@ export class TopicComponent implements OnInit {
         }else{
             section.sectionTopics.push(newTopic);
         }
+        
        
         this.rotationTopicService.addRotationTopic(newTopic);
         this.rotationReferenceService.addRotationReference(newReference);
@@ -270,7 +272,19 @@ export class TopicComponent implements OnInit {
        this.updateTopicInArray(topic, section);
     }
 
+    removeTopic(topic: RotationTopic,  section: HandoverSection){
+        topic.enabled = false;
+
+        this.updateTopicInArray(topic, section);
+    }
+
     //----------------References--------------------
+
+    removeReference(topic: RotationTopic,  section: HandoverSection){
+        topic.enabled = false;
+
+        this.updateTopicInArray(topic, section);
+    }
 
     editReference(reference: RotationReference): void {
         reference.editing = !reference.editing;
@@ -299,19 +313,16 @@ export class TopicComponent implements OnInit {
 
     pinnedReference(reference: RotationReference, topic: RotationTopic){
         reference.isPinned = !reference.isPinned;
-
         this.updateReferenceInArray(reference, topic);
     }
 
     checkedReference(reference: RotationReference, topic: RotationTopic){
         reference.checked = !reference.checked;
-
         this.updateReferenceInArray(reference, topic);
     }
 
     updateReference(reference: RotationReference){
         reference.editing = false;
-         //update formControl
         this.rotationReferenceService.updateRotationReference(reference);
     }
 

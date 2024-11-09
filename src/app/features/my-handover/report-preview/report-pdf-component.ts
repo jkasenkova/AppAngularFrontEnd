@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Guid } from "guid-typescript";
 import {jsPDF} from 'jspdf';
@@ -9,12 +9,17 @@ import { HandoverService } from "src/app/services/handoverService";
 import { pdfReportModel } from "../models/pdfReportModel";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
+import { CommonModule } from "@angular/common";
+import { LocationService } from "src/app/services/locationService";
+import { HandoverSection } from "src/app/models/handoverSection";
+import { TopicModelComponent } from "./topic-model/topic-model.component";
 
 @Component({
     selector: 'pdf-preview',
     standalone: true,
     imports: [
-
+        CommonModule,
+        TopicModelComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './report-pdf-component.html',
@@ -30,6 +35,8 @@ export class ReportPDFPreviewComponent implements OnInit {
     handoverOwner: MyTeamModel;
     handoverRecipient: MyTeamModel;
     contributors: string[];
+    timeZoneReport: string;
+    @Output() sectionsOut: HandoverSection[];
 
     //for test
     options: Intl.DateTimeFormatOptions = {
@@ -307,11 +314,11 @@ handoverRecipientTmp: MyTeamModel = {
     private route: ActivatedRoute,
     private handoverService: HandoverService,
     private myTeamService: MyTeamService,
+    private locationService: LocationService,
   ) { }
 
     ngOnInit(): void {
         this.handoverId = this.route.snapshot.paramMap.get('id');
-
 
         this.handover = this.handoverTmp; // for test
         this.handoverOwner = this.handoverOwnerTmp; // for test
@@ -320,16 +327,16 @@ handoverRecipientTmp: MyTeamModel = {
         this.handoverService.getHandoverById(Guid.parse(this.handoverId)).subscribe(handover =>{
             this.handover = handover;
         });
-
-        this.handoverService.getHandoverById(Guid.parse(this.handoverId)).subscribe(handover =>{
-            this.handover = handover;
-        });
-
         
+        this.sectionsOut = this.handover.sections;
+
         this.myTeamService.getTeamUser(this.handover.ownerId).subscribe(owner => {
             this.handoverOwner = owner;
         }); 
-        
+
+        this.locationService.getLocationById( this.handoverOwner.locationId).subscribe(location => {
+            this.timeZoneReport = location.timeZoneId;
+        })
 
         if(this.handoverOwner.contributors){
             this.handoverOwner.contributors.forEach(userId => {
@@ -343,25 +350,23 @@ handoverRecipientTmp: MyTeamModel = {
             this.handoverRecipient = recipient;
         }); 
 
-        debugger;
       this.pdfReportModel = this.initilizeReportData(this.handover);
     }
 
     initilizeReportData(handover: Handover): pdfReportModel{
-        debugger;
         const today = new Date();
         var isToday = today.toDateString() === handover.endDate;
 
         var res = handover.createDate + " - " + handover.endDate;
 
         var shared = handover.shareUsers ? handover.shareUsers.flatMap(u=>u.ownerName)
-        .concat(handover.shareEmails).join(","): handover.shareEmails.join(",")
+        .concat(handover.shareEmails).join(","): handover.shareEmails.join(",");
 
         var dataModel: pdfReportModel = {
             handoverId: handover.handoverId,
             handoverDates: handover.createDate + " - " + handover.endDate,
             handoverType: isToday ? "Draft Version" : "Final Version",
-            handoverTimeZone: "Ukraine",
+            handoverTimeZone: "(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius", //this.timeZoneReport,
             handoverOwner: this.handoverOwner.ownerName,
             handoverRecipient: this.handoverRecipient.ownerName,
             handoverSharedReports: shared,
@@ -370,5 +375,9 @@ handoverRecipientTmp: MyTeamModel = {
         };
 
         return dataModel;
+    }
+
+    lines(text: string): string[]{
+        return text.split('\n');
     }
 }

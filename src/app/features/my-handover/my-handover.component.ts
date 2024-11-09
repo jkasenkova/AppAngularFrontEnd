@@ -77,7 +77,6 @@ export class MyHandoverComponent implements OnInit {
 
     @Output() ownerHandoverName = new EventEmitter<string>();
     @Output() handoverOut: Handover;
-    
     @Input() handoverAdmin: boolean; 
 
     options: Intl.DateTimeFormatOptions = {
@@ -179,7 +178,7 @@ export class MyHandoverComponent implements OnInit {
                         enabled: true,
                         index: 0,
                         isExpand:false,
-                        isPinned: false,
+                        isPinned: true,
                         templateTopic: false,
                         checked: false,
                         editing: false,
@@ -272,7 +271,7 @@ export class MyHandoverComponent implements OnInit {
                         templateTopic: false,
                         index: 0,
                         checked: false,
-                        isPinned: false,
+                        isPinned: true,
                         isExpand:false,
                         references:[ 
                             {
@@ -311,7 +310,7 @@ export class MyHandoverComponent implements OnInit {
                         checked: false,
                         templateTopic: false,
                         editing: false,
-                        isPinned: false,
+                        isPinned: true,
                         isExpand:false,
                         references:[ 
                             {
@@ -830,6 +829,11 @@ export class MyHandoverComponent implements OnInit {
     }
 
      reportPreview(handover: Handover){
-        this.router.navigate(['/pdf-preview', handover.handoverId.toString()]);
+
+        const url = this.router.serializeUrl(
+            this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
+          );
+        
+          window.open(url, '_blank');
     } 
 }

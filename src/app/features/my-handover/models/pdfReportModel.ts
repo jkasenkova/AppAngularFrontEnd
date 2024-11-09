@@ -1,5 +1,6 @@
 import { Guid } from 'guid-typescript';
 import { HandoverSection } from 'src/app/models/handoverSection';
+import { pdfDisplayTopicsModel } from './pdfDisplayTopicsModel';
 
 export class pdfReportModel {
     handoverId: Guid;

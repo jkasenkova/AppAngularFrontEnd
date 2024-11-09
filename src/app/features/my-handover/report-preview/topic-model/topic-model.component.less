@@ -1,0 +1,102 @@
+.modules {
+    margin-top: 10px;
+}
+
+.module-block {
+    border-top: solid 4px #F29105;
+
+    .module-title {
+      //  font-size: 14pt;
+        color: #F29105;
+        font-weight: bold;
+    }
+
+    .simple-topic {
+        &:last-child {
+            .topic-body {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .row{
+        width: 1060px;
+        padding-left: 15px;
+    }
+
+    .topic-body {
+        border-bottom: solid 1px #B4B4B4;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        page-break-inside: avoid !important;
+
+        .action {
+            display: inline-block;
+            padding-right: 20px;
+            vertical-align: top;
+
+            .topic-icon {
+                width: 30px;
+                height: 30px;
+
+                &.blue-pin {
+                    width: 25px;
+                    height: 25px;
+                    padding: 0;
+                    cursor: pointer;
+                    background-image: url("/assets/img/active-pin.svg");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+
+                &.grey-pin {
+                    width: 25px;
+                    height: 25px;
+                    padding: 0;
+                    cursor: pointer;
+                    background-image: url("/assets/img/inactive-pin.svg");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+
+                &.white-pin {
+                    width: 25px;
+                      height: 25px;
+                      padding: 0;
+                      cursor: pointer;
+                      background-image: url("/assets/img/white-pin.svg");
+                      background-repeat: no-repeat;
+                      background-position: center;
+                }
+
+                &.null-report {
+                    width: 25px;
+                    height: 25px;
+                    padding: 0;
+                    cursor: pointer;
+                    background-image: url("/assets/img/checked-topic.svg");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+            }
+        }
+
+        .topic-name{
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        .topic-reference{
+            display: inline-block;
+            padding-left: 10px;
+        }
+
+        .description{
+            padding-left: 40px;
+        }
+    }
+
+    .topic-body:last-child {
+        border-bottom: none;
+      }
+}

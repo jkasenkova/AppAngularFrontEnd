@@ -18,7 +18,6 @@ export class RoleService {
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createRole(roleModel: RoleModel): Observable<RoleModel> {
-        debugger;
         return this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders);
     }
 
