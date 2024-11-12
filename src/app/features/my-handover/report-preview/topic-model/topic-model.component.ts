@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit, ViewEncapsulation } from "@angular/core";
 import { HandoverSection } from "src/app/models/handoverSection";
-import { pdfDisplayTopicsModel } from "../../models/pdfDisplayTopicsModel";
 
 @Component({
     selector: 'topic-model',

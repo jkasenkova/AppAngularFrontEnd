@@ -27,6 +27,7 @@
     "bootstrap": "^5.3.3",
     "guid-typescript": "^1.0.9",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.2",
     "jspdf": "^2.5.2",
     "moment-timezone": "^0.5.45",
     "ngx-mat-timepicker": "^18.0.0",

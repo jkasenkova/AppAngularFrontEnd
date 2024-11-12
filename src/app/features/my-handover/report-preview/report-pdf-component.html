@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body class="handover-portrait">
+
+ <body class="handover-portrait">
     <div class="report-page">
         <table class="report-head">
             <tbody>
@@ -36,19 +37,20 @@
                         </div>
                         <div class="shared">
                             <div class="title">Shared:</div>
-                            <div class="name">{{pdfReportModel.handoverSharedReports}}</div>
+                            <div class="nameArr">{{pdfReportModel.handoverSharedReports}}</div>
                         </div>
                         @if(pdfReportModel.handoverContributors){
                             <div class="contributors">
                                 <div class="title">Contributors:</div>
-                                <div class="name">{{pdfReportModel.handoverContributors}}</div>
+                                <div class="nameArr">{{pdfReportModel.handoverContributors}}</div>
                             </div>
                         }
                     </td>
                 </tr>
             </tbody>
         </table>
-      <topic-model [sectionsOut]="handover.sections"></topic-model>
+       <topic-model [sectionsOut]="handover.sections"></topic-model> 
+       <report-comments [reportComments]="reportComments"></report-comments>
     </div>
 </body>
 </html>

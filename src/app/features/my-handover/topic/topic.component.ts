@@ -167,9 +167,8 @@ export class TopicComponent implements OnInit {
             editing: false,
             expand: false
         };
-        debugger;
-      // newTopic.references = [];
-        newTopic.references.push(newReference); // check array
+
+        newTopic.references.push(newReference);
        
         newTopic.references = newTopic.references.sort((a, b) => a.name.localeCompare(b.name))
 
@@ -248,7 +247,6 @@ export class TopicComponent implements OnInit {
 
     updateTopic(topic: RotationTopic){
         topic.editing = !topic.editing;
-         //update formControl ?
         this.rotationTopicService.updateTopic(topic);
     }
 
@@ -280,10 +278,9 @@ export class TopicComponent implements OnInit {
 
     //----------------References--------------------
 
-    removeReference(topic: RotationTopic,  section: HandoverSection){
-        topic.enabled = false;
-
-        this.updateTopicInArray(topic, section);
+    removeReference(reference:RotationReference, topic: RotationTopic){
+        reference.enabled = false;
+        this.updateReferenceInArray(reference, topic);
     }
 
     editReference(reference: RotationReference): void {

@@ -13,6 +13,7 @@ import { CommentsService } from "src/app/services/commentsService";
 import { UserModel } from "src/app/models/user";
 import { Handover } from "src/app/models/handover";
 import moment from "moment";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: 'report-comments',
@@ -32,7 +33,8 @@ import moment from "moment";
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule
     ]
 })
 
@@ -143,6 +145,13 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
     }
 
+    getNameUser(): string {
+        if(this.authorizedUser){
+            return this.authorizedUser.userName;
+        }
+        return "";
+    }
+
 
     getLettersIcon(): string {
         if(this.authorizedUser){
@@ -154,6 +163,8 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
         return "";
     }
+
+
 
     editComment(reportComment: ReportCommentsModel){
         this.addBtnVisible = false;

@@ -1,5 +1,5 @@
 
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, EventEmitter } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ViewContainerRef, ComponentRef } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,8 +36,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
 import { expand } from "rxjs";
-import {Router, RouterModule} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
+import { pdfReportModel } from "./models/pdfReportModel";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { reference } from "@popperjs/core";
 
 @Component({
     selector: 'app-my-handover',
@@ -74,11 +78,13 @@ export class MyHandoverComponent implements OnInit {
     countShare: number;
     teamMembers: MyTeamModel[] = [];
     template: Template;
-
+    handoverRecipient: MyTeamModel;
+   
     @Output() ownerHandoverName = new EventEmitter<string>();
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
-
+    @ViewChild(ReportPDFPreviewComponent, { static: false }) pdfReport: ReportPDFPreviewComponent;
+    
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'long',
@@ -517,14 +523,28 @@ export class MyHandoverComponent implements OnInit {
         isHandoverTemplate: false
     }; 
 
+    handoverRecipientTmp: MyTeamModel = {
+        ownerName: "Peter Hlazunov",
+        ownerEmail: "phlazunov@gmail.com",
+        userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+        ownerRole: "Team Lead",
+        isActiveRotation: true, //get state from back by curentRotationId
+        recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        selected: false
+    };
+
     constructor(
+        private router: Router,
+        private route: ActivatedRoute,
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private myTeamService: MyTeamService,
         private templateService: TemplateService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService,
-        private router: Router) 
+        private rotationReferenceService: RotationReferenceService) 
         {
             this.owner = this.handoverOwner;//for test
             this.ownerHandoverName.emit(this.owner.ownerName);
@@ -535,7 +555,7 @@ export class MyHandoverComponent implements OnInit {
       this.template = this.templateTmp;//for test
       this.handoverOut = this.handover;//for test
       this.teamMembers = this.usersTmp;// for test
-    
+      this.handoverRecipient = this.handoverRecipientTmp; // for test
 
        this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
          this.handover = rotation;
@@ -618,6 +638,8 @@ export class MyHandoverComponent implements OnInit {
     }
 
     addOtherTopic(): RotationTopic{
+        var references: RotationReference[] = [];
+        
         var otherTopic = { 
             id: Guid.create(),
             isPinned: false,
@@ -627,7 +649,8 @@ export class MyHandoverComponent implements OnInit {
             editing: false,
             isExpand: false,
             templateTopic: false,
-            checked: false
+            checked: false,
+            references: references
         };
 
         this.rotationTopicService.addRotationTopic(otherTopic);
@@ -690,7 +713,7 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-      getLettersIcon(userId: Guid): string {
+    getLettersIcon(userId: Guid): string {
         this.myTeamService.getTeamUser(userId).pipe(
             expand(user => 
                 {
@@ -709,7 +732,6 @@ export class MyHandoverComponent implements OnInit {
             ));
         return "";
     }
-
 
     setRecipient(){
         const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, { 
@@ -832,8 +854,8 @@ export class MyHandoverComponent implements OnInit {
 
         const url = this.router.serializeUrl(
             this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
-          );
-        
-          window.open(url, '_blank');
+        ); 
+
+        window.open(url, '_blank'); 
     } 
 }

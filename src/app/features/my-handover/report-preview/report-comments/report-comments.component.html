@@ -1,0 +1,19 @@
+<div class="modules">
+    <div class="module-block">
+        <span class="module-title">Report Comments</span>
+        @for (comment of reportComments; track comment) 
+        {
+            <div class="comment-row">
+                <div class="date-block">
+                    <div class="owner">
+                        {{getOwnerComment(comment.ownerId)}}
+                    </div>
+                    <div class="report-date">{{comment.createDate}}</div>
+                </div>
+                <span>|</span>
+                <div class="report-body">{{comment.comment}}</div>
+                
+            </div>
+        }
+    </div>
+</div>

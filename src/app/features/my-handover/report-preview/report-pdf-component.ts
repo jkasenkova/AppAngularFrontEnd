@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Guid } from "guid-typescript";
 import {jsPDF} from 'jspdf';
@@ -13,13 +13,17 @@ import { CommonModule } from "@angular/common";
 import { LocationService } from "src/app/services/locationService";
 import { HandoverSection } from "src/app/models/handoverSection";
 import { TopicModelComponent } from "./topic-model/topic-model.component";
+import html2canvas from "html2canvas";
+import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
+import { ReportCommentsComponent } from "./report-comments/report-comments.component";
 
 @Component({
     selector: 'pdf-preview',
     standalone: true,
     imports: [
         CommonModule,
-        TopicModelComponent
+        TopicModelComponent,
+        ReportCommentsComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './report-pdf-component.html',
@@ -27,7 +31,7 @@ import { TopicModelComponent } from "./topic-model/topic-model.component";
     encapsulation: ViewEncapsulation.None
 })
 
-export class ReportPDFPreviewComponent implements OnInit {
+export class ReportPDFPreviewComponent implements OnInit  {
     @ViewChild('pdfReport', {static: false}) pdfReport: ElementRef;
     handoverId: string;
     handover: Handover;
@@ -37,6 +41,7 @@ export class ReportPDFPreviewComponent implements OnInit {
     contributors: string[];
     timeZoneReport: string;
     @Output() sectionsOut: HandoverSection[];
+    @Output() reportComments: ReportCommentsModel[];
 
     //for test
     options: Intl.DateTimeFormatOptions = {
@@ -311,13 +316,39 @@ handoverRecipientTmp: MyTeamModel = {
 };
 
   constructor(
-    private route: ActivatedRoute,
     private handoverService: HandoverService,
     private myTeamService: MyTeamService,
     private locationService: LocationService,
+    private route: ActivatedRoute
   ) { }
 
-    ngOnInit(): void {
+   ngAfterViewInit(){
+    debugger;
+    this.convertToPDF();
+  }
+
+  private convertToPDF() {
+    const content = this.pdfReport.nativeElement;
+
+    html2canvas(content).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+      const pdfBlob = pdf.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const newTab = window.open();
+      newTab?.document.write('<iframe width="100%" height="100%" src="' + pdfUrl + '"></iframe>');
+    });
+  }
+
+     ngOnInit(): void {
+        debugger;
         this.handoverId = this.route.snapshot.paramMap.get('id');
 
         this.handover = this.handoverTmp; // for test
@@ -350,14 +381,14 @@ handoverRecipientTmp: MyTeamModel = {
             this.handoverRecipient = recipient;
         }); 
 
-      this.pdfReportModel = this.initilizeReportData(this.handover);
+       this.pdfReportModel = this.initilizeReportData(this.handover);
+       this.reportComments = this.handover.reportComments;
     }
 
     initilizeReportData(handover: Handover): pdfReportModel{
+        
         const today = new Date();
         var isToday = today.toDateString() === handover.endDate;
-
-        var res = handover.createDate + " - " + handover.endDate;
 
         var shared = handover.shareUsers ? handover.shareUsers.flatMap(u=>u.ownerName)
         .concat(handover.shareEmails).join(","): handover.shareEmails.join(",");
@@ -370,14 +401,9 @@ handoverRecipientTmp: MyTeamModel = {
             handoverOwner: this.handoverOwner.ownerName,
             handoverRecipient: this.handoverRecipient.ownerName,
             handoverSharedReports: shared,
-            handoverContributors: this.handoverOwner.contributors ? this.handoverOwner.contributors.join(",") : null,
-            handoverSections: this.handover.sections
+            handoverContributors: this.handoverOwner.contributors ? this.handoverOwner.contributors.join(",") : null
         };
 
         return dataModel;
-    }
-
-    lines(text: string): string[]{
-        return text.split('\n');
     }
 }
