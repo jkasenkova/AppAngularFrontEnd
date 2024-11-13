@@ -51,6 +51,7 @@ export class ReportCommentsDialogComponent implements OnInit {
         ownerEmail: "jkasenkova@gmail.com",
         userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         ownerRole: "Developer",
+        ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         isActiveRotation: true, //get state from back by curentRotationId
         recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),

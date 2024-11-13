@@ -81,7 +81,7 @@
                                                     <mat-form-field calss="edit-topic">
                                                         <input matInput placeholder="Name"
                                                                 formControlName="topicName"
-                                                                (keydown.enter)="updateTopic(topic)">
+                                                                (keydown.enter)="updateTopic(topic, section)">
                                                     </mat-form-field>
                                                 </div>
                                             }
@@ -111,7 +111,7 @@
                                                         <span class="glyphicon span"></span>
                                                 </div>
                                                 <div type="button" class="btn btn-circle save-edit-btn"
-                                                    (click)="updateTopic(topic)">Save</div>
+                                                    (click)="updateTopic(topic, section)">Save</div>
                                                 </div>
                                             }
                                         </div>
@@ -173,7 +173,7 @@
                                                                         <mat-form-field calss="edit-topic">
                                                                             <input matInput placeholder="Name"
                                                                                     formControlName="referenceName"
-                                                                                    (keydown.enter)="updateReference(reference)">
+                                                                                    (keydown.enter)="updateReference(reference, topic)">
                                                                         </mat-form-field>
 
                                                                     }
@@ -222,7 +222,7 @@
                                                                                 <span class="glyphicon span"></span>
                                                                         </div>
                                                                         <div type="button" class="btn btn-circle save-edit-btn"
-                                                                            (click)="updateReference(reference)">Save</div>
+                                                                            (click)="updateReference(reference, topic)">Save</div>
                                                                         }
                                                                 </div>
                                                         </div>

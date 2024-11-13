@@ -38,11 +38,14 @@ import { TopicComponent } from "./topic/topic.component";
 import { expand } from "rxjs";
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
-import { pdfReportModel } from "./models/pdfReportModel";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { reference } from "@popperjs/core";
-import { FinishRotationDialogComponent } from "./dialogs/finish-rotation/finish-rotation.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
+import { TabsMenuComponent } from "../tabs-menu/tabs-menu.component";
+import { RoleModel } from "src/app/models/role";
+import { RoleService } from "src/app/services/roleService";
+import { UserType } from "src/app/models/userType";
+import { RotationType } from "src/app/models/rotationType";
+import { ShiftPatternType } from "src/app/models/shiftPatternType";
 
 @Component({
     selector: 'app-my-handover',
@@ -61,7 +64,9 @@ import { FinishRotationDialogComponent } from "./dialogs/finish-rotation/finish-
         ViewUserPanelComponent,
         TopicComponent,
         RouterModule,
-        ReportPDFPreviewComponent
+        ReportPDFPreviewComponent,
+        MatTabsModule,
+        FinishRotationDialogComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
@@ -73,13 +78,12 @@ export class MyHandoverComponent implements OnInit {
     handover: Handover;
     readonly dialog = inject(MatDialog);
     owner: MyTeamModel;
-    recipient: UserModel;
     expandAll: boolean = false;
-    isMyRotation: boolean = false;
     countShare: number;
     teamMembers: MyTeamModel[] = [];
     template: Template;
     handoverRecipient: MyTeamModel;
+    ownerRole: RoleModel;
    
     @Output() ownerHandoverName = new EventEmitter<string>();
     @Output() handoverOut: Handover;
@@ -96,7 +100,8 @@ export class MyHandoverComponent implements OnInit {
         ownerName: "Julia Kasenkova",
         ownerEmail: "jkasenkova@gmail.com",
         userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-        ownerRole: "Developer",
+        ownerRole: "Developer", // get by id role info
+        ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         isActiveRotation: true, //get state from back by curentRotationId
         recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -110,6 +115,7 @@ export class MyHandoverComponent implements OnInit {
             ownerName: "Julia Kasenkova",
             ownerEmail: "jkasenkova@gmail.com",
             userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             ownerRole: "Developer",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
@@ -125,6 +131,7 @@ export class MyHandoverComponent implements OnInit {
             ownerRole: "Team Lead",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -137,6 +144,7 @@ export class MyHandoverComponent implements OnInit {
             ownerRole: "Product Manager",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -149,6 +157,7 @@ export class MyHandoverComponent implements OnInit {
         ownerEmail: "jkasenkova@gmail.com",
         userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         ownerRole: "Developer",
+        ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         isActiveRotation: true, //get state from back by curentRotationId
         recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -529,6 +538,7 @@ export class MyHandoverComponent implements OnInit {
         ownerEmail: "phlazunov@gmail.com",
         userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
         ownerRole: "Team Lead",
+        ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         isActiveRotation: true, //get state from back by curentRotationId
         recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -537,21 +547,44 @@ export class MyHandoverComponent implements OnInit {
         selected: false
     };
 
+    roleTmp: RoleModel = {
+        roleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        roleName: "Developer",
+        locationId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        templateId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        userType: UserType.User,
+        teamId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        rotationType: RotationType.Shift,
+        shiftPatternType: ShiftPatternType.hours8
+    }
+
     constructor(
         private router: Router,
-        private route: ActivatedRoute,
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private myTeamService: MyTeamService,
         private templateService: TemplateService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService) 
+        private rotationReferenceService: RotationReferenceService,
+        private roleService: RoleService) 
         {
             this.owner = this.handoverOwner;//for test
             this.ownerHandoverName.emit(this.owner.ownerName);
         }
 
     ngOnInit(): void {
+    
+        if(this.owner){
+            this.roleService.getRoleById(this.owner.ownerRoleId).subscribe(role =>{
+                this.ownerRole = role
+            });
+
+            //for test
+            this.ownerRole = this.roleTmp;
+        }
+
+
+
       this.handover = this.handoverTmp;// for test
       this.template = this.templateTmp;//for test
       this.handoverOut = this.handover;//for test

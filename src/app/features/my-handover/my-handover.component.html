@@ -1,8 +1,21 @@
+<!-- @if(ownerRole.userType == "User"){
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
+        <mat-tab label="Handover"></mat-tab>
+    </mat-tab-group>
+}
+ -->
+ @if(!handoverAdmin){
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
+        <mat-tab label="Handover"></mat-tab>
+    </mat-tab-group>
+ }
+
 <div class="container app-my-handover">
 
 @if(handover) {
-     <!-- set condition for view this panel -->
-    <view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
+    @if(handoverAdmin){
+        <view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
+    }
 
     <div Id="templatePanel" class="panel panel-primary">
         <div class="panel-heading clearfix">
@@ -80,7 +93,7 @@
         <topic [handoverOut]="handover"></topic>
         }
         @else{
-            <div class="message-block">
+            <div class="message-block font-weight">
                 <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-20">
                     To start a new handover, select the 'Start New Handover' button.
                 </div>

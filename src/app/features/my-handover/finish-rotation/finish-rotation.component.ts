@@ -3,6 +3,7 @@ import {  MatDialogRef } from "@angular/material/dialog";
 
 @Component({
     selector: 'finish-rotation',
+    standalone: true,
     templateUrl: './finish-rotation.component.html',
     styleUrls: ['./finish-rotation.component.less']
   })

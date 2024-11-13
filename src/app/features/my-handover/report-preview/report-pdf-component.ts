@@ -297,6 +297,7 @@ handoverOwnerTmp: MyTeamModel = {
     ownerEmail: "jkasenkova@gmail.com",
     userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
     ownerRole: "Developer",
+    ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
     isActiveRotation: true, //get state from back by curentRotationId
     recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
     locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -310,6 +311,7 @@ handoverRecipientTmp: MyTeamModel = {
     ownerEmail: "phlazunov@gmail.com",
     userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
     ownerRole: "Team Lead",
+    ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
     isActiveRotation: true, //get state from back by curentRotationId
     recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
     locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -348,7 +350,6 @@ handoverRecipientTmp: MyTeamModel = {
   }
 
      ngOnInit(): void {
-        debugger;
         this.handoverId = this.route.snapshot.paramMap.get('id');
 
         this.handover = this.handoverTmp; // for test

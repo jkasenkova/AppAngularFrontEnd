@@ -3,7 +3,7 @@ import { UserType } from "./userType";
 import { ShiftPatternType } from "./shiftPatternType";
 import { RotationType } from "./rotationType";
 
-export interface RoleModel {
+export class RoleModel {
     roleId?: Guid;
     roleName: string;
     locationId: Guid;

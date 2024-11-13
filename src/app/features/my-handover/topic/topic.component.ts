@@ -245,9 +245,11 @@ export class TopicComponent implements OnInit {
     }
 
 
-    updateTopic(topic: RotationTopic){
+    updateTopic(topic: RotationTopic, section: HandoverSection){
         topic.editing = !topic.editing;
-        this.rotationTopicService.updateTopic(topic);
+
+        topic.name = this.topicForm.get('topicName').value;
+        this.updateTopicInArray(topic, section);
     }
 
     checkedTopic(topic: RotationTopic, section: HandoverSection){
@@ -293,7 +295,7 @@ export class TopicComponent implements OnInit {
         reference.expand = false;
 
         this.updateReferenceInArray(reference, topic);
-        this.updateReference(reference);
+        this.updateReference(reference, topic);
     }
 
     cancelReferenceEdit(reference: RotationReference){
@@ -318,9 +320,12 @@ export class TopicComponent implements OnInit {
         this.updateReferenceInArray(reference, topic);
     }
 
-    updateReference(reference: RotationReference){
+    updateReference(reference: RotationReference, topic: RotationTopic){
         reference.editing = false;
-        this.rotationReferenceService.updateRotationReference(reference);
+
+        reference.name = this.topicForm.get('referenceName').value;
+
+        this.updateReferenceInArray(reference, topic);
     }
 
     displayRefFn(reference?: RotationReference): string | undefined {
@@ -357,7 +362,7 @@ export class TopicComponent implements OnInit {
     clickOutside(reference: RotationReference, topic: RotationTopic, description: any) {
         reference.description = description.trim();
         reference.expand = false;
-        this.updateReference(reference);
+        this.updateReference(reference, topic);
         this.updateReferenceInArray(reference, topic);
       }
 }
