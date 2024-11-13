@@ -21,7 +21,9 @@
                             <div class="count">{{countShare}}</div>
                         }
                     </div>
-                    <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" matTooltip="Finish Report">
+                    <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" 
+                            matTooltip="Finish Report"
+                            (click)="finishRotation(handover)">
                         <span class="glyphicon span"></span>
                     </button>
                     <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster" matTooltip="PDF Report Preview"
@@ -41,6 +43,7 @@
                 
             </div>
         </div>
+        @if(handover.liveRotation){
         <div class="panel-body main-panel">
             <div class="navbar navbar-brown navbar-white">
                 <div class="row-block col col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -75,6 +78,18 @@
             </div>
         </div>
         <topic [handoverOut]="handover"></topic>
+        }
+        @else{
+            <div class="message-block">
+                <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-20">
+                    To start a new handover, select the 'Start New Handover' button.
+                </div>
+                <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    You can see the previous report in the Reports tab.
+                </div>
+              
+            </div>
+        }
     </div>
 }
 @else{

@@ -42,6 +42,7 @@ import { pdfReportModel } from "./models/pdfReportModel";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { reference } from "@popperjs/core";
+import { FinishRotationDialogComponent } from "./dialogs/finish-rotation/finish-rotation.component";
 
 @Component({
     selector: 'app-my-handover',
@@ -850,12 +851,26 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-     reportPreview(handover: Handover){
+    reportPreview(handover: Handover){
 
-        const url = this.router.serializeUrl(
+         const url = this.router.serializeUrl(
             this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
         ); 
 
-        window.open(url, '_blank'); 
+        window.open(url, '_blank');  
     } 
+
+    finishRotation(handover: Handover){
+        const dialogRef = this.dialog.open(FinishRotationDialogComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                handover.liveRotation = false;
+                this.owner.isActiveRotation = false;
+                this.handoverService.updateHandover(handover);
+                this.myTeamService.updateTeamUser(this.owner);
+               //sent reports
+            }
+        });
+    }
 }

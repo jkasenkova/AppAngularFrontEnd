@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Guid } from "guid-typescript";
 import {jsPDF} from 'jspdf';
 import { Handover } from "src/app/models/handover";
@@ -31,7 +31,7 @@ import { ReportCommentsComponent } from "./report-comments/report-comments.compo
     encapsulation: ViewEncapsulation.None
 })
 
-export class ReportPDFPreviewComponent implements OnInit  {
+export class ReportPDFPreviewComponent implements OnInit   {
     @ViewChild('pdfReport', {static: false}) pdfReport: ElementRef;
     handoverId: string;
     handover: Handover;
@@ -40,8 +40,11 @@ export class ReportPDFPreviewComponent implements OnInit  {
     handoverRecipient: MyTeamModel;
     contributors: string[];
     timeZoneReport: string;
+    showSaveBtn: boolean = true;
+
     @Output() sectionsOut: HandoverSection[];
     @Output() reportComments: ReportCommentsModel[];
+    @Input() handoverOut: Handover; 
 
     //for test
     options: Intl.DateTimeFormatOptions = {
@@ -322,8 +325,8 @@ handoverRecipientTmp: MyTeamModel = {
     private route: ActivatedRoute
   ) { }
 
-   ngAfterViewInit(){
-    debugger;
+  exportToPDF(){
+    this.showSaveBtn = false;
     this.convertToPDF();
   }
 
@@ -340,10 +343,7 @@ handoverRecipientTmp: MyTeamModel = {
 
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-      const pdfBlob = pdf.output('blob');
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      const newTab = window.open();
-      newTab?.document.write('<iframe width="100%" height="100%" src="' + pdfUrl + '"></iframe>');
+      pdf.save('RelayWorks-Report/' + this.handoverId + '.pdf');
     });
   }
 
@@ -387,16 +387,13 @@ handoverRecipientTmp: MyTeamModel = {
 
     initilizeReportData(handover: Handover): pdfReportModel{
         
-        const today = new Date();
-        var isToday = today.toDateString() === handover.endDate;
-
         var shared = handover.shareUsers ? handover.shareUsers.flatMap(u=>u.ownerName)
-        .concat(handover.shareEmails).join(","): handover.shareEmails.join(",");
+        .concat(handover.shareEmails).join(", "): handover.shareEmails.join(", ");
 
         var dataModel: pdfReportModel = {
             handoverId: handover.handoverId,
             handoverDates: handover.createDate + " - " + handover.endDate,
-            handoverType: isToday ? "Draft Version" : "Final Version",
+            handoverType: handover.liveRotation ? "Draft Version" : "Final Version",
             handoverTimeZone: "(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius", //this.timeZoneReport,
             handoverOwner: this.handoverOwner.ownerName,
             handoverRecipient: this.handoverRecipient.ownerName,
