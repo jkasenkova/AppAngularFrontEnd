@@ -17,6 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "guid-typescript",
+              "moment-timezone"
+            ],
             "outputPath": "dist/client-application",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -81,10 +85,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ClientApplication:build:production"
+              "buildTarget": "ClientApplication:build:production"
             },
             "development": {
-              "browserTarget": "ClientApplication:build:development"
+              "buildTarget": "ClientApplication:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +96,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ClientApplication:build:production"
+            "buildTarget": "ClientApplication:build:production"
           }
         },
         "test": {

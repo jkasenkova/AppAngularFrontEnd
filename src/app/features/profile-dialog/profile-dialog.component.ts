@@ -47,8 +47,8 @@ export class ProfileDialogComponent implements OnInit {
     ) {
 
         this.profileForm = this.fb.group({
-            userName: [data.userName, Validators.required],
-            surName:  [data.userSurname, Validators.required],
+            firstName: [data.firstName, Validators.required],
+            lastName:  [data.lastName, Validators.required],
             title: data.title,
             roleName: ''
         });

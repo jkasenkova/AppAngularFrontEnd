@@ -1,6 +1,5 @@
 
 <div class="sign-in-page">
-
     <div class="sign-in-container">
         <div class="relay-logo-block">
             <a class="logo" href="\"></a>
@@ -27,15 +26,13 @@
                             <input matInput formControlName="password" type='password'>
                         </mat-form-field>
 
-                        <button type="submit" class="btn btn-send">Login</button>
+                        <button type="submit" class="btn btn-send" (click)="signIn()" >Login</button>
                     </form>
                 </div>
                 <span class="change-indicator"></span>
             </div>
-        </div>
-    
+        </div>   
      
-    
         <div class="row text-center">
             <div class="col col-xs-12">
                 <div class="buttons-block">
@@ -61,9 +58,7 @@
                 </div>
             </div>
         </div>
-    
-    </div>
-    
+    </div>   
 </div>
 
 <router-outlet></router-outlet> 

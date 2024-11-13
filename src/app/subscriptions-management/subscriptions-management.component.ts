@@ -6,7 +6,7 @@ import { RouterModule, RouterOutlet } from "@angular/router";
 import { Subscription } from "../models/subscription";
 import { MatIconModule} from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SubscriptionService } from "../services/subscriptionService";
+import { AuthService } from "../services/auth/auth.service";
 
 @Component({
     selector: 'subscriptions-management',
@@ -30,13 +30,13 @@ export class SubscriptionManagementComponent implements OnInit {
     subscriptions: Subscription[];
     currentYear: number;
 
-    constructor(private subscriptionService: SubscriptionService){}
+    constructor(
+        private authService: AuthService) {
+    }
 
     ngOnInit(): void {
-        this.subscriptionService.getSubscriptions().subscribe(subscriptions =>{
-            this.subscriptions = subscriptions
-        });
-
+        this.authService.getAccounts().subscribe(accounts => this.subscriptions = accounts);
+        console.log(typeof this.subscriptions);
         this.currentYear = new Date().getFullYear();
     }
 }

@@ -164,7 +164,7 @@
                                     <mat-label>Line Manager</mat-label>
                                     <mat-select placeholder="Select Line Manager">
                                         @for (lineManager of data.lineManagers; track lineManager) {
-                                            <mat-option [value]="lineManager">{{lineManager.userName}}</mat-option>
+                                            <mat-option [value]="lineManager">{{lineManager.firstName}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -182,7 +182,7 @@
                                     <mat-select placeholder="Select Observer" multiple>
                                         <mat-option>--</mat-option>
                                         @for (contributor of data.contributors; track contributor) {
-                                            <mat-option [value]="contributor">{{contributor.userName}}</mat-option>
+                                            <mat-option [value]="contributor">{{contributor.firstName}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -198,7 +198,7 @@
                                         <mat-select placeholder="Select Default Recipient">
                                             <mat-option>--</mat-option>
                                             @for (recipient of data.recipients; track recipient) {
-                                                <mat-option [value]="recipient">{{recipient.userName}}</mat-option>
+                                                <mat-option [value]="recipient">{{recipient.firstName}}</mat-option>
                                             }
                                         </mat-select>
                                     </mat-form-field>

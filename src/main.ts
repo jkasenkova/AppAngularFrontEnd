@@ -1,72 +1,41 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
+import { provideHttpClient, withInterceptorsFromDi, withInterceptors } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
-import { MyHandoverComponent } from './app/features/my-handover/my-handover.component';
-import { MyTeamComponent } from './app/features/my-team/my-team.component';
-import { AdminPanelComponent } from './app/features/admin-panel/admin-panel.component';
-import { SignInComponent } from './app/sign-in/sign-in.component';
-import { SignUpComponent } from './app/sign-up/sign-up.component';
-import { SubscriptionManagementComponent } from './app/subscriptions-management/subscriptions-management.component';
-import { FooterComponent } from './app/features/footer/footer.component';
-import { register as registerSwiperElements } from 'swiper/element/bundle';
-import { MyTeamTabComponent } from './app/features/my-team-tab/my-team-tab.component';
+import { provideStore, ReducerManager, ReducerManagerDispatcher, StoreModule } from '@ngrx/store';
+import { EffectsModule, provideEffects } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+
+import { AppComponent } from './app/app.component';
+import { AuthService, authServiceInitProvider } from './app/services/auth/auth.service';
+import { authInterceptorProviders, AuthInterceptor } from './app/services/auth/interceptors/auth.interceptor';
+import { AuthEffects } from './app/services/auth/store/auth.effects';
+import { AuthFacade } from './app/services/auth/store/auth.facade';
+import { authReducer } from './app/services/auth/store/auth.reducer';
+import { APP_ROUTES } from './app/app-routes';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;
 }
 
-const providers = [
-    {
-        provide: 'BASE_URL', useFactory: getBaseUrl
-    }
+const providerRegistry = [
+    { provide: 'BASE_URL', useFactory: getBaseUrl },
+    { provide: 'StoreRootModule', useClass: StoreModule },
+    { provide: 'ReducerManager', useClass: ReducerManager },
+    { provide: 'AuthService', useClass: AuthService },
+    authInterceptorProviders
 ];
 
-const routes: Routes =
-    [
-        {
-            path: '', pathMatch: 'full', redirectTo: 'my-team'
-        },
-        {
-            path: 'my-handover', component: MyHandoverComponent
-        },
-        {
-            path: 'my-team-tab', component: MyTeamTabComponent
-        },
-        {
-            path: 'my-team', component: MyTeamComponent
-        },
-        {
-            path: 'admin-panel', component: AdminPanelComponent
-        },
-        {
-            path: 'sign-in', component: SignInComponent
-        },
-        {
-            path: 'sign-up', component: SignUpComponent
-        },
-        {
-            path: 'subscriptions-management', component: SubscriptionManagementComponent
-        },
-        {
-            path: 'footer', component: FooterComponent
-        }
-      /*   {
-            path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)
-        },  */
-    ];
-
-registerSwiperElements();
-bootstrapApplication(AppComponent,
-    {
-        providers: [
-            provideHttpClient(),
-            provideAnimations(),
-            providers,
-            importProvidersFrom(RouterModule.forRoot(routes))
-        ]
-    });
-
-
+bootstrapApplication(AppComponent, {
+    providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideAnimations(),
+        providerRegistry,
+        importProvidersFrom(RouterModule.forRoot(APP_ROUTES, {
+            scrollPositionRestoration: 'enabled'
+        })),
+        provideStore({ auth: authReducer }),
+        provideEffects([AuthEffects])
+    ]
+});

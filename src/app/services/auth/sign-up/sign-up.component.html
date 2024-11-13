@@ -1,24 +1,19 @@
 
 <div class="sign-up-page">
-
     <div class="sign-up-container">
         <div class="relay-logo-block">
             <a class="logo" href="\"></a>
         </div>
-
         <div class="row text-center">
             <div class="col col-xs-12 title-block">
                 Register
             </div>
         </div>
 
-
         <div class="row text-center">
             <div class="col col-xs-12">
                 <div class="form-block">
                     <form [formGroup]="signUpForm">
-
-
                         <div class="row">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                 <div class="row padding-right-15">
@@ -37,8 +32,8 @@
                                 <div class="row padding-right-15">
                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <mat-form-field class="example-full-width">
-                                            <mat-label>Name</mat-label>
-                                            <input matInput formControlName="name">
+                                            <mat-label>First name</mat-label>
+                                            <input matInput formControlName="firstName">
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -48,8 +43,8 @@
                                 <div class="row padding-right-15">
                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <mat-form-field class="example-full-width">
-                                            <mat-label>Surname</mat-label>
-                                            <input matInput formControlName="surname">
+                                            <mat-label>Last name</mat-label>
+                                            <input matInput formControlName="lastName">
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -103,11 +98,11 @@
                                             matInput
                                             formControlName="timeZoneControl"
                                             [matAutocomplete]="auto">
-                                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                                       @for (option of timeZones; track option) {
-                                         <mat-option [value]="option.zoneName">(UTC{{option.utc}}) {{option.zoneName}}</mat-option>
-                                       }
-                                     </mat-autocomplete>
+                                            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                            @for (option of timeZones; track option) {
+                                                <mat-option [value]="option.zoneName">(UTC{{option.utc}}) {{option.zoneName}}</mat-option>
+                                            }
+                                            </mat-autocomplete>
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -152,22 +147,20 @@
                      Check to confirm that you have read and understood the 
                         <a href="/assets/documents/RelayWorks_Web_Terms_and_Conditions_20180424.pdf" target="_blank">
                             Terms & Conditions</a> and <a href="/assets/documents/Terms_Conditions.pdf" target="_blank">
-                            Privacy Policy</a></div>
-
+                            Privacy Policy</a>
+                    </div>
                     <div class="terms-check">
                         <input type="checkbox" (change)="isAgree = !isAgree"/>
                     </div>
                 </div>
             </div>
-
             <div class="col col-xs-12">
                 <div class="buttons-block">
-                    <button class="btn btn-pay" type="submit" [disabled]="!isAgree">
+                    <button class="btn btn-pay" (click)="submit()" [disabled]="!isAgree">
                         Start 14 Day Free Trial
                     </button>
                 </div>
             </div>
         </div>
-
     </div>
 </div>

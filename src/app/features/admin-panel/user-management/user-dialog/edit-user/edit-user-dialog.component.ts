@@ -69,8 +69,8 @@ export class EditUserDialogComponent implements OnInit {
     ) {
 
         this.userForm = this.fb.group({
-            userName: [data.userName, Validators.required],
-            userSurname: [data.userSurname, Validators.required],
+            firstName: [data.firstName, Validators.required],
+            lastName: [data.lastName, Validators.required],
             email: [data.email, [Validators.required, Validators.email]],
             lineManagers: [data.lineManagers, Validators.required],
             roles: [data.roles, Validators.required],

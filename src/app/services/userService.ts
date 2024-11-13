@@ -15,7 +15,7 @@ export class UserService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/userManagment';  //!!!!set correct url
+    url = configurl.apiServer.url + '/users';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createUser(userModel: UserModel): Observable<UserModel> {

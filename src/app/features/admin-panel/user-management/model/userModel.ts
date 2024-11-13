@@ -6,8 +6,8 @@ import { UserType } from "src/app/models/userType";
 
 export interface UserModel {
     userId?: Guid;
-    userName: string;
-    userSurname?: string;
+    firstName: string;
+    lastName?: string;
     email: string;
     password: string;
     roleId: Guid;

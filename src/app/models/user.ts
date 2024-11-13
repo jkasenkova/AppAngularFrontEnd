@@ -2,8 +2,8 @@ import { Guid } from "guid-typescript";
 
 export class UserModel {
     userId?: Guid;
-    userName: string = '';
-    userSurname?: string;
+    firstName: string = '';
+    lastName?: string;
     email: string = '';
     password: string = '';
     roleId: Guid;

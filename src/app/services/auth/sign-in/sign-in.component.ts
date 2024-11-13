@@ -4,6 +4,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { AuthFacade } from '../store/auth.facade';
 
 @Component({
     selector: 'sign-in',
@@ -25,15 +26,20 @@ export class SignInComponent {
     signInForm: FormGroup;
     
     constructor(
+        private authFacade: AuthFacade,
         private router: Router,
         private fb: FormBuilder) {
-            this.signInForm = this.fb.group({
-                userName: '',
-                password:''
-            });
-        }
+        this.signInForm = this.fb.group({
+            userName: '',
+            password:''
+        });
+    }
 
-        registration(){
-            this.router.navigate(['/sign-up']);
-        }
+    signIn(){
+        this.authFacade.signIn(this.signInForm.value.userName, this.signInForm.value.password);
+    }
+
+    registration(){
+        this.router.navigate(['/sign-up']);
+    }
 }

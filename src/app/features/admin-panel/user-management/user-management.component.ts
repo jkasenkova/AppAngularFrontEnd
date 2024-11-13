@@ -133,8 +133,8 @@ export class UserManagementComponent implements OnInit {
             this.lineManagersList.map(user => {
                 this.rowData.push(
                 {
-                    userName: user.userName, 
-                    userSurname: user.userSurname,  
+                    firstName: user.firstName, 
+                    lastName: user.lastName,  
                     email: user.email,
                     password: user.password,
                     locationId: user.locationId, 

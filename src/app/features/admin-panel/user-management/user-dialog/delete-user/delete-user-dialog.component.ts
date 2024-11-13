@@ -43,8 +43,8 @@ export class DeleteUserDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: UserModel
     ) {
         this.userForm = this.fb.group({
-            userName: data.userName,
-            userSurname: data.userSurname,
+            firstName: data.firstName,
+            lastName: data.lastName,
             userId: data.userId
         });
     }
