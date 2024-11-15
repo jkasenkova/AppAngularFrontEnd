@@ -31,7 +31,9 @@
                                     @if(topic.enabled){
                                     <div class="divRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="topic">
                                         <div class="actions-body">
-                                            <div class="btn btn-circle draganddrop"  matTooltip="Reorder">
+                                            <div class="btn btn-circle draganddrop" 
+                                                [ngClass]="{'locked': topic.editing }"
+                                                matTooltip="Reorder">
                                                 <mat-icon class="dragCursor">reorder</mat-icon>
                                             </div>
                                             @if(topic.templateTopic){
@@ -46,6 +48,7 @@
                                             @else
                                             {
                                                 <div class="btn btn-circle remove-btn" matTooltip="Remove"
+                                                [ngClass]="{'locked': topic.editing }"
                                                 (click)="removeTopic(topic, section)">
                                                     <span class="glyphicon span"></span>
                                                 </div>
@@ -205,9 +208,7 @@
                                                                                     <textarea autfocus maxlength="1000" class="textarea-note"
                                                                                         #textArea
                                                                                         clickOutside
-                                                                                        (clickOutside)="clickOutside(reference, topic, textArea.value)">
-                                                                                            {{reference.description}}
-                                                                                    </textarea>
+                                                                                        (clickOutside)="clickOutside(reference, topic, textArea.value)">{{reference.description}}</textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -320,7 +321,7 @@
                 <div class="navbar navbar-blue"></div>
             </div>
             <div class="navbar navbar-white">
-                <div type="button" class="add-section center-block">Add Section</div>
+                <div type="button" class="add-section center-block" (click)="createSectionDialog()">Add Section</div>
             </div>
     </div>
 </div>

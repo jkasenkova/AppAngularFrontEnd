@@ -1,5 +1,5 @@
 
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, EventEmitter, ViewChild, ViewContainerRef, ComponentRef } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output} from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -12,7 +12,6 @@ import { Handover } from "src/app/models/handover";
 import { RotationTopic } from "src/app/models/rotationTopic";
 import { SectionType } from "src/app/models/sectionType";
 import { SortType } from "src/app/models/sortType";
-import { UserModel } from "src/app/models/user";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HandoverSection } from "src/app/models/handoverSection";
 import { RotationReference } from "src/app/models/rotationReference";
@@ -36,16 +35,16 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
 import { expand } from "rxjs";
-import { ActivatedRoute, Router, RouterModule} from '@angular/router';
+import { Router, RouterModule} from '@angular/router';
 import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
-import { TabsMenuComponent } from "../tabs-menu/tabs-menu.component";
 import { RoleModel } from "src/app/models/role";
 import { RoleService } from "src/app/services/roleService";
 import { UserType } from "src/app/models/userType";
 import { RotationType } from "src/app/models/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
+
 
 @Component({
     selector: 'app-my-handover',
@@ -76,20 +75,20 @@ import { ShiftPatternType } from "src/app/models/shiftPatternType";
 
 export class MyHandoverComponent implements OnInit {
     handover: Handover;
-    readonly dialog = inject(MatDialog);
     owner: MyTeamModel;
-    expandAll: boolean = false;
-    countShare: number;
+    recipient: MyTeamModel; //for test
     teamMembers: MyTeamModel[] = [];
     template: Template;
-    handoverRecipient: MyTeamModel;
     ownerRole: RoleModel;
-   
-    @Output() ownerHandoverName = new EventEmitter<string>();
+    expandAll: boolean = false;
+    countShare: number;
+    
+    readonly dialog = inject(MatDialog);
+    @Output() ownerHandoverName: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
-    @ViewChild(ReportPDFPreviewComponent, { static: false }) pdfReport: ReportPDFPreviewComponent;
-    
+
+     //for test
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'long',
@@ -174,6 +173,7 @@ export class MyHandoverComponent implements OnInit {
             recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
             createDate: new Date().toLocaleDateString(undefined, this.options),
             endDate: new Date().toLocaleDateString(undefined, this.options),
+            endTime: new Date().toLocaleTimeString(),
             liveRotation: true,
             sections:  [
                 {
@@ -405,7 +405,7 @@ export class MyHandoverComponent implements OnInit {
             ]
     };
 
-     templateTmp: Template = {
+    templateTmp: Template = {
         templateName: "Template 1",
         templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
         sections: [
@@ -569,40 +569,46 @@ export class MyHandoverComponent implements OnInit {
         private roleService: RoleService) 
         {
             this.owner = this.handoverOwner;//for test
-            this.ownerHandoverName.emit(this.owner.ownerName);
         }
 
     ngOnInit(): void {
-    
+        this.loadData();
+    }
+
+    loadData(): void {
         if(this.owner){
-            this.roleService.getRoleById(this.owner.ownerRoleId).subscribe(role =>{
+            this.roleService.getRoleById(this.owner.ownerRoleId).subscribe(role => {
                 this.ownerRole = role
             });
-
-            //for test
-            this.ownerRole = this.roleTmp;
         }
-
-
-
       this.handover = this.handoverTmp;// for test
+      this.ownerRole = this.roleTmp;//for test
       this.template = this.templateTmp;//for test
       this.handoverOut = this.handover;//for test
       this.teamMembers = this.usersTmp;// for test
-      this.handoverRecipient = this.handoverRecipientTmp; // for test
+      this.recipient = this.handoverRecipientTmp; // for test
+      this.handover = this.setShareCounter(this.handover);// for test
+      this.handover = this.initilizeTemplateSection(this.template, this.handover);// for test
+      
+      if(this.owner.isActiveRotation && this.owner.curentRotationId) {
+            this.handoverService.getHandoverById(this.owner.curentRotationId).subscribe(rotation =>
+            {
+                this.handover = rotation;
+                this.handoverOut = rotation
 
-       this.handoverService.getHandoverById(this.teamUserTmp.curentRotationId).subscribe(rotation =>{
-         this.handover = rotation;
-         this.handoverOut = rotation
-       });
+                this.handover = this.setShareCounter(this.handover);
+              
+            });
+      }
 
-        this.handover = this.setShareCounter(this.handover);
+      this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
+        this.template = template;
+        this.handover = this.initilizeTemplateSection(this.template, this.handover);
+    });
 
         this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;
         }); 
-
-        this.handover = this.initilizeTemplateSection(this.template, this.handover);//for test
     }
 
     initilizeTemplateSection(template: Template, handover: Handover):Handover {
@@ -629,8 +635,7 @@ export class MyHandoverComponent implements OnInit {
 
         handover.sections = handover.sections.sort((a, b) => Number(b.templateSection) - Number(a.templateSection));
         
-        this.initilizeForEachSectionTopics(this.handover);// for test
-
+        this.addOtherTopicForEachSectionTopics(this.handover);
 
         return handover;
     }
@@ -661,7 +666,7 @@ export class MyHandoverComponent implements OnInit {
        return rotationTopics;
     }
 
-    initilizeForEachSectionTopics(handover: Handover): void{
+    addOtherTopicForEachSectionTopics(handover: Handover): void{
 
         handover.sections.forEach(section => {
             if(section.sectionTopics.find(t => t.name == "Other") == null){
@@ -767,47 +772,55 @@ export class MyHandoverComponent implements OnInit {
         return "";
     }
 
-    setRecipient(){
+    handoverRecipient(): void{
         const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, { 
             data: this.handover
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
-                this.template = this.templateTmp;//for test
-                
-                this.handoverService.updateHandover(result);
-                this.handover.recipientId = result.recipientId;
-                this.handover = this.setShareCounter(this.handover);
-
-                 this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
-                    this.template = template;
-                    this.handover = this.initilizeTemplateSection(this.template, this.handover);
-                }); 
-                
-                this.handover = this.initilizeTemplateSection(this.template, this.handover);//for test
+               
+                if(this.owner.isActiveRotation && this.owner.curentRotationId){
+                    this.handover.recipientId = result.recipientId;
+                    this.handoverService.updateHandover(result);
+                }else{
+                    this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
+                        this.template = template;
+                        this.handover = this.initilizeTemplateSection(this.template, this.handover);
+                    }); 
+                    this.owner.isActiveRotation = true;
+                    this.owner.curentRotationId = this.handover.handoverId;
+                   
+                   // this.cdr.detectChanges();
+                }
             }
         });
     }
 
-    editDates(){
+    handoverDates(): void {
         const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
             data: { 
-                ownerId: this.teamUserTmp.userId, // get login user id
-                handover: this.handover
+                endDate: this.handover.endDate,
+                endTime: this.handover.endTime
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handoverService.updateHandover(result);
                 this.handover.endDate = result.endDate;
+                this.handover.endTime = result.endTime;
+               
+                if(this.owner.curentRotationId && this.owner.isActiveRotation){
+                    this.handoverService.updateHandover(this.handover);
+                }
+                else{
+                    this.handoverRecipient();
+                }
             }
         });
     }
 
-    shareReport(){
+    shareReport(): void{
         this.handover.shareUsers = []; //for test
         this.handover.shareUsers.push(this.teamMembers[1]); //for test
 
@@ -850,7 +863,7 @@ export class MyHandoverComponent implements OnInit {
         return title + arr.toString().split(",").join('\n');
     }
 
-    reportComments(){
+    reportComments(): void{
         const dialogRef = this.dialog.open(ReportCommentsDialogComponent, { 
             data: this.handover
         });
@@ -864,27 +877,54 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-    startHandover(){
+    startHandover(): void {
         const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
             data: { 
-                ownerId: this.teamUserTmp.userId, // get logn user id
-                handover: this.handover
+                endDate: null,
+                endTime: null
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                 this.handoverService.addHandover(result).subscribe(handover=>{
+                let newHandover: Handover = {
+                    templateId: this.template.templateId,
+                    handoverId: Guid.create(),
+                    ownerId: this.owner.userId,
+                    sections: [],
+                    endTime: result.endTime,
+                    endDate:  result.endDate,
+                    createDate: new Date().toLocaleDateString(),
+                    liveRotation: true
+                };
+
+                 this.handoverService.addHandover(newHandover).subscribe(handover => {
                     this.handover = handover
                 }); 
 
-                this.handover = this.handoverTmp;
-                this.setRecipient();
+                if(this.owner.alwaysShareRecipient){
+                    if(this.owner.alwaysShareRecipient.emails){
+                        newHandover.shareEmails = this.owner.alwaysShareRecipient.emails;
+                    }
+                    if(this.owner.alwaysShareRecipient.usersIds){
+                        newHandover.shareUsers = [];
+                        this.owner.alwaysShareRecipient.usersIds.forEach(userId =>{
+                            this.myTeamService.getTeamUser(userId).subscribe(user =>{
+                                newHandover.shareUsers.push(user);
+                            })
+                        }) 
+                    }
+                }
+
+                this.handover = newHandover; //  for test
+                this.loadData();
+                this.handover.liveRotation = true; // for test
+                this.handoverRecipient();
             }
         });
     }
 
-    reportPreview(handover: Handover){
+    reportPreview(handover: Handover): void{
 
          const url = this.router.serializeUrl(
             this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
@@ -893,15 +933,20 @@ export class MyHandoverComponent implements OnInit {
         window.open(url, '_blank');  
     } 
 
-    finishRotation(handover: Handover){
+    finishRotation(handover: Handover): void{
         const dialogRef = this.dialog.open(FinishRotationDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 handover.liveRotation = false;
+
                 this.owner.isActiveRotation = false;
+                this.owner.curentRotationId = null;
+
                 this.handoverService.updateHandover(handover);
                 this.myTeamService.updateTeamUser(this.owner);
+
+                this.handover = null;
                //sent reports
             }
         });

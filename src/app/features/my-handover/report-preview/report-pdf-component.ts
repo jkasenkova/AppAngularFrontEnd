@@ -61,6 +61,7 @@ handoverTmp: Handover =
         recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         createDate: new Date().toLocaleDateString(undefined, this.options),
         endDate: new Date().toLocaleDateString(undefined, this.options),
+        endTime: new Date().toLocaleTimeString(),
         liveRotation: true,
         sections:  [
             {

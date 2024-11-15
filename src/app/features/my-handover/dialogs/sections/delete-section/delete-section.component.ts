@@ -12,7 +12,7 @@ import { SectionDialogModel } from "../../../models/sectionDialogModel";
 @Component({
     selector: 'delete-section',
     templateUrl: './delete-section.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    styleUrl: './delete-section.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

@@ -6,7 +6,6 @@ import { UserManagementComponent } from '../admin-panel/user-management/user-man
 import { HandoverTemplatesComponent } from '../admin-panel/handover-templates/handover-templates.component';
 import { MyHandoverComponent } from '../my-handover/my-handover.component';
 import { MyTeamComponent } from '../my-team/my-team.component';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tabs-menu',
@@ -34,7 +33,6 @@ export class TabsMenuComponent implements OnInit {
     @Output() handoverAdmin = new EventEmitter<boolean>();
 
     constructor(
-        private router: Router,
         private sessionStorageService: SessionStorageService) {}
     
     ngOnInit(): void {

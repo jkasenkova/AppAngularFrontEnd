@@ -49,7 +49,7 @@
                     </button>
                 }
                 @else{
-                    <div class="start-handover">
+                    <div class="start-handover" (click)="startHandover()">
                        Start New Handover
                     </div>
                 }
@@ -72,8 +72,8 @@
                             <div class="name"> {{ getLettersIcon(handover.recipientId) }}</div>
                         </div>
                     </div>
-                    <div class="recipient-block" matTooltip="Edit Recipient" (click)="setRecipient()"></div>
-                    <div class="dates-block" matTooltip="Edit Dates" (click)="editDates()"></div>
+                    <div class="recipient-block" matTooltip="Edit Recipient" (click)="handoverRecipient()"></div>
+                    <div class="dates-block" matTooltip="Edit Dates" (click)="handoverDates()"></div>
                 </div>
 
                 <div class="row-block col col-lg-4 col-md-4 col-sm-4 col-xs-4">

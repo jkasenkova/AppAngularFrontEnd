@@ -12,7 +12,7 @@ import { SectionDialogModel } from "../../../models/sectionDialogModel";
 @Component({
     selector: 'edit-section',
     templateUrl: './edit-section.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    styleUrl: './edit-section.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

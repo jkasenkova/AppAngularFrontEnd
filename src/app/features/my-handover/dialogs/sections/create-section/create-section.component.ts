@@ -12,7 +12,7 @@ import { SectionDialogModel } from "../../../models/sectionDialogModel";
 @Component({
     selector: 'crete-section',
     templateUrl: './create-section.component.html',
-    styleUrl: '../../../../../styles/pop-up.less',
+    styleUrl: './create-section.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

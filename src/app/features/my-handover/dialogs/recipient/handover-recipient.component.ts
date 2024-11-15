@@ -94,10 +94,11 @@ export class HandoverRecipientDialogComponent implements OnInit {
         this.teamMembers = this.teamRotationsTmp;  //for test
 
         this.recipientForm = this.fb.group({
-            handoverId: [data.handoverId],
-            recipientId: [data.recipientId, Validators.required]
+            handoverId: data ? data.handoverId : null,
+            recipientId: [data ? data.recipientId : null, Validators.required]
         });
-        if(data.recipientId){
+
+        if(data && data.recipientId){
             this.teamMembers.map((member, i) => {
                 if (member.userId.toString() == data.recipientId.toString()){
                    this.teamMembers[i].selected = true;

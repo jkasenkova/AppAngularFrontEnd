@@ -7,9 +7,10 @@ export class Handover {
     public templateId: Guid;
     public handoverId: Guid;
     public ownerId: Guid;
-    public recipientId: Guid;
+    public recipientId?: Guid;
     public sections: HandoverSection[] = [];
     public createDate: string;
+    public endTime: string;
     public endDate: string;
     public liveRotation: boolean = false;
     public shareUsers?: MyTeamModel[]=[];

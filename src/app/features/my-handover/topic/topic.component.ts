@@ -20,7 +20,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { Handover } from "src/app/models/handover";
-import { ClickOutsideDirective } from './clickoutside.directive';
+import { ClickOutsideDirective } from '../../../shared/clickoutside.directive';
+import { SectionType } from "src/app/models/sectionType";
 
 @Component({
     selector: 'topic',
@@ -78,17 +79,34 @@ export class TopicComponent implements OnInit {
     }
     //----------------------Section Dialogs--------------------------
 
-    createSectionDialog(handoverId: Guid): void {
+    createSectionDialog(): void {
         const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
              data: { 
-                handoverId: handoverId 
+                handoverId: this.handoverOut.handoverId 
             },
              panelClass: 'section-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              this.handoverSectionService.createSection(result);
+               var newSection: HandoverSection = {
+                    handoverId: this.handoverOut.handoverId,
+                    sectionId: Guid.create(),
+                    sectionName: result.sectionName,
+                    iHandoverSection: false,
+                    sectionType: SectionType.Other,
+                    addBtnShow:true,
+                    sortReferenceType: SortType.alphabetically,
+                    sortType: SortType.alphabetically,
+                    templateSection: false,
+                    sectionTopics: []
+               };
+              
+               this.handoverOut.sections.push(newSection);
+
+               this.handoverOut.sections = this.handoverOut.sections.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
+
+               this.handoverSectionService.createSection(newSection);
             }
         });
     }
@@ -121,7 +139,12 @@ export class TopicComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handoverSectionService.deleteSection(result.sectionId)
+                this.handoverSectionService.deleteSection(result.sectionId);
+
+                const sectionDeleted = this.handoverOut.sections.findIndex(s => s.sectionId == result.sectionId);
+                if (sectionDeleted > -1) {
+                    this.handoverOut.sections.splice(sectionDeleted, 1);
+                }
             }
         });
     }
@@ -197,7 +220,7 @@ export class TopicComponent implements OnInit {
         this.topicForm.get('topicName').setValue(topic.name);
     }
 
-     addHideRowTopicForm(section: HandoverSection, index: number): void{
+    addHideRowTopicForm(section: HandoverSection, index: number): void{
         let nativeElement = this.addRowElement.toArray()[index].nativeElement;
         
         nativeElement.style.display =
@@ -356,6 +379,7 @@ export class TopicComponent implements OnInit {
     }
 
     expandNotes(reference: RotationReference): void{
+        this.topicForm.get('referenceName').setValue(reference.name);
         reference.expand = true;
     }
 
