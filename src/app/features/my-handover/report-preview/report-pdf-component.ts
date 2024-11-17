@@ -1,5 +1,5 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Guid } from "guid-typescript";
 import {jsPDF} from 'jspdf';
 import { Handover } from "src/app/models/handover";
@@ -325,8 +325,18 @@ handoverRecipientTmp: MyTeamModel = {
     private handoverService: HandoverService,
     private myTeamService: MyTeamService,
     private locationService: LocationService,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private router: Router
+  ) { 
+    const navigation = this.router.getCurrentNavigation();
+
+    if (navigation?.extras.state["data"]) {
+        this.handover = navigation?.extras.state["data"];
+
+        this.sectionsOut = this.handover.sections;
+      }
+   
+  }
 
   exportToPDF(){
     this.showSaveBtn = false;
@@ -351,18 +361,10 @@ handoverRecipientTmp: MyTeamModel = {
   }
 
      ngOnInit(): void {
-        this.handoverId = this.route.snapshot.paramMap.get('id');
 
-        this.handover = this.handoverTmp; // for test
         this.handoverOwner = this.handoverOwnerTmp; // for test
         this.handoverRecipient = this.handoverRecipientTmp; // for test
-
-        this.handoverService.getHandoverById(Guid.parse(this.handoverId)).subscribe(handover =>{
-            this.handover = handover;
-        });
         
-        this.sectionsOut = this.handover.sections;
-
         this.myTeamService.getTeamUser(this.handover.ownerId).subscribe(owner => {
             this.handoverOwner = owner;
         }); 

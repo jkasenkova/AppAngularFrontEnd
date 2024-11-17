@@ -926,11 +926,15 @@ export class MyHandoverComponent implements OnInit {
 
     reportPreview(handover: Handover): void{
 
-         const url = this.router.serializeUrl(
+       /*  const url = this.router.serializeUrl(
             this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
         ); 
 
-        window.open(url, '_blank');  
+        window.open(url, '_blank');   */
+
+        this.router.navigate(['/pdf-preview'], {
+            state: { data: handover }
+          });
     } 
 
     finishRotation(handover: Handover): void{

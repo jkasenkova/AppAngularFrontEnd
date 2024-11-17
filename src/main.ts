@@ -55,7 +55,7 @@ const routes: Routes =
             path: 'footer', component: FooterComponent
         },
         {
-            path: 'pdf-preview/:id', component: ReportPDFPreviewComponent
+            path: 'pdf-preview', component: ReportPDFPreviewComponent
         } 
 
       /*   {

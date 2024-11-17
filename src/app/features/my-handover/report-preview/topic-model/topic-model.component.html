@@ -34,6 +34,9 @@
                            <span>|</span>
                            <div class="topic-reference">{{reference.name}}</div>
                            <div class="description">{{reference.description}}</div>
+                           @if(reference.templateDescription){
+                                <div class="description">{{reference.templateDescription}}</div>
+                           }
                        </div>
                     }
                     
