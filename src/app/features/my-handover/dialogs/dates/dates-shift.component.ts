@@ -49,6 +49,7 @@ export class DatesShiftDialogComponent {
         public dialogRef: MatDialogRef<DatesShiftDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DatesModel
     ) { 
+       
         const initialTime = data.endTime ? this.formatDateToTimeString(this.setTime(data.endTime)): null;
 
         this.datestForm = this.fb.group({
@@ -57,20 +58,27 @@ export class DatesShiftDialogComponent {
         });
     }
 
-    setTime(time: string): Date {
-        const [hours, minutes, seconds] = time.split(':').map(Number);
+    setTime(timeStr: string): Date {
+
         const date = new Date();
-        date.setHours(hours);
-        date.setMinutes(minutes);
-        date.setSeconds(seconds);
+        const [time, modifier] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+        
+        if (modifier === "PM" && hours !== 12) {
+          hours += 12;
+        } else if (modifier === "AM" && hours === 12) {
+          hours = 0; 
+        }
+        date.setHours(hours, minutes, 0, 0);
+
         return date;
       }
 
-      formatDateToTimeString(date: Date): string {
+    formatDateToTimeString(date: Date): string {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         return `${hours}:${minutes}`;
-      }
+    }
 
     onNoClick(): void {
         this.dialogRef.close();
