@@ -6,6 +6,31 @@
     font-size: 16px;
   }
 
+  
+  .button-block{
+    width: 1140px;
+    margin: 0 auto;
+    padding: 10px;
+    height: 45px;
+
+    .export-to-pdf{
+        text-align: center;
+        background-color: #009982;
+        width: 120px;
+        border: 1px solid #009982;
+        border-radius: 15px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        height: 25px;
+        float: right;
+    
+        &:hover{
+            opacity: 0.8;
+        }
+    }
+  }
+
 .handover-portrait {
     background-color: white !important;
     width: 1140px;
@@ -79,27 +104,7 @@
                     text-align: right;
                     padding-right: 2%;
 
-                    .export-to-pdf{
-                        text-align: center;
-                        background-color: #009982;
-                        width: 120px;
-                        border: 1px solid #009982;
-                        border-radius: 15px;
-                        color: white;
-                        font-size: 16px;
-                        cursor: pointer;
-                        height: 25px;
-                        float:right;
-
-                        &:hover{
-                            opacity: 0.8;
-                        }
-                    }
-                    .from{
-                        margin-top: 30px;
-                    }
-
-                    .to, .shared, .contributors {
+                    .from, .to, .shared, .contributors {
                         margin: 10px 0;
 
                         .title {

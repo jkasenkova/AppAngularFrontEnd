@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     admin: UserModel = new UserModel();
     subscriptionId: Guid;
     url: string;
-    isAuth: boolean = true;
+    @Output() isAuth = new EventEmitter<boolean>();
     @Output() urlActive = new EventEmitter<string>();
 
     constructor(
@@ -78,7 +78,9 @@ export class AppComponent implements OnInit {
         var urlCur = window.location.pathname; 
 
         if(urlCur == "/subscriptions-management" || urlCur == "/sign-up"){
-            this.isAuth = false;
+            this.isAuth.emit(false);
+        }else{
+            this.isAuth.emit(true);
         }
     }
 
@@ -94,7 +96,10 @@ export class AppComponent implements OnInit {
         this.url = url;
 
         if(url == "/sign-in"){
-            this.isAuth = false;
+            this.isAuth.emit(false);
+        }
+        else{
+            this.isAuth.emit(true);
         }
 
         this.urlActive.emit(this.url);

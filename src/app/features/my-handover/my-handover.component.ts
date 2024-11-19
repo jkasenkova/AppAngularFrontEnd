@@ -35,7 +35,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
 import { expand } from "rxjs";
-import { Router, RouterModule} from '@angular/router';
+import { NavigationExtras, Router, RouterModule} from '@angular/router';
 import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
@@ -44,7 +44,7 @@ import { RoleService } from "src/app/services/roleService";
 import { UserType } from "src/app/models/userType";
 import { RotationType } from "src/app/models/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
-
+import { DataService } from "src/app/services/data.service";
 
 @Component({
     selector: 'app-my-handover',
@@ -84,9 +84,10 @@ export class MyHandoverComponent implements OnInit {
     countShare: number;
     
     readonly dialog = inject(MatDialog);
-    @Output() ownerHandoverName: string;
+    @Output() ownerHandoveName: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
+    @Input() isAuth: boolean;
 
      //for test
     options: Intl.DateTimeFormatOptions = {
@@ -186,6 +187,7 @@ export class MyHandoverComponent implements OnInit {
                     sortReferenceType: SortType.alphabetically,
                     sortType: SortType.alphabetically,
                     templateSection: false,
+                    appendAddItemLine: false,
                     sectionTopics: [
                         {
                         sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
@@ -199,6 +201,19 @@ export class MyHandoverComponent implements OnInit {
                         checked: false,
                         editing: false,
                         references:[
+                            {
+                                id:Guid.parse("44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0"),
+                                rotationTopicId:Guid.parse("0f6b0e0c-daa8-4930-be62-8b8ab5a4694f"),
+                                name:"AAAAA",
+                                description: "AAAAA",
+                                enabled: false,
+                                index:0,
+                                templateReference: false,
+                                checked:false,
+                                editing: false,
+                                isPinned: false,
+                                expand:false
+                            },
                             {
                                 id:Guid.parse("44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0"),
                                 rotationTopicId:Guid.parse("0f6b0e0c-daa8-4930-be62-8b8ab5a4694f"),
@@ -275,6 +290,7 @@ export class MyHandoverComponent implements OnInit {
                     sectionType: SectionType.Other,
                     addBtnShow:true,
                     sortType: SortType.alphabetically,
+                    appendAddItemLine: false,
                     sortReferenceType: SortType.alphabetically,
                     templateSection: false,
                     sectionTopics: [
@@ -566,7 +582,8 @@ export class MyHandoverComponent implements OnInit {
         private templateService: TemplateService,
         private rotationTopicService: RotationTopicService,
         private rotationReferenceService: RotationReferenceService,
-        private roleService: RoleService) 
+        private roleService: RoleService,
+        private dataService: DataService) 
         {
             this.owner = this.handoverOwner;//for test
         }
@@ -625,6 +642,7 @@ export class MyHandoverComponent implements OnInit {
                 addBtnShow: true,
                 sortReferenceType: section.sortReferenceType,
                 templateSection: true,
+                appendAddItemLine: false,
                 sectionTopics: this.initilizeRotationTopics(section)
             };
 
@@ -924,17 +942,17 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-    reportPreview(handover: Handover): void{
+    reportPreview(handover: Handover): void {
 
-       /*  const url = this.router.serializeUrl(
-            this.router.createUrlTree(['/pdf-preview', handover.handoverId.toString()])
-        ); 
-
-        window.open(url, '_blank');   */
-
-        this.router.navigate(['/pdf-preview'], {
+       /*  this.router.navigate(['/pdf-preview'], {
             state: { data: handover }
-          });
+        }); */
+
+        const url = this.router.serializeUrl(
+            this.router.createUrlTree(['/pdf-preview'], { queryParams: { id: handover.handoverId.toString() } })
+        );
+        
+        window.open(url, '_blank');
     } 
 
     finishRotation(handover: Handover): void{

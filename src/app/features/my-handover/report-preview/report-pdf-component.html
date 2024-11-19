@@ -1,4 +1,9 @@
-<div id="pdfReport" #pdfReport>
+
+<div class="button-block">
+    <div class="export-to-pdf" (click)="exportToPDF()">Save as PDF</div>
+</div>
+
+<div  id="pdfReport" #pdfReport>
 <!DOCTYPE html>
 <html lang="en-gb">
 <head>
@@ -8,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
     <body class="handover-portrait">
+        <p>Received Data: {{ receivedData | json }}</p>
     <div class="report-page">
         <table class="report-head">
             <tbody>
@@ -25,8 +31,6 @@
                         </div>
                     </td>
                     <td class="report-info">
-                        <div class="export-to-pdf" (click)="exportToPDF()">Save as PDF</div>
-
                         <div class="from">
                             <div class="title">From:</div>
                             <div class="name">{{pdfReportModel.handoverOwner}}</div>

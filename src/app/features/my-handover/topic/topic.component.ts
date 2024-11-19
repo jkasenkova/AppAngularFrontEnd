@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Guid } from "guid-typescript";
 import { HandoverSection } from "src/app/models/handoverSection";
@@ -22,6 +22,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { Handover } from "src/app/models/handover";
 import { ClickOutsideDirective } from '../../../shared/clickoutside.directive';
 import { SectionType } from "src/app/models/sectionType";
+import { AddTopicComponent } from "../add-topic/add-topic.component";
 
 @Component({
     selector: 'topic',
@@ -29,7 +30,6 @@ import { SectionType } from "src/app/models/sectionType";
     imports: [
         FormsModule,
         MatAutocompleteModule,
-        FormsModule,
         MatInputModule,
         DragDropModule,
         MatFormFieldModule,
@@ -37,7 +37,8 @@ import { SectionType } from "src/app/models/sectionType";
         MatTooltipModule,
         CommonModule,
         MatIconModule,
-        ClickOutsideDirective
+        ClickOutsideDirective,
+        AddTopicComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './topic.component.html',
@@ -51,29 +52,22 @@ export class TopicComponent implements OnInit {
     addTopicForm: FormGroup;
     readonly dialog = inject(MatDialog);
     @ViewChildren("addRowElement") addRowElement: QueryList<ElementRef>;
-    enableAddTopicBtn: boolean = true;
     references: RotationReference[];
+
+    @Output() sectionOut: HandoverSection;
 
     constructor(
         private rotationTopicService: RotationTopicService,
         private rotationReferenceService: RotationReferenceService,
         private handoverSectionService: HandoverSectionService, 
         private fb: FormBuilder) 
-        {
+    {
             this.topicForm = this.fb.group({
                 topicName: new FormControl(),
                 referenceName: new FormControl(),
                 description: new FormControl()
             });
-
-            this.addTopicForm = this.fb.group({
-                topic: new FormControl(),
-                referenceId: new FormControl(),
-                topicName: new FormControl(),
-                referenceName: new FormControl(),
-                description: new FormControl()
-            });
-        }
+    }
 
     ngOnInit(): void {
     }
@@ -99,6 +93,7 @@ export class TopicComponent implements OnInit {
                     sortReferenceType: SortType.alphabetically,
                     sortType: SortType.alphabetically,
                     templateSection: false,
+                    appendAddItemLine: false,
                     sectionTopics: []
                };
               
@@ -152,72 +147,14 @@ export class TopicComponent implements OnInit {
 
     //-----------------------------Topics--------------------------------
 
-    addTopic(section: HandoverSection, index: number){
-        var newTopic: RotationTopic;
-
-        if(this.addTopicForm.value.topic){
-            newTopic = this.addTopicForm.value.topic as RotationTopic;
-            newTopic.enabled = true;
-            newTopic.sectionId = section.sectionId;
-            newTopic.index = section.sectionTopics.length ?? 0;
-        }
-        else{
-            newTopic = {
-                id: Guid.create(),
-                isPinned: false,
-                name: this.addTopicForm.value.topicName,
-                enabled: true,
-                index: section.sectionTopics.length ?? 0,
-                editing: false,
-                isExpand: false,
-                templateTopic: false,
-                checked: false,
-                sectionId: section.sectionId,
-                references: []
-            };
-        }
-
-        var newReference: RotationReference = {
-            id: this.addTopicForm.value.referenceId ?? Guid.create(),
-            name: this.addTopicForm.value.referenceName,
-            enabled: true,
-            rotationTopicId: newTopic.id,
-            index: 0,
-            templateReference: false,
-            description: this.addTopicForm.value.description,
-            isPinned: false,
-            checked: false,
-            editing: false,
-            expand: false
-        };
-
-        newTopic.references.push(newReference);
-       
-        newTopic.references = newTopic.references.sort((a, b) => a.name.localeCompare(b.name))
-
-        var otherTopic = section.sectionTopics.find(t => t.id == newTopic.id);
-
-        if(otherTopic){
-            let index = section.sectionTopics.indexOf(otherTopic);
-            section.sectionTopics[index] = newTopic;
-            otherTopic = newTopic;
-        }else{
-            section.sectionTopics.push(newTopic);
-        }
-        
-       
-        this.rotationTopicService.addRotationTopic(newTopic);
-        this.rotationReferenceService.addRotationReference(newReference);
-
-        this.addHideRowTopicForm(section, index);
-
-        this.addTopicForm.reset();
-    }
-
     editTopic(topic: RotationTopic): void{
         topic.editing = !topic.editing;
 
         this.topicForm.get('topicName').setValue(topic.name);
+    }
+
+    toggleDiv(show: boolean, section: HandoverSection, index: number): void {
+       this.addHideRowTopicForm(section, index);
     }
 
     addHideRowTopicForm(section: HandoverSection, index: number): void{
@@ -229,10 +166,8 @@ export class TopicComponent implements OnInit {
             : "none";
 
              if(nativeElement.style.display !== "none"){
-                this.enableAddTopicBtn = false;
                 section.addBtnShow = false;
             }else{
-                this.enableAddTopicBtn = true;
                 section.addBtnShow = true;
             }
     }
@@ -261,13 +196,6 @@ export class TopicComponent implements OnInit {
         //update index for topics
     }
     
-    onSelectAddTopic(event: any): void {
-        var topic = event.option.value;
-        this.addTopicForm.get('topicName').setValue(topic.name);
-        this.addTopicForm.get('topic').setValue(topic);
-    }
-
-
     updateTopic(topic: RotationTopic, section: HandoverSection){
         topic.editing = !topic.editing;
 
@@ -355,14 +283,6 @@ export class TopicComponent implements OnInit {
         return reference ? reference.name : undefined;
     }
 
-    onSelectAddReference(event: any): void {
-        var reference = event.option.value;
-
-        this.topicForm.controls['referenceName'].setValue(reference);
-        this.topicForm.controls['description'].setValue(reference);
-
-    }
-
     dropReference(event: CdkDragDrop<RotationReference[]>, references: RotationReference[], section: HandoverSection): void {
     
         moveItemInArray(references, event.previousIndex, event.currentIndex);
@@ -388,5 +308,5 @@ export class TopicComponent implements OnInit {
         reference.expand = false;
         this.updateReference(reference, topic);
         this.updateReferenceInArray(reference, topic);
-      }
+    }
 }

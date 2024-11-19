@@ -16,5 +16,6 @@ export class HandoverSection {
     public sortType: SortType = 0;
     public sortReferenceType: SortType = 0;
     public sectionTopics?: RotationTopic[] = [];
+    public appendAddItemLine: boolean = false;
 }
   
