@@ -27,14 +27,14 @@
     </button>
   }
   @else{
-    <button #menuItem mat-menu-item routerLink="/my-handover">
+    <button mat-menu-item routerLink="/my-handover">
       <span>My Handover</span>
     </button>
     <button mat-menu-item class="menu-btn">
       <span>Reports</span>
     </button>
   }
-  <button  mat-menu-item class="menu-btn" routerLink="/sign-in">
+  <button mat-menu-item class="menu-btn" (click)="logOut()">
     <span>Log Out</span>
   </button>
 </mat-menu>

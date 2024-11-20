@@ -46,16 +46,16 @@ export class AppComponent implements OnInit {
     userName: string;
     readonly dialog = inject(MatDialog);
     isAdmin: boolean;
-    adminId: Guid;
     admin: UserModel = new UserModel();
-    subscriptionId: Guid;
-    url: string;
     isAuth: boolean;
 
     constructor(
-        private authFacade: AuthFacade) {}
+        private authFacade: AuthFacade,
+        private router: Router) {}
 
     ngOnInit(): void {
+        debugger;
+
         this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
             this.isAuth = isLoggedIn;   
         });
@@ -88,6 +88,11 @@ export class AppComponent implements OnInit {
         
             }
         });
+    }
+
+    logOut(){
+      //  this.isAuth = false; reset this data
+        this.router.navigate(['/sign-in']);
     }
 }
 
