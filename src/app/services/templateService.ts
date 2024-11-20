@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../models/template';
 import { environment } from '../../environments/environment';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
     providedIn: 'root'
@@ -28,22 +29,11 @@ export class TemplateService {
         return this.http.put<Template>(this.url, template, this.httpHeaders);
     }
 
-    deleteTemplateById(id: string): Observable<string> {
+    deleteTemplateById(id: Guid): Observable<string> {
         return this.http.delete<string>(this.url + '/' + id);
     }
 
-    getTemplateById(id: string): Observable<Template> {
+    getTemplateById(id: Guid): Observable<Template> {
         return this.http.get<Template>(this.url + '/' + id);
     }
-
-    //getTemplateNames(templateIds: string[]): Observable<string> {
-    //  var options = {
-    //    headers: new HttpHeaders({
-    //      'Accept': 'text/plain'
-    //    }),
-    //    'responseType': 'text' as 'json'
-    //  }
-    //  return this.http.get<string>(this.url + '/getTemplateName', templateIds, options);
-    //}
-
 }

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TopicService } from '../../../../services/topicService';
+import { TemplateTopicService } from '../../../../services/templateTopicService';
 import { AgGridAngular } from 'ag-grid-angular';
 import { MatButtonModule } from '@angular/material/button';
 import { TemplateTopic } from 'src/app/models/templateTopic';
@@ -8,7 +8,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateTemplateTopicDialogComponent } from './template-topic-dialog/create-template-topic/create-template-topic-dialog.component';
 import { EditButtonComponent } from './editButtonComponent';
 import { Template } from 'src/app/models/template';
-import { Guid } from 'guid-typescript';
 import { DeleteButtonComponent } from './deleteButtonComponent';
 import { TemplateService } from 'src/app/services/templateService';
 import { TemplateTopicDialogModel } from './model/templateTopicDialogModel';
@@ -64,7 +63,7 @@ export class TemplateTopicComponent implements OnInit {
     ];
 
   constructor(
-    private topicService: TopicService, 
+    private topicService: TemplateTopicService, 
     private templateService: TemplateService) {
     }
 

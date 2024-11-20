@@ -13,6 +13,7 @@ import { CommentsService } from "src/app/services/commentsService";
 import { UserModel } from "src/app/models/user";
 import { Handover } from "src/app/models/handover";
 import moment from "moment";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: 'report-comments',
@@ -32,7 +33,8 @@ import moment from "moment";
         MatDialogClose,
         ReactiveFormsModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule
     ]
 })
 
@@ -49,6 +51,7 @@ export class ReportCommentsDialogComponent implements OnInit {
         ownerEmail: "jkasenkova@gmail.com",
         userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         ownerRole: "Developer",
+        ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         isActiveRotation: true, //get state from back by curentRotationId
         recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
         locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -59,8 +62,8 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     authorizedUserTmp: UserModel = {
         userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        userName: "John Smith",
-        userSurname: "Smith",
+        firstName: "John",
+        lastName: "Smith",
         email: "john@gmail.com",
         password: "johnDoe123!",
         roleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -143,10 +146,17 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
     }
 
+    getNameUser(): string {
+        if(this.authorizedUser){
+            return this.authorizedUser.firstName + this.authorizedUser.lastName;
+        }
+        return "";
+    }
+
 
     getLettersIcon(): string {
         if(this.authorizedUser){
-            var getLetters = (this.authorizedUser.userName[0] + this.authorizedUser.userSurname[0])
+            var getLetters = (this.authorizedUser.firstName[0] + this.authorizedUser.lastName[0])
             .split(" ")
             .join("");
 
@@ -154,6 +164,8 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
         return "";
     }
+
+
 
     editComment(reportComment: ReportCommentsModel){
         this.addBtnVisible = false;

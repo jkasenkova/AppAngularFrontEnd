@@ -48,6 +48,7 @@ export class HandoverRecipientDialogComponent implements OnInit {
             ownerName: "Julia Kasenkova",
             ownerEmail: "jkasenkova@gmail.com",
             userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             ownerRole: "Developer",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
@@ -60,6 +61,7 @@ export class HandoverRecipientDialogComponent implements OnInit {
             ownerName: "Peter Hlazunov",
             ownerEmail: "peter_hlazunov@gmail.com",
             userId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             ownerRole: "Team Lead",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
@@ -75,6 +77,7 @@ export class HandoverRecipientDialogComponent implements OnInit {
             ownerRole: "Product Manager",
             isActiveRotation: true, //get state from back by curentRotationId
             recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
             curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
@@ -91,10 +94,11 @@ export class HandoverRecipientDialogComponent implements OnInit {
         this.teamMembers = this.teamRotationsTmp;  //for test
 
         this.recipientForm = this.fb.group({
-            handoverId: [data.handoverId],
-            recipientId: [data.recipientId, Validators.required]
+            handoverId: data ? data.handoverId : null,
+            recipientId: [data ? data.recipientId : null, Validators.required]
         });
-        if(data.recipientId){
+
+        if(data && data.recipientId){
             this.teamMembers.map((member, i) => {
                 if (member.userId.toString() == data.recipientId.toString()){
                    this.teamMembers[i].selected = true;

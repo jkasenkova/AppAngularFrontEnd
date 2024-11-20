@@ -8,7 +8,7 @@
                     </div>
                     <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
                         <button type="submit" class="btn btn-save" (click)="onSave()">Save</button>
-                        <button type="button" mat-dialog-close aria-hidden="true" class="btn btn-close"></button>
+                        <button type="button" mat-dialog-close  class="btn btn-close"></button>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                                             <input 
                                             matInput 
                                             [ngxMatTimepicker]="picker" 
-                                            formControlName="time" 
+                                            formControlName="endTime" 
                                             placeholder="HH:mm" />
                                             <ngx-mat-timepicker #picker></ngx-mat-timepicker>
                                           </mat-form-field>

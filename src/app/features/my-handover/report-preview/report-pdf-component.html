@@ -1,0 +1,62 @@
+
+<div class="button-block">
+    <div class="export-to-pdf" (click)="exportToPDF()">Save as PDF</div>
+</div>
+
+<div  id="pdfReport" #pdfReport>
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+    <meta charset="utf-8" />
+    <title>RelayWorks Report</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+    <body class="handover-portrait">
+        <p>Received Data: {{ receivedData | json }}</p>
+    <div class="report-page">
+        <table class="report-head">
+            <tbody>
+                <tr>
+                    <td class="report-title">
+                        <div class="title">
+                            Handover Report
+                        </div>
+                        <div class="report-date">
+                            {{pdfReportModel.handoverDates}}
+                            <div> {{pdfReportModel.handoverTimeZone}}</div>
+                        </div>
+                        <div class="report-type">
+                            <div class="type">{{pdfReportModel.handoverType}}</div>
+                        </div>
+                    </td>
+                    <td class="report-info">
+                        <div class="from">
+                            <div class="title">From:</div>
+                            <div class="name">{{pdfReportModel.handoverOwner}}</div>
+                        </div>
+                        <div class="to">
+                            <div class="title">To:</div>
+                            <div class="name">{{pdfReportModel.handoverRecipient}}</div>
+                        </div>
+                        <div class="shared">
+                            <div class="title">Shared:</div>
+                            <div class="nameArr">{{pdfReportModel.handoverSharedReports}}</div>
+                        </div>
+                        @if(pdfReportModel.handoverContributors){
+                            <div class="contributors">
+                                <div class="title">Contributors:</div>
+                                <div class="nameArr">{{pdfReportModel.handoverContributors}}</div>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+       <topic-model [sectionsOut]="handover.sections"></topic-model> 
+       <report-comments [reportComments]="reportComments"></report-comments>
+    </div>
+    </body>
+</html>
+</div>
+

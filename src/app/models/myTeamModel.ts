@@ -5,6 +5,7 @@ export class MyTeamModel {
     public ownerName: string;
     public ownerEmail: string;
     public ownerRole: string;
+    public ownerRoleId: Guid;
     public userId: Guid;
     public isActiveRotation: boolean;
     public recipientId: Guid;
