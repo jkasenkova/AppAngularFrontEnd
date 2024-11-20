@@ -45,6 +45,7 @@ import { UserType } from "src/app/models/userType";
 import { RotationType } from "src/app/models/rotationType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { DataService } from "src/app/services/data.service";
+import { AuthFacade } from "src/app/services/auth/store/auth.facade";
 
 @Component({
     selector: 'app-my-handover',
@@ -82,12 +83,12 @@ export class MyHandoverComponent implements OnInit {
     ownerRole: RoleModel;
     expandAll: boolean = false;
     countShare: number;
+    isAdmin: boolean;
     
     readonly dialog = inject(MatDialog);
     @Output() ownerHandoveName: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
-    @Input() isAuth: boolean;
 
      //for test
     options: Intl.DateTimeFormatOptions = {
@@ -575,6 +576,7 @@ export class MyHandoverComponent implements OnInit {
     }
 
     constructor(
+        private authFacade: AuthFacade,
         private router: Router,
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
@@ -589,6 +591,13 @@ export class MyHandoverComponent implements OnInit {
         }
 
     ngOnInit(): void {
+
+        this.authFacade.getIsAdmin().subscribe(isAdmin => {
+            this.isAdmin = isAdmin;
+        });
+
+        this.isAdmin = true;
+
         this.loadData();
     }
 
@@ -947,7 +956,6 @@ export class MyHandoverComponent implements OnInit {
        /*  this.router.navigate(['/pdf-preview'], {
             state: { data: handover }
         }); */
-
         const url = this.router.serializeUrl(
             this.router.createUrlTree(['/pdf-preview'], { queryParams: { id: handover.handoverId.toString() } })
         );

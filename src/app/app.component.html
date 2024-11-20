@@ -7,8 +7,8 @@
         <a href="\" class="logo"></a>
       </div>
       <div class="col col-lg-1 col-md-1 col-sm-1 col-xs-1 no-padding">
-        <div id="icon-container" (click)="getProfile()">
-          <div id="name">{{ getFullName() }}</div>
+        <div id="icon-container" (click)="getProfileDialog()">
+          <div id="name">{{ getProfileName() }}</div>
         </div> 
       </div>
   </mat-toolbar>
@@ -16,20 +16,30 @@
 
 <mat-menu #menu="matMenu">
   @if(isAdmin){
-    <button #menuItem mat-menu-item (click)="navigateToPage('/my-handover', $event)">
+
+    <button #menuItem mat-menu-item routerLink="/my-handover">
       <span>My Handover</span>
     </button>
-    <button mat-menu-item class="menu-btn" routerLinkActive="active" (click)="navigateToPage('/my-team-tab', $event)">
+
+    <button mat-menu-item class="menu-btn" routerLink="/my-team">
       <span>My Team</span>
     </button>
-    <button mat-menu-item class="menu-btn" (click)="navigateToPage('/admin-panel', $event)">
+    <button mat-menu-item class="menu-btn" routerLink="/admin-panel">
         <span>Admin Panel</span>
     </button>
     <button mat-menu-item class="menu-btn">
-        <span>Reports</span>
-      </button>
+      <span>Reports</span>
+    </button>
   }
-  <button  mat-menu-item class="menu-btn" (click)="navigateToPage('/sign-in', $event)">
+  @else{
+    <button #menuItem mat-menu-item routerLink="/my-handover">
+      <span>My Handover</span>
+    </button>
+    <button mat-menu-item class="menu-btn">
+      <span>Reports</span>
+    </button>
+  }
+  <button  mat-menu-item class="menu-btn" routerLink="/sign-in">
     <span>Log Out</span>
   </button>
 </mat-menu>

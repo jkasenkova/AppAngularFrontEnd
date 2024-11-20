@@ -1,1 +1,5 @@
-<app-tabs-menu [urlActive]="urlAdminPanel"></app-tabs-menu>
+<mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs"
+               [selectedIndex]="selectedIndex" (selectedTabChange)="onTabChanged($event);">
+    <mat-tab label="User Orientation"><app-user-orientation></app-user-orientation></mat-tab>
+    <mat-tab label="Handover Templates"><app-handover-templates></app-handover-templates></mat-tab>
+    <mat-tab label="User Management"><app-user-management></app-user-management></mat-tab>

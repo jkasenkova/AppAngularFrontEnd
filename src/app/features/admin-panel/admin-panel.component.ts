@@ -4,7 +4,6 @@ import { HandoverTemplatesComponent } from './handover-templates/handover-templa
 import { UserManagementComponent } from './user-management/user-management.component';
 import { UserOrientationComponent } from './user-orientation/user-orientation.component';
 import { SessionStorageService } from '../../services/sessionStorageService';
-import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
 
 @Component({
     selector: 'app-admin-panel',
@@ -13,10 +12,10 @@ import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
         MatTabsModule,
         HandoverTemplatesComponent,
         UserManagementComponent,
-        UserOrientationComponent,
-        TabsMenuComponent
+        UserOrientationComponent
     ],
     templateUrl: './admin-panel.component.html',
+    styleUrls: ['./admin-panel.component.less'],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None
 })

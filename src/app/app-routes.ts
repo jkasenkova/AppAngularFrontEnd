@@ -7,6 +7,7 @@ import { MyHandoverComponent } from './features/my-handover/my-handover.componen
 import { MyTeamComponent } from './features/my-team/my-team.component';
 import { SubscriptionManagementComponent } from './subscriptions-management/subscriptions-management.component';
 import { Routes } from '@angular/router';
+import { ReportPDFPreviewComponent } from './features/my-handover/report-preview/report-pdf-component';
 
 export const APP_ROUTES: Routes =
 [
@@ -34,6 +35,10 @@ export const APP_ROUTES: Routes =
         path: 'subscriptions-management',
         canActivate: [authGuard],
         component: SubscriptionManagementComponent
+    },
+    {
+        path: 'pdf-preview',
+        component: ReportPDFPreviewComponent
     },
     {
         path: 'footer',
