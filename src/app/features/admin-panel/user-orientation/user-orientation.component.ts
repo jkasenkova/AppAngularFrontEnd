@@ -19,6 +19,7 @@ import { LocationModel } from "../../../models/locationModel";
 import { LocationService } from "src/app/services/locationService";
 import { RoleService } from "src/app/services/roleService";
 import { TeamService } from "src/app/services/teamServices";
+import { Location } from "src/app/models/location";
 
 @Component({
     selector: 'app-user-orientation',
@@ -70,7 +71,16 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 debugger;
-                this.locationService.createLocation(result);
+                var location: Location = {
+                    name: result.name,
+                    timeZoneId: result.timeZoneId,
+                    mapLink: result.result,
+                    address: result.address
+                };
+
+                this.locationService.createLocation(location).subscribe(location =>{
+                    this.locations.push(location);
+                });
             }
         });
     }

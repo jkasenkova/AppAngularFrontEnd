@@ -54,8 +54,6 @@ export class AppComponent implements OnInit {
         private router: Router) {}
 
     ngOnInit(): void {
-        debugger;
-
         this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
             this.isAuth = isLoggedIn;   
         });

@@ -3,8 +3,8 @@ import { Inject, Injectable } from "@angular/core";
 import configurl from '../../assets/config/config.json'
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
-import { LocationModel } from "../models/locationModel";
 import { Team } from "../models/team";
+import { Location } from "../models/location";
 
 @Injectable({
     providedIn: 'root'
@@ -18,11 +18,12 @@ export class LocationService {
     url = configurl.apiServer.url + '/location'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createLocation(locationModel: LocationModel): Observable<LocationModel> {
-        return this.http.post<LocationModel>(this.url, locationModel, this.httpHeaders);
+    createLocation(locationModel: Location): Observable<Location> {
+        debugger;
+        return this.http.post<Location>(this.url, locationModel, this.httpHeaders);
     }
 
-    updateLocation(locationModel: LocationModel) {
+    updateLocation(locationModel: Location) {
         this.http.put(this.url, locationModel, this.httpHeaders).subscribe();
     }
 
@@ -30,12 +31,12 @@ export class LocationService {
       return this.http.delete(this.url + '/' + locationId);
     }
 
-    getLocationById(locationId: Guid): Observable<LocationModel> {
-        return this.http.get<LocationModel>(this.url  + '/'+ locationId);
+    getLocationById(locationId: Guid): Observable<Location> {
+        return this.http.get<Location>(this.url  + '/'+ locationId);
     }
 
-    getLocations(): Observable<LocationModel[]> {
-        return this.http.get<LocationModel[]>(this.url);
+    getLocations(): Observable<Location[]> {
+        return this.http.get<Location[]>(this.url);
     }
 
     getTeamsByLocationId(locationId: Guid): Observable<Team[]> {

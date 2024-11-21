@@ -49,10 +49,10 @@ export class CreateLocationDialogComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
         this.locationForm = this.fb.group({
-            name: ['', Validators.required],
-            address: [''],
-            mapLink: [''],
-            timeZoneControl: new FormControl('')
+            name: [null, Validators.required],
+            address: null,
+            mapLink: null,
+            timeZoneId: [null, Validators.required]
         });
     }
 
