@@ -1,10 +1,4 @@
-<!-- @if(ownerRole.userType == "User"){
-    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
-        <mat-tab label="Handover"></mat-tab>
-    </mat-tab-group>
-}
- -->
- @if(!handoverAdmin){
+ @if(!isAdmin){
     <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
         <mat-tab label="Handover"></mat-tab>
     </mat-tab-group>

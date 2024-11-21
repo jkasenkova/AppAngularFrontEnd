@@ -1,21 +1,21 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MyTeamModel } from 'src/app/models/myTeamModel';
-import { TabsMenuComponent } from '../tabs-menu/tabs-menu.component';
 import { MyTeamService } from 'src/app/services/myTeamService';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { HandoverInfoComponent } from './hondover-info/handover-info.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MyHandoverComponent } from '../my-handover/my-handover.component';
 
 @Component({
     selector: 'app-my-team',
     standalone: true,
     imports: [
         MatTabsModule,
-        TabsMenuComponent, 
         CommonModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MyHandoverComponent
     ], 
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-team.component.html',

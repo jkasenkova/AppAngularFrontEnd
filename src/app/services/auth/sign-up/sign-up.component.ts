@@ -9,7 +9,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { Timezone } from "../../../models/timezoneModel";
 import { SignUpResponse, SignUpData } from "../auth.service";
 import { AuthService } from "../auth.service";
-import { UserService } from "../../userService";
+import { LocationService } from "../../locationService";
+import { Location } from "src/app/models/location";
 
 @Component({
     selector: 'sign-up',
@@ -35,8 +36,8 @@ export class SignUpComponent implements OnInit{
 
     constructor(
         private router: Router,
-        private userService: UserService,
         private authService: AuthService,
+        private locationService: LocationService,
         private fb: FormBuilder) {
         this.signUpForm = this.fb.group({
             email: ['',   Validators.compose([Validators.email, Validators.required])],
@@ -70,6 +71,7 @@ export class SignUpComponent implements OnInit{
     }
 
     submit() {
+        debugger;
         const signUpData: SignUpData = {
             email: this.signUpForm.value.email,
             firstName: this.signUpForm.value.firstName,
@@ -80,12 +82,19 @@ export class SignUpComponent implements OnInit{
             timeZoneControl: this.signUpForm.value.timeZoneControl,
             password: this.signUpForm.value.password,
             passwordConfirm: this.signUpForm.value.confirmPassword
-        }
+        };
+        debugger;
         this.authService.signUp(signUpData).subscribe((response: SignUpResponse) => {
             if (response.succeeded) {
                 this.router.navigate(['/sign-in']);
             }
         });
         this.signUpForm.reset();
+
+        var location: Location = {
+            name: signUpData.officeLocation,
+            timeZoneId: signUpData.timeZoneControl
+        };
+        this.locationService.createLocation(location);
     }
 }

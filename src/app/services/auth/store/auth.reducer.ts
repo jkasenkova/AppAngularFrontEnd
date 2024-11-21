@@ -81,6 +81,7 @@ export const authReducer = createReducer(
     (state, action): AuthState => ({
       ...state,
       authUser: action.user,
+
     })
   ),
   on(

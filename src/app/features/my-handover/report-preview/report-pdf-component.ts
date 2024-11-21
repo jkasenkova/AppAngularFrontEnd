@@ -335,7 +335,6 @@ handoverTmp: Handover =
 
     ngOnInit(): void {
         debugger;
-
         this.dataService.currentData.subscribe(data => {
             if (data) {
               this.receivedData = data; 

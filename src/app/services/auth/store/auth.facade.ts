@@ -31,4 +31,8 @@ export class AuthFacade {
   getAuthUser() {
     this.store.dispatch(GetAuthUserActions.request());
   }
+
+  getIsAdmin(){
+    return this.store.select(AuthSelectors.selectIsAdmin);
+  }
 }

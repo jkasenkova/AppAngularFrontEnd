@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,9 +17,7 @@ import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
 import { SignInComponent } from './services/auth/sign-in/sign-in.component';
 import { FooterComponent } from './features/footer/footer.component';
-import { TabsMenuComponent } from './features/tabs-menu/tabs-menu.component';
 import { AuthFacade } from './services/auth/store/auth.facade';
-import { MyTeamTabComponent } from './features/my-team-tab/my-team-tab.component';
 
 @Component({
     selector: 'app-root',
@@ -39,9 +37,7 @@ import { MyTeamTabComponent } from './features/my-team-tab/my-team-tab.component
         MatInputModule,
         MatFormFieldModule,
         SignInComponent,
-        FooterComponent,
-        TabsMenuComponent,
-        MyTeamTabComponent
+        FooterComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.less']
@@ -50,12 +46,8 @@ export class AppComponent implements OnInit {
     userName: string;
     readonly dialog = inject(MatDialog);
     isAdmin: boolean;
-    adminId: Guid;
     admin: UserModel = new UserModel();
-    subscriptionId: Guid;
-    url: string;
     isAuth: boolean;
-    @Output() urlActive = new EventEmitter<string>();
 
     constructor(
         private authFacade: AuthFacade,
@@ -68,39 +60,23 @@ export class AppComponent implements OnInit {
         this.authFacade.isAdmin$.subscribe(isAdmin => {
             this.isAdmin = isAdmin;
         });
+
+        this.authFacade.getIsAdmin().subscribe(isAdmin => {
+            this.isAdmin = isAdmin;
+        });
+
+        this.isAdmin = true; //test
     }
 
-    navigateToPage(url: string, event: Event){
-
-        var elems = document.querySelector(".active");
-        if(elems !== null){
-            elems.classList.remove("active");
-        }
-        var element = event.target as HTMLElement;
-        element.classList.add('active');
-
-        this.url = url;
-
-        if(url == "/sign-in"){
-            this.isAuth = false;
-        }
-
-        this.urlActive.emit(this.url);
-        this.router.navigate([url]);
-    }
-
-    getFullName(): string {
-
+    getProfileName(): string {
         if(Boolean(this.admin.firstName) && Boolean(this.admin.lastName)){
-            
             var getLetters = [this.admin.firstName[0] + this.admin.lastName[0]].join("");
             return getLetters;
         }
-
         return "";
     }
 
-    getProfile(){
+    getProfileDialog(){
         const dialogRef = this.dialog.open(ProfileDialogComponent, { 
             data: this.admin
         });
@@ -110,6 +86,11 @@ export class AppComponent implements OnInit {
         
             }
         });
+    }
+
+    logOut(){
+      //  this.isAuth = false; reset this data
+        this.router.navigate(['/sign-in']);
     }
 }
 
