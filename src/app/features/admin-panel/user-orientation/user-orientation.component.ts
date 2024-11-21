@@ -42,9 +42,9 @@ export class UserOrientationComponent implements OnInit {
         private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locationService.getLocations().subscribe(locations => 
-            this.locations = locations
-        );
+        this.locationService.getLocations().subscribe(locations => {
+            this.locations = locations.sort((a, b) => a.name.localeCompare(b.name));
+        });
     }
 
     selectLocation(location:LocationModel){
@@ -70,12 +70,12 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
                 var location: Location = {
                     name: result.name,
                     timeZoneId: result.timeZoneId,
                     mapLink: result.result,
-                    address: result.address
+                    address: result.address,
+                    isAccountLocation: false
                 };
 
                 this.locationService.createLocation(location).subscribe(location =>{
@@ -107,7 +107,8 @@ export class UserOrientationComponent implements OnInit {
                 id: location.id,
                 address: location.address,
                 mapLink: location.mapLink,
-                timeZoneId: location.timeZoneId
+                timeZoneId: location.timeZoneId,
+                IsAccountLocation: location.isAccountLocation
             }
         });
 

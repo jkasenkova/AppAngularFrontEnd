@@ -52,7 +52,8 @@ export class EditLocationDialogComponent {
             mapLink: [data.mapLink],
             id: [data.id],
             timeZoneControl: new FormControl(''),
-            timeZoneId: [data.timeZoneId, Validators.required]
+            timeZoneId: [data.timeZoneId, Validators.required],
+            isAccountLocation: data.isAccountLocation
         });
     }
 
