@@ -46,6 +46,7 @@ export class EditLocationDialogComponent {
         public dialogRef: MatDialogRef<EditLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
+        debugger;
         this.locationForm = this.fb.group({
             name: [data.name, Validators.required],
             address: [data.address],

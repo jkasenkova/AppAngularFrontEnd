@@ -52,7 +52,8 @@ export class CreateLocationDialogComponent implements OnInit {
             name: [null, Validators.required],
             address: null,
             mapLink: null,
-            timeZoneId: [null, Validators.required]
+            timeZoneId: [null, Validators.required],
+            isAccountLocation: false
         });
     }
 

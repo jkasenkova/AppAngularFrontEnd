@@ -95,7 +95,8 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.deleteLocation(result.id);
+                this.locationService.deleteLocation(location.id);
+                this.locations = this.locations.filter(l=>l.id != location.id);
             }
         });
     }
@@ -108,13 +109,26 @@ export class UserOrientationComponent implements OnInit {
                 address: location.address,
                 mapLink: location.mapLink,
                 timeZoneId: location.timeZoneId,
-                IsAccountLocation: location.isAccountLocation
+                isAccountLocation: location.isAccountLocation
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.updateLocation(result);
+                var locationUpdate: Location = {
+                    id: result.id,
+                    name: result.name,
+                    timeZoneId: result.timeZoneId,
+                    mapLink: result.result,
+                    address: result.address,
+                    isAccountLocation: result.isAccountLocation
+                };
+
+                this.locationService.updateLocation(locationUpdate);
+
+                let updateLocation = this.locations.find(l=> l.id == result.id);
+                let index = this.locations.indexOf(updateLocation);
+                this.locations[index] = locationUpdate;
             }
         });
     }
@@ -128,7 +142,13 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.teamService.createTeam(result);
+                var team: Team = {
+                    id: Guid.create(),
+                    name: result.teamName,
+                    locationId: locationId
+                };
+                this.teamService.createTeam(team);
+                this.teams.push(team);
             }
         });
     }
@@ -160,6 +180,10 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.teamService.updateTeam(result);
+                let updateTeam = this.teams.find(l=> l.id == team.id);
+                let index = this.teams.indexOf(updateTeam);
+                this.teams[index].name = result.name;
+
             }
         });
     }

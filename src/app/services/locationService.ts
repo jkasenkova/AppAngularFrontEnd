@@ -19,16 +19,15 @@ export class LocationService {
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createLocation(locationModel: Location): Observable<Location> {
-        debugger;
         return this.http.post<Location>(this.url, locationModel, this.httpHeaders);
     }
 
     updateLocation(locationModel: Location) {
-        this.http.put(this.url, locationModel, this.httpHeaders).subscribe();
+        this.http.patch(this.url, locationModel, this.httpHeaders).subscribe();
     }
 
-    deleteLocation(locationId: Guid) {
-      return this.http.delete(this.url + '/' + locationId);
+    deleteLocation(id: Guid) {
+      return this.http.delete(this.url + '/' + id).subscribe();
     }
 
     getLocationById(locationId: Guid): Observable<Location> {

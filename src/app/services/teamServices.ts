@@ -15,15 +15,15 @@ export class TeamService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/team/'; 
+    url = configurl.apiServer.url + '/team'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createTeam(team: Team): Observable<Team> {
-        return this.http.post<Team>(this.url, team, this.httpHeaders);
+    createTeam(team: Team){
+        this.http.post(this.url, team, this.httpHeaders).subscribe();
     }
 
     updateTeam(team: Team) {
-        this.http.put(this.url, team, this.httpHeaders).subscribe();
+        this.http.patch(this.url, team, this.httpHeaders).subscribe();
     }
 
     deleteTeam(teamId: Guid) {
