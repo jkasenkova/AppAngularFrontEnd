@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../models/template';
-import { environment } from '../../environments/environment';
 import { Guid } from 'guid-typescript';
+import configurl from '../../assets/config/config.json'
 
 @Injectable({
     providedIn: 'root'
@@ -14,15 +14,22 @@ export class TemplateService {
         this.baseUrl = baseUrl;
     }
 
-    url = environment.routerUrl + '/template';
+    url = configurl.apiServer.url + '/template';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTemplates(): Observable<Template[]> {
         return this.http.get<Template[]>(this.url);
     }
 
-    addTemplate(template: Template): Observable<Template> {
-        return this.http.post<Template>(this.url, template, this.httpHeaders);
+    addTemplate(template: Template) {
+        this.http.post<Template>(this.url, template, this.httpHeaders).subscribe({
+            next: (response) => {
+              console.log('Resource updated successfully:', response);
+            },
+            error: (err) => {
+              console.error('Error updating resource:', err);
+            },
+        });
     }
 
     updateTemplate(template: Template): Observable<Template> {

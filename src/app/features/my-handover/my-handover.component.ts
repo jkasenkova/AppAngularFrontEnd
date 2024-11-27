@@ -423,8 +423,8 @@ export class MyHandoverComponent implements OnInit {
     };
 
     templateTmp: Template = {
-        templateName: "Template 1",
-        templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+        name: "Template 1",
+        id: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
         sections: [
             {
                 sectionName: "HSE",
@@ -547,7 +547,7 @@ export class MyHandoverComponent implements OnInit {
                 ]
             }
         ],
-        isHandoverTemplate: false
+        isHandover: false
     }; 
 
     handoverRecipientTmp: MyTeamModel = {
@@ -565,9 +565,8 @@ export class MyHandoverComponent implements OnInit {
     };
 
     roleTmp: RoleModel = {
-        roleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-        roleName: "Developer",
-        locationId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        id: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+        name: "Developer",
         templateId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
         userType: UserType.User,
         teamId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
@@ -915,7 +914,7 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 let newHandover: Handover = {
-                    templateId: this.template.templateId,
+                    templateId: this.template.id,
                     handoverId: Guid.create(),
                     ownerId: this.owner.userId,
                     sections: [],

@@ -53,7 +53,7 @@ export class PersonalTabComponent {
 
 
         this.roleService.getRoleById(this.data.roleId).subscribe(role =>  
-            this.personalForm.get('roleName').setValue(role.roleName));
+            this.personalForm.get('roleName').setValue(role.name));
 
         this.titles = ["Mr", "Mrs", "Ms", "Miss", "Dr"];
     }

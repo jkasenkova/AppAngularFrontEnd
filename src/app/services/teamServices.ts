@@ -26,8 +26,8 @@ export class TeamService {
         this.http.patch(this.url, team, this.httpHeaders).subscribe();
     }
 
-    deleteTeam(teamId: Guid) {
-      return this.http.delete(this.url + teamId);
+    deleteTeam(id: Guid) {
+      return this.http.delete(this.url  + '/' + id).subscribe();
     }
 
     getTeams(): Observable<Team[]> {
@@ -39,12 +39,10 @@ export class TeamService {
     }
 
     getTeamById(teamId: Guid): Observable<Team> {
-        return this.http.get<Team>(this.url + teamId);
+        return this.http.get<Team>(this.url + '/' + teamId);
     }
 
     getRolesByTeamId(id: Guid): Observable<RoleModel[]> {
-        debugger;
-        var res = this.url + id + '/roles';
-        return this.http.get<RoleModel[]>(this.url + id + '/roles');
+        return this.http.get<RoleModel[]>(this.url + '/'+ id + '/roles');
     }
 }

@@ -206,7 +206,7 @@ export class TemplateComponent implements OnInit {
     }
 
     getTemplateSections(template: Template): void{
-        this.sectionService.getSections(template.templateId).subscribe(sections => {
+        this.sectionService.getSections(template.id).subscribe(sections => {
             template.sections = sections;
             this.sections = sections;
         })

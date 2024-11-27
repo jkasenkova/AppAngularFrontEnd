@@ -66,7 +66,7 @@ export class HandoverTemplatesComponent implements OnInit {
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
-            map(templates => templates.find(template => template.templateId === id))
+            map(templates => templates.find(template => template.id === id))
         ).subscribe(template => {
             this.template = template;
             this.isSelectedTemplate = true;
@@ -114,7 +114,7 @@ export class HandoverTemplatesComponent implements OnInit {
 
     editTemplateDialog(template: Template): void {
         const dialogRef = this.dialog.open(EditTemplateDialogComponent, {
-            data: { templateId: template.templateId, templateName: template.templateName },
+            data: { templateId: template.id, name: template.name },
             panelClass: 'template-dialog'
         });
 
@@ -128,7 +128,7 @@ export class HandoverTemplatesComponent implements OnInit {
 
     deleteTemplateDialog(template: Template): void {
         const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, {
-            data: { templateId: template.templateId, templateName: template.templateName },
+            data: { templateId: template.id, templateName: template.name },
             panelClass: 'template-dialog'
         });
 
@@ -143,8 +143,8 @@ export class HandoverTemplatesComponent implements OnInit {
         const dialogRef = this.dialog.open(CopyTemplateDialogComponent, {
             data: 
             { 
-                templateId: template.templateId, 
-                templateName: template.templateName,
+                templateId: template.id, 
+                templateName: template.name,
                 templates: this.templates
             },
             panelClass: 'template-dialog'

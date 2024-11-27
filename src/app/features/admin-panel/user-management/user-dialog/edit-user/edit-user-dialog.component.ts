@@ -53,9 +53,8 @@ export class EditUserDialogComponent implements OnInit {
 
     role: RoleModel = 
         {
-            roleId: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
-            roleName: "Team Lead",
-            locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74"),
+            id: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
+            name: "Team Lead",
             templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
             userType: UserType.Administrator,
             rotationType: RotationType.NoRotation,

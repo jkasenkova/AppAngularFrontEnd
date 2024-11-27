@@ -106,7 +106,7 @@
                     <div class="list-group">
                         @for (role of roles; track role) {
                             <div class="list-group-item">
-                                {{role.roleName}}
+                                {{role.name}}
                                 <span class="pull-right btn-close" (click)="removeRole(role)"></span>
                                 <span class="pull-right pencil-block" (click)="editRole(role)"></span>
                             </div>

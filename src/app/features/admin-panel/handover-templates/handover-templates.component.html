@@ -10,7 +10,7 @@
                     <mat-select (selectionChange)="onSelectTemplate($event)" placeholder="Select a Template">
                         <mat-option>None</mat-option>
                         @for (template of templates; track template) {
-                            <mat-option [value]="template">{{template.templateName}}</mat-option>
+                            <mat-option [value]="template">{{template.name}}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>

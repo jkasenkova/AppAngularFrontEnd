@@ -70,7 +70,7 @@
                                     <mat-label>Role</mat-label>
                                     <mat-select placeholder="Select a Role" formControlName="role">
                                         @for (role of data.roles; track role) {
-                                            <mat-option [value]="role">{{role.roleName}}</mat-option>
+                                            <mat-option [value]="role">{{role.name}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
