@@ -6,12 +6,18 @@
         <button mat-button mat-dialog-close class="close-btn"></button>
         <button mat-button  class="save-btn"
             (click)="onSave()" 
-            cdkFocusInitial>
+            cdkFocusInitial
+            [disabled]="isCanDelete">
         Delete</button>
         </mat-dialog-actions>
     </div>
 
     <div mat-dialog-content>
-        <p>Are you sure you want to delete location <strong>{{data.name}}</strong>?</p>
+        @if(isCanDelete){
+            <p>You are unable to delete this Location. To do this you need to delete all of the linked roles and teams.</p>
+        }
+        @else{
+            <p>Are you sure you want to delete location <strong>{{data.name}}</strong>?</p>
+        }
     </div>
 </div>

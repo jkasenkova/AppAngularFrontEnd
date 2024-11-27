@@ -105,7 +105,6 @@ export class UserOrientationComponent implements OnInit {
     }
 
     editLocation(location: LocationModel){
-        debugger;
         const dialogRef = this.dialog.open(EditLocationDialogComponent, { 
             data: { 
                 name: location.name,

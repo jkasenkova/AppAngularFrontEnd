@@ -27,6 +27,8 @@
                                         <mat-error>Name is required</mat-error>
                                     }
                                 </mat-form-field>
+
+                                <mat-error *ngIf="locationForm.get('name').hasError('existLocationName')">A location with this name already exists!</mat-error>
                             </div>
                         </div>
                     </div>

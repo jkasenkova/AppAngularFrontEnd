@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormControl } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -12,6 +12,9 @@ import moment from 'moment-timezone';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { Timezone } from "../../../../../models/timezoneModel";
 import { LocationModel } from "../../../../../models/locationModel";
+import { LocationService } from "src/app/services/locationService";
+import { CommonModule } from "@angular/common";
+import { Location } from "../../../../../models/location";
 
 @Component({
     selector: 'location-dialog',
@@ -33,20 +36,22 @@ import { LocationModel } from "../../../../../models/locationModel";
         MatSelectModule,
         MatDialogModule,
         NgbDatepickerModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        CommonModule
     ],
 })
-export class EditLocationDialogComponent {
+export class EditLocationDialogComponent implements OnInit{
     locationForm: FormGroup;
     filteredTimeZone: string[];
     timeZones: Timezone[] = [];
+    locations: Location[];
 
     constructor(
         private fb: FormBuilder,
+        private locationService: LocationService,
         public dialogRef: MatDialogRef<EditLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
-        debugger;
         this.locationForm = this.fb.group({
             name: [data.name, Validators.required],
             address: [data.address],
@@ -60,6 +65,11 @@ export class EditLocationDialogComponent {
 
 
     ngOnInit(){
+
+        this.locationService.getLocations().subscribe(locations =>{
+            this.locations = locations;
+        });
+
         this.timeZones = moment.tz.names().map((zoneName) => {
             return {
                 zoneName: zoneName,
@@ -74,6 +84,12 @@ export class EditLocationDialogComponent {
     }
 
     onSave(): void {
+        var locationName = this.locationForm.get('name').value;
+
+        if(this.locations.find(l=>l.name == locationName) != null){
+            this.locationForm.get('name').setErrors({'existLocationName': true})
+        }
+
         if (this.locationForm.valid) {
             this.dialogRef.close(this.locationForm.value);
         }
