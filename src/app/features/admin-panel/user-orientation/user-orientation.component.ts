@@ -20,6 +20,8 @@ import { LocationService } from "src/app/services/locationService";
 import { RoleService } from "src/app/services/roleService";
 import { TeamService } from "src/app/services/teamServices";
 import { Location } from "src/app/models/location";
+import { Template } from "src/app/models/template";
+import { TemplateService } from "src/app/services/templateService";
 
 @Component({
     selector: 'app-user-orientation',
@@ -39,12 +41,13 @@ export class UserOrientationComponent implements OnInit {
     constructor(
         private locationService: LocationService,
         private teamService: TeamService,
+        private templateService: TemplateService,
         private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locationService.getLocations().subscribe(locations => 
-            this.locations = locations
-        );
+        this.locationService.getLocations().subscribe(locations => {
+            this.locations = locations.sort((a, b) => a.name.localeCompare(b.name));
+        });
     }
 
     selectLocation(location:LocationModel){
@@ -60,7 +63,7 @@ export class UserOrientationComponent implements OnInit {
     selectTeam(team: Team){
         this.selectedTeam = team;
 
-        this.roleService.getRolesByTeamId(team.id).subscribe(roles => 
+        this.teamService.getRolesByTeamId(team.id).subscribe(roles => 
             this.roles = roles
         );
     }
@@ -70,12 +73,12 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
                 var location: Location = {
                     name: result.name,
                     timeZoneId: result.timeZoneId,
                     mapLink: result.result,
-                    address: result.address
+                    address: result.address,
+                    isAccountLocation: false
                 };
 
                 this.locationService.createLocation(location).subscribe(location =>{
@@ -95,7 +98,8 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.deleteLocation(result.id);
+                this.locationService.deleteLocation(location.id);
+                this.locations = this.locations.filter(l=>l.id != location.id);
             }
         });
     }
@@ -107,13 +111,27 @@ export class UserOrientationComponent implements OnInit {
                 id: location.id,
                 address: location.address,
                 mapLink: location.mapLink,
-                timeZoneId: location.timeZoneId
+                timeZoneId: location.timeZoneId,
+                isAccountLocation: location.isAccountLocation
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.locationService.updateLocation(result);
+                var locationUpdate: Location = {
+                    id: result.id,
+                    name: result.name,
+                    timeZoneId: result.timeZoneId,
+                    mapLink: result.result,
+                    address: result.address,
+                    isAccountLocation: result.isAccountLocation
+                };
+
+                this.locationService.updateLocation(locationUpdate);
+
+                let updateLocation = this.locations.find(l=> l.id == result.id);
+                let index = this.locations.indexOf(updateLocation);
+                this.locations[index] = locationUpdate;
             }
         });
     }
@@ -127,7 +145,13 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.teamService.createTeam(result);
+                var team: Team = {
+                    id: Guid.create(),
+                    name: result.teamName,
+                    locationId: locationId
+                };
+                this.teamService.createTeam(team);
+                this.teams.push(team);
             }
         });
     }
@@ -142,7 +166,8 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.teamService.deleteTeam(result.id);
+                this.teamService.deleteTeam(result.teamId);
+                this.teams = this.teams.filter(l=>l.id != team.id);
             }
         });
     }
@@ -159,6 +184,10 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.teamService.updateTeam(result);
+                let updateTeam = this.teams.find(l=> l.id == team.id);
+                let index = this.teams.indexOf(updateTeam);
+                this.teams[index].name = result.name;
+
             }
         });
     }
@@ -167,37 +196,81 @@ export class UserOrientationComponent implements OnInit {
         const dialogRef = this.dialog.open(CreateRoleDialogComponent, { 
             data: { 
                 teamId: teamId,
-                locationId: locationId,
                 userType: UserType
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
-                this.roleService.createRole(result);
+                var templateId: any;
+
+                if(result.template.id != null){
+                    templateId = result.template.id;
+                }else{
+                    var id = Guid.create();
+                    templateId = this.createTemplate(result.template, id);
+                }
+
+                var role: RoleModel = {
+                    id: Guid.create(),
+                    name: result.name,
+                    userType: result.userType,
+                    teamId: result.teamId,
+                    rotationType: result.rotationType,
+                    shiftPatternType: result.shiftPatternType,
+                    templateId: templateId
+                };
+
+                this.roleService.createRole(role);
+                this.roles.push(role);
             }
         });
     }
 
+    createTemplate(nameTemplate: string, id: any): Guid{
+
+        var newTemplate: Template = {
+            name: nameTemplate,
+            id: id.value,
+            isHandover: false
+        };
+
+        this.templateService.addTemplate(newTemplate);
+
+        return newTemplate.id;
+    }
+
     editRole(role: RoleModel){
         const dialogRef = this.dialog.open(EditRoleDialogComponent, { 
-            data: { 
-                roleName: role.roleName,
-                teamId: role.teamId,
-                locationId: role.locationId,
-                templateName: "Template for Role",
-                userType: role.userType,
-                roleId: role.roleId,
-                rotationType: role.rotationType,
+            data: {
+                id: role.id,
+                name: role.name,
                 templateId: role.templateId,
+                userType: role.userType,
+                teamId: role.teamId,
+                rotationType: role.rotationType,
                 shiftPatternType: role.shiftPatternType
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.roleService.updateRole(result);
+
+                var updRole: RoleModel = {
+                    id: result.id,
+                    name: result.name,
+                    userType: result.userType,
+                    teamId: result.teamId,
+                    rotationType: result.rotationType,
+                    shiftPatternType: result.shiftPatternType,
+                    templateId: result.template.id
+                };
+
+                this.roleService.updateRole(updRole);
+
+                let updateRole = this.roles.find(t=> t.id == role.id);
+                let index = this.roles.indexOf(updateRole);
+                this.roles[index] = updRole;
             }
         });
     }
@@ -205,15 +278,15 @@ export class UserOrientationComponent implements OnInit {
     removeRole(role: RoleModel){
         const dialogRef = this.dialog.open(DeleteRoleDialogComponent, { 
             data: { 
-                roleName: role.roleName,
-                roleId: role.roleId
+                name: role.name,
+                roleId: role.id
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
-                this.roleService.deleteRole(result.roleId);
+                this.roleService.deleteRole(role.id);
+                this.roles = this.roles.filter(r => r.id != role.id);
             }
         });
     }

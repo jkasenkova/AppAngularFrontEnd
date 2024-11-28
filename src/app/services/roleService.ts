@@ -14,23 +14,30 @@ export class RoleService {
         this.baseUrl = baseUrl;
     }
 
-    url = configurl.apiServer.url + '/userManagment/role';
+    url = configurl.apiServer.url + '/role';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createRole(roleModel: RoleModel): Observable<RoleModel> {
-        return this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders);
+    createRole(roleModel: RoleModel): void{
+        this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders).subscribe({
+            next: (response) => {
+              console.log('Resource updated successfully:', response);
+            },
+            error: (err) => {
+              console.error('Error updating resource:', err);
+            },
+        });
     }
 
-    updateRole(roleModel: RoleModel) {
-        this.http.put(this.url, roleModel, this.httpHeaders).subscribe();
+    updateRole(roleModel: RoleModel): void {
+        this.http.patch(this.url, roleModel, this.httpHeaders).subscribe();
     }
 
-    deleteRole(roleId: Guid): Observable<string> {
-        return this.http.delete<string>(this.url + '/' + roleId);
+    deleteRole(roleId: Guid) {
+        this.http.delete<string>(this.url + '/' + roleId).subscribe();
     }
 
-    getRoleById(roleId: Guid): Observable<RoleModel> {
-        return this.http.get<RoleModel>(this.url + '/' + roleId);
+    getRoleById(id: Guid): Observable<RoleModel> {
+        return this.http.get<RoleModel>(this.url + '/' + id);
     }
 
     getRolesByTeamId(teamId: Guid): Observable<RoleModel[]> {

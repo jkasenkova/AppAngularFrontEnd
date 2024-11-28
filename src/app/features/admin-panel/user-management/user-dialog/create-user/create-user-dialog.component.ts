@@ -91,7 +91,7 @@ export class CreateUserDialogComponent {
     onSelectRole(event: any){
        var roleId = event.value.roleId;
 
-       var role = this.data.roles.find(r => r.roleId == roleId);
+       var role = this.data.roles.find(r => r.id == roleId);
 
         if(role){
             this.userForm.get('rotation').setValue(role.rotationType);

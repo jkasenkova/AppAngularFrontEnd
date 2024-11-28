@@ -71,7 +71,6 @@ export class SignUpComponent implements OnInit{
     }
 
     submit() {
-        debugger;
         const signUpData: SignUpData = {
             email: this.signUpForm.value.email,
             firstName: this.signUpForm.value.firstName,
@@ -83,7 +82,6 @@ export class SignUpComponent implements OnInit{
             password: this.signUpForm.value.password,
             passwordConfirm: this.signUpForm.value.confirmPassword
         };
-        debugger;
         this.authService.signUp(signUpData).subscribe((response: SignUpResponse) => {
             if (response.succeeded) {
                 this.router.navigate(['/sign-in']);
@@ -93,7 +91,9 @@ export class SignUpComponent implements OnInit{
 
         var location: Location = {
             name: signUpData.officeLocation,
-            timeZoneId: signUpData.timeZoneControl
+            timeZoneId: signUpData.timeZoneControl,
+            isAccountLocation: true
+
         };
         this.locationService.createLocation(location);
     }

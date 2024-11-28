@@ -95,7 +95,7 @@ export class TemplateTopicComponent implements OnInit {
    }
 
   displayTemplatesName(templates:Template[]): string {
-    return templates.flatMap(t => t.templateName).toString();
+    return templates.flatMap(t => t.name).toString();
   }
 
   getTemplateTopics(): void{

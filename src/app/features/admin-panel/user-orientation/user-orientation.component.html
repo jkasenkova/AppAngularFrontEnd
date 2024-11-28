@@ -21,15 +21,19 @@
                             @if(selectedLocation == location){
                                 <div class="list-group-item selected" (click)="selectLocation(location)">
                                     {{location.name}}
-                                    <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
-                                    <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                    @if(!location.isAccountLocation){
+                                        <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                        <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                    }
                                 </div>
                             }
                             @else{
                                 <div class="list-group-item list-group-item-action" (click)="selectLocation(location)">
                                     {{location.name}}
-                                    <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
-                                    <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                    @if(!location.isAccountLocation){
+                                        <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                        <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                                    }
                                 </div>
                             }
                         }
@@ -102,7 +106,7 @@
                     <div class="list-group">
                         @for (role of roles; track role) {
                             <div class="list-group-item">
-                                {{role.roleName}}
+                                {{role.name}}
                                 <span class="pull-right btn-close" (click)="removeRole(role)"></span>
                                 <span class="pull-right pencil-block" (click)="editRole(role)"></span>
                             </div>

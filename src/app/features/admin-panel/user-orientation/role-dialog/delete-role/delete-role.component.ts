@@ -44,8 +44,8 @@ export class DeleteRoleDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: RoleModel
     ) {
         this.roleForm = this.fb.group({
-            roleName: [data.roleName, Validators.required],
-            roleId: [data.roleId]
+            roleName: [data.name, Validators.required],
+            roleId: [data.id]
         });
 
     }
