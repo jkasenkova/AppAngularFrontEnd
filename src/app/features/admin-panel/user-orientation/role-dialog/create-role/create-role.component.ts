@@ -87,7 +87,6 @@ export class CreateRoleDialogComponent {
     }
 
     onSave(): void {
-        debugger;
         if (this.roleForm.valid) {
             this.dialogRef.close(this.roleForm.value);
         }
