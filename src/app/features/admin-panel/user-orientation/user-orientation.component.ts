@@ -255,7 +255,15 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                var templateId: any;
 
+                if(result.template.id != null){
+                    templateId = result.template.id;
+                }else{
+                    var id = Guid.create();
+                    templateId = this.createTemplate(result.template, id);
+                }
+                
                 var updRole: RoleModel = {
                     id: result.id,
                     name: result.name,
@@ -263,7 +271,7 @@ export class UserOrientationComponent implements OnInit {
                     teamId: result.teamId,
                     rotationType: result.rotationType,
                     shiftPatternType: result.shiftPatternType,
-                    templateId: result.template.id
+                    templateId: templateId
                 };
 
                 this.roleService.updateRole(updRole);
