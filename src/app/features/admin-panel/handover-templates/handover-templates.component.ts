@@ -107,7 +107,14 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.templateService.addTemplate(result);
+                debugger;
+
+                var newTemplate: Template = {
+                    name: result.templateName,
+                    isHandover: false
+                };
+        
+                this.templateService.addTemplate(newTemplate);
             }
         });
     }

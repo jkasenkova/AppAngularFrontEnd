@@ -106,9 +106,9 @@
                                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
                                         (optionSelected)='selectTemplate($event.option.value)'
                                         [displayWith]="displayFn">
-                                            @for (template of templates; track template) {
-                                                <mat-option [value]="template">{{template.name}}</mat-option>
-                                            }
+                                        <mat-option *ngFor="let option of templates" [value]="option">
+                                            {{ option.name }}
+                                        </mat-option>
                                         </mat-autocomplete>
                                       </mat-form-field>
                                 </div>

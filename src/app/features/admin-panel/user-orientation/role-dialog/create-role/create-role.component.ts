@@ -17,6 +17,8 @@ import { RotationType } from "../../../../../models/rotationType";
 import { UserType } from "src/app/models/userType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { TemplateService } from "src/app/services/templateService";
+import { TeamService } from "src/app/services/teamServices";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'role-dialog',
@@ -38,7 +40,8 @@ import { TemplateService } from "src/app/services/templateService";
         MatSelectModule,
         MatDialogModule,
         NgbDatepickerModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        CommonModule
     ],
 })
 export class CreateRoleDialogComponent {
@@ -50,6 +53,7 @@ export class CreateRoleDialogComponent {
     templates: Template[];
     isRotationDisabled: boolean = false;
     filteredOptions: Observable<Template[]>;
+    roles: RoleModel[];
 
     rotationOptions = RotationType.getAll();
     userTypeOptions = UserType.getAll();
@@ -58,6 +62,7 @@ export class CreateRoleDialogComponent {
     constructor(
         private fb: FormBuilder,
         private templateService: TemplateService,
+        private teamService: TeamService,
         public dialogRef: MatDialogRef<CreateRoleDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: RoleModel
     ) {
@@ -72,10 +77,37 @@ export class CreateRoleDialogComponent {
     }
 
     ngOnInit() {
+        this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
+            this.roles = roles;
+        });
+
         this.templateService.getTemplates().subscribe(templates =>{
             this.templates = templates;
+
+            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
+                startWith(''),
+                map(value => this.filterOptions(value || '')),
+            );
         });
+   /*  
+        if(this.templates){
+            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
+                startWith(''),
+                map(value => this.filterOptions(value || '')),
+            );
+        }  */
     }
+
+    
+  private filterOptions(value: string): Template[] {
+    if(value != ''){
+        const filterValue = value.toLowerCase();
+        return this.templates.filter(template =>
+            template.name.toLowerCase().includes(filterValue)
+        );
+    }
+    return [];
+  }
 
 
     displayFn(template?: Template): string | undefined {
@@ -87,7 +119,12 @@ export class CreateRoleDialogComponent {
     }
 
     onSave(): void {
-        debugger;
+        var roleName = this.roleForm.get('name').value;
+
+        if(this.roles.find(l=>l.name == roleName) != null){
+            this.roleForm.get('name').setErrors({'existRoleName': true})
+        }
+
         if (this.roleForm.valid) {
             this.dialogRef.close(this.roleForm.value);
         }
@@ -101,6 +138,15 @@ export class CreateRoleDialogComponent {
         }
         else{
             this.roleForm.get('rotationType').reset();
+            this.selectedRotation = false;
+            this.isRotationDisabled = false;
+        }
+    }
+
+    selectRotation(event: any){
+        if(event.value == 1){
+            this.selectedRotation = true;
+        }else{
             this.selectedRotation = false;
             this.isRotationDisabled = false;
         }

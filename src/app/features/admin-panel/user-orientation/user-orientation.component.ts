@@ -53,10 +53,10 @@ export class UserOrientationComponent implements OnInit {
     selectLocation(location:LocationModel){
         this.selectedLocation = location;
         this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
-            this.teams = teams
-        );
-
-        this.teams = this.teams.filter(t => t.locationId == location.id);
+        {
+                this.teams = teams.sort((a, b) => a.name.localeCompare(b.name));
+                this.teams = this.teams.filter(t => t.locationId == location.id);
+        });
         this.roles = [];
     }
 
@@ -64,8 +64,9 @@ export class UserOrientationComponent implements OnInit {
         this.selectedTeam = team;
 
         this.teamService.getRolesByTeamId(team.id).subscribe(roles => 
-            this.roles = roles
-        );
+        {
+            this.roles = roles.sort((a, b) => a.name.localeCompare(b.name));
+        });
     }
 
     addLocation() {
@@ -83,7 +84,10 @@ export class UserOrientationComponent implements OnInit {
 
                 this.locationService.createLocation(location).subscribe(location =>{
                     this.locations.push(location);
+                    this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
                 });
+
+                
             }
         });
     }
@@ -132,6 +136,8 @@ export class UserOrientationComponent implements OnInit {
                 let updateLocation = this.locations.find(l=> l.id == result.id);
                 let index = this.locations.indexOf(updateLocation);
                 this.locations[index] = locationUpdate;
+
+                this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
     }
@@ -152,6 +158,8 @@ export class UserOrientationComponent implements OnInit {
                 };
                 this.teamService.createTeam(team);
                 this.teams.push(team);
+
+                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
     }
@@ -188,6 +196,7 @@ export class UserOrientationComponent implements OnInit {
                 let index = this.teams.indexOf(updateTeam);
                 this.teams[index].name = result.name;
 
+                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
     }
@@ -203,12 +212,14 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var templateId: any;
-
-                if(result.template.id != null){
-                    templateId = result.template.id;
-                }else{
-                    var id = Guid.create();
-                    templateId = this.createTemplate(result.template, id);
+                debugger;
+                if(result.template){
+                    if(result.template.id != null){
+                        templateId = result.template.id;
+                    }else{
+                        var id = Guid.create();
+                        templateId = this.createTemplate(result.template, id);
+                    }
                 }
 
                 var role: RoleModel = {
@@ -223,6 +234,7 @@ export class UserOrientationComponent implements OnInit {
 
                 this.roleService.createRole(role);
                 this.roles.push(role);
+                this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
     }
@@ -255,7 +267,15 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                var templateId: any;
 
+                if(result.template.id != null){
+                    templateId = result.template.id;
+                }else{
+                    var id = Guid.create();
+                    templateId = this.createTemplate(result.template, id);
+                }
+                
                 var updRole: RoleModel = {
                     id: result.id,
                     name: result.name,
@@ -263,7 +283,7 @@ export class UserOrientationComponent implements OnInit {
                     teamId: result.teamId,
                     rotationType: result.rotationType,
                     shiftPatternType: result.shiftPatternType,
-                    templateId: result.template.id
+                    templateId: templateId
                 };
 
                 this.roleService.updateRole(updRole);
@@ -271,6 +291,8 @@ export class UserOrientationComponent implements OnInit {
                 let updateRole = this.roles.find(t=> t.id == role.id);
                 let index = this.roles.indexOf(updateRole);
                 this.roles[index] = updRole;
+
+                this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
     }

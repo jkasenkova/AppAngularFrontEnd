@@ -17,6 +17,8 @@ import { map, Observable, startWith } from "rxjs";
 import { RotationType } from "src/app/models/rotationType";
 import { TemplateService } from "src/app/services/templateService";
 import { RoleService } from "src/app/services/roleService";
+import { CommonModule } from "@angular/common";
+import { TeamService } from "src/app/services/teamServices";
 
 @Component({
     selector: 'role-dialog',
@@ -38,7 +40,8 @@ import { RoleService } from "src/app/services/roleService";
         MatSelectModule,
         MatDialogModule,
         NgbDatepickerModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        CommonModule
     ],
 })
 export class EditRoleDialogComponent {
@@ -52,6 +55,7 @@ export class EditRoleDialogComponent {
     filteredOptions: Observable<Template[]>;
     template: Template;
     role: RoleModel;
+    roles: RoleModel[];
 
     rotationOptions = RotationType.getAll();
     userTypeOptions = UserType.getAll();
@@ -61,6 +65,7 @@ export class EditRoleDialogComponent {
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<EditRoleDialogComponent>,
         private templateService: TemplateService,
+        private teamService: TeamService,
         private roleService: RoleService,
         @Inject(MAT_DIALOG_DATA) public data: RoleModel
     ) {
@@ -84,6 +89,15 @@ export class EditRoleDialogComponent {
     }
 
     ngOnInit() {
+        this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterOptions(value || '')),
+          );
+
+        this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
+            this.roles = roles;
+        });
+
         this.templateService.getTemplates().subscribe(templates =>{
             this.templates = templates;
         });
@@ -97,6 +111,16 @@ export class EditRoleDialogComponent {
             },
         });
     }
+
+    private filterOptions(value: string): Template[] {
+        if(value != ''){
+            const filterValue = value.toLowerCase();
+            return this.templates.filter(template =>
+                template.name.toLowerCase().includes(filterValue)
+            );
+        }
+        return [];
+      }
 
     displayFn(template?: Template): string | undefined {
         return template ? template.name : undefined;
