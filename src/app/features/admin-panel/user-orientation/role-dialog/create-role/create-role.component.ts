@@ -77,18 +77,25 @@ export class CreateRoleDialogComponent {
     }
 
     ngOnInit() {
-        this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
-            startWith(''),
-            map(value => this.filterOptions(value || '')),
-          );
-
         this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
             this.roles = roles;
         });
 
         this.templateService.getTemplates().subscribe(templates =>{
             this.templates = templates;
+
+            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
+                startWith(''),
+                map(value => this.filterOptions(value || '')),
+            );
         });
+   /*  
+        if(this.templates){
+            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
+                startWith(''),
+                map(value => this.filterOptions(value || '')),
+            );
+        }  */
     }
 
     
@@ -133,6 +140,14 @@ export class CreateRoleDialogComponent {
             this.roleForm.get('rotationType').reset();
             this.selectedRotation = false;
             this.isRotationDisabled = false;
+        }
+    }
+
+    selectRotation(event: any){
+        if(event.value == 1){
+            this.selectedRotation = true;
+        }else{
+            this.selectedRotation = false;
         }
     }
 }

@@ -61,7 +61,7 @@
                                 <mat-form-field>
                                     <mat-label>Rotation</mat-label>
                                     <mat-select placeholder="Select Rotation Type" formControlName="rotationType"
-                                    (selectionChange)="selectedRotation = !selectedRotation"
+                                    (selectionChange)="selectRotation($event)"
                                     [disabled]="isRotationDisabled">
                                         @for (rotationType of rotationOptions; track rotationType) {
                                             <mat-option [value]="rotationType.key">
@@ -113,7 +113,7 @@
                                         />
                                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" 
                                         [displayWith]="displayFn" formControlName="template">
-                                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                            <mat-option *ngFor="let option of templates" [value]="option">
                                                 {{ option.name }}
                                             </mat-option>
                                         </mat-autocomplete>

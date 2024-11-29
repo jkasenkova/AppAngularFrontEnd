@@ -106,7 +106,7 @@
                                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
                                         (optionSelected)='selectTemplate($event.option.value)'
                                         [displayWith]="displayFn">
-                                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                        <mat-option *ngFor="let option of templates" [value]="option">
                                             {{ option.name }}
                                         </mat-option>
                                         </mat-autocomplete>

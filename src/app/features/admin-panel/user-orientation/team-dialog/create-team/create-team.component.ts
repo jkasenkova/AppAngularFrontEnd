@@ -63,7 +63,7 @@ export class CreateTeamDialogComponent implements OnInit {
 
     onSave(): void {
         var teamName = this.teamForm.get('teamName').value;
-        if(this.teams.find(t => t.name == teamName) != null || this.teams.length > 0){
+        if(this.teams.find(t => t.name == teamName) != null){
             this.teamForm.get('teamName').setErrors({'existTeamName': true})
         }
 
