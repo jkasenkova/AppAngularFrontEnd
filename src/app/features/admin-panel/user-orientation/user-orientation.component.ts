@@ -53,10 +53,10 @@ export class UserOrientationComponent implements OnInit {
     selectLocation(location:LocationModel){
         this.selectedLocation = location;
         this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
-            this.teams = teams
-        );
-
-        this.teams = this.teams.filter(t => t.locationId == location.id);
+        {
+                this.teams = teams.sort((a, b) => a.name.localeCompare(b.name));
+                this.teams = this.teams.filter(t => t.locationId == location.id);
+        });
         this.roles = [];
     }
 
@@ -64,8 +64,9 @@ export class UserOrientationComponent implements OnInit {
         this.selectedTeam = team;
 
         this.teamService.getRolesByTeamId(team.id).subscribe(roles => 
-            this.roles = roles
-        );
+        {
+            this.roles = roles.sort((a, b) => a.name.localeCompare(b.name));
+        });
     }
 
     addLocation() {
@@ -211,7 +212,7 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var templateId: any;
-
+                debugger;
                 if(result.template){
                     if(result.template.id != null){
                         templateId = result.template.id;
