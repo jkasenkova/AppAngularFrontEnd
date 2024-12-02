@@ -21,23 +21,16 @@ export class TemplateService {
         return this.http.get<Template[]>(this.url);
     }
 
-    addTemplate(template: Template) {
-        this.http.post<Template>(this.url, template, this.httpHeaders).subscribe({
-            next: (response) => {
-              console.log('Resource updated successfully:', response);
-            },
-            error: (err) => {
-              console.error('Error updating resource:', err);
-            },
-        });
+    addTemplate(template: Template): Observable<Template> {
+        return this.http.post<Template>(this.url, template, this.httpHeaders);
     }
 
-    updateTemplate(template: Template): Observable<Template> {
-        return this.http.put<Template>(this.url, template, this.httpHeaders);
+    updateTemplate(template: Template): void {
+        this.http.patch<Template>(this.url, template, this.httpHeaders).subscribe();
     }
 
-    deleteTemplateById(id: Guid): Observable<string> {
-        return this.http.delete<string>(this.url + '/' + id);
+    deleteTemplateById(id: Guid) {
+        this.http.delete(this.url + '/' + id).subscribe();
     }
 
     getTemplateById(id: Guid): Observable<Template> {

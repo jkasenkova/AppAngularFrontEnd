@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, ChangeDetectionStrategy, EventEmitter } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -16,6 +16,7 @@ import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-handover-templates',
@@ -29,7 +30,6 @@ import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/co
         MatFormFieldModule
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'handover-templates.component.html',
     styleUrls: ['handover-templates.component.less'],
     schemas: [
@@ -44,6 +44,7 @@ export class HandoverTemplatesComponent implements OnInit {
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
+
     readonly dialog = inject(MatDialog);
 
     constructor(
@@ -55,12 +56,12 @@ export class HandoverTemplatesComponent implements OnInit {
             this.templates = templates
         );
 
-        var templateId = this.sessionStorageService.getItem<Guid>('templateId');
+      /*   var templateId = this.sessionStorageService.getItem<Guid>('templateId');
         this.selectedIndex = this.sessionStorageService.getItem<number>('template-tab');
 
         if (templateId) {
             this.getTemplateById(templateId);
-        } 
+        }  */
     }
 
 
@@ -99,49 +100,69 @@ export class HandoverTemplatesComponent implements OnInit {
     //--------------Template Dialogs---------------------
 
     createTemplateDialog(): void {
-        const dialogRef = this.dialog.open(CreateTemplateDialogComponent, { 
-                data: { templateName: '' },
-                panelClass: 'template-dialog'
-            }
-        );
+        const dialogRef = this.dialog.open(CreateTemplateDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 debugger;
 
-                var newTemplate: Template = {
+                var templateModel: Template = {
                     name: result.templateName,
-                    isHandover: false
+                    isHandover: false,
+                    sections: []
                 };
-        
-                this.templateService.addTemplate(newTemplate);
+                
+                this.templateService.addTemplate(templateModel).subscribe(newTemplate => 
+                {
+                    debugger;
+                    this.selectedTemplate = newTemplate;
+                    this.isSelectedTemplate = true;
+                    this.template = newTemplate;
+                    this.templates.push(newTemplate);
+                    this.templates = this.templates.sort((a, b) => a.name.localeCompare(b.name));
+                });
             }
         });
     }
 
+
     editTemplateDialog(template: Template): void {
         const dialogRef = this.dialog.open(EditTemplateDialogComponent, {
-            data: { templateId: template.id, name: template.name },
+            data: template,
             panelClass: 'template-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                //check value result
+              
                 this.templateService.updateTemplate(result);
+                this.template = result;
+                this.selectedTemplate = result;
+                let updateTemplate = this.templates.find(l=> l.id == result.id);
+                let index = this.templates.indexOf(updateTemplate);
+                this.templates[index].name = result.name;
             }
         });
     }
 
     deleteTemplateDialog(template: Template): void {
-        const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, {
-            data: { templateId: template.id, templateName: template.name },
+        const dialogRef = this.dialog.open(DeleteTemplateDialogComponent, 
+        {
+            data: 
+            { 
+                templateId: template.id, 
+                templateName: template.name 
+            },
             panelClass: 'template-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.templateService.deleteTemplateById(result.templateId);
+                this.templateService.deleteTemplateById(template.id);
+                this.templates = this.templates.filter(t=>t.id != template.id);
+                this.isSelectedTemplate = false;
+                this.template = null;
+                this.selectedTemplate = null;
             }
         });
     }
