@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, ChangeDetectionStrategy, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -16,7 +16,6 @@ import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
-import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-handover-templates',
@@ -44,26 +43,19 @@ export class HandoverTemplatesComponent implements OnInit {
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
-
     readonly dialog = inject(MatDialog);
 
     constructor(
         private templateService: TemplateService,
-        private sessionStorageService: SessionStorageService) { }
+        private sessionStorageService: SessionStorageService) 
+        {
+        }
 
     ngOnInit(): void {
         this.templateService.getTemplates().subscribe(templates =>
             this.templates = templates
         );
-
-      /*   var templateId = this.sessionStorageService.getItem<Guid>('templateId');
-        this.selectedIndex = this.sessionStorageService.getItem<number>('template-tab');
-
-        if (templateId) {
-            this.getTemplateById(templateId);
-        }  */
     }
-
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
@@ -104,7 +96,6 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
 
                 var templateModel: Template = {
                     name: result.templateName,
@@ -114,7 +105,6 @@ export class HandoverTemplatesComponent implements OnInit {
                 
                 this.templateService.addTemplate(templateModel).subscribe(newTemplate => 
                 {
-                    debugger;
                     this.selectedTemplate = newTemplate;
                     this.isSelectedTemplate = true;
                     this.template = newTemplate;
@@ -134,7 +124,6 @@ export class HandoverTemplatesComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              
                 this.templateService.updateTemplate(result);
                 this.template = result;
                 this.selectedTemplate = result;

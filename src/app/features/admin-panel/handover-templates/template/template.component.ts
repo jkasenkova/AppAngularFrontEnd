@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren, ViewEncapsulation, inject } from '@angular/core';
 import { Template } from '../../../../models/template';
 import { Section } from '../../../../models/section';
 import { SectionService } from '../../../../services/sectionService';
@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Guid } from 'guid-typescript';
-import { SectionType } from 'src/app/models/sectionType';
 import { SortType } from 'src/app/models/sortType';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateTopic } from 'src/app/models/templateTopic';
@@ -19,6 +18,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { CreateSectionDialogComponent } from '../dialogs/section/create-section/create-section-dialog.component';
 import { EditSectionDialogComponent } from '../dialogs/section/edit-section/edit-section-dialog.component';
 import { DeleteSectionDialogComponent } from '../dialogs/section/delete-section/delete-section-dialog.component';
+import { SectionType } from 'src/app/models/sectionType';
 
 @Component({
     selector: 'app-template',
@@ -39,7 +39,7 @@ import { DeleteSectionDialogComponent } from '../dialogs/section/delete-section/
     styleUrls: ['template.component.less']
 })
 
-export class TemplateComponent implements OnInit {
+export class TemplateComponent implements OnInit, OnChanges {
     isSelectedTemplate: boolean = false;
     @Input() selectedTemplate?: Template;
     sections?: Section[];
@@ -49,7 +49,10 @@ export class TemplateComponent implements OnInit {
     enableAddTopicBtn: boolean = true;
     references: Reference[];
 
-    constructor(private sectionService: SectionService, private fb: FormBuilder) {
+    constructor(
+      private sectionService: SectionService, 
+      private fb: FormBuilder
+    ) {
         this.topicForm = this.fb.group({
             topic: null,
             reference: null,
@@ -59,8 +62,14 @@ export class TemplateComponent implements OnInit {
         });
      }
 
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['selectedTemplate']) {
+        this.selectedTemplate = changes['selectedTemplate'].currentValue;
+        this.getTemplateSections(this.selectedTemplate);
+      }
+    }
+
     ngOnInit(): void {
-        debugger;
         if (this.selectedTemplate) {
             this.isSelectedTemplate = true;
             this.getTemplateSections(this.selectedTemplate);
@@ -69,47 +78,84 @@ export class TemplateComponent implements OnInit {
 
     getTemplateSections(template: Template): void{
         this.sectionService.getSections(template.id).subscribe(sections => {
-            template.sections = sections;
             this.sections = sections;
-        })
+        });
     }
 
     //---------Section Dialogs------------
 
     createSectionDialog(templateId: Guid): void {
         const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
-            data: { templateId: templateId, sectionName: '' },
-             panelClass: 'section-dialog'
+            data: 
+            { 
+              templateId: templateId,
+              sections: this.sections 
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-              
+
+              var newSection: Section = {
+                name: result.name,
+                templateId: result.templateId,
+                type: SectionType.Other
+              };
+              this.sectionService.createSection(newSection).subscribe(newSection =>{
+                if(this.sections != null){
+                  this.sections.push(newSection);
+                }
+                else{
+                  this.sections = [];
+                  this.sections.push(newSection);
+                }
+              })
             }
         });
     }
 
     editSectionDialog(section: Section): void {
         const dialogRef = this.dialog.open(EditSectionDialogComponent, {
-            data: { sectionId: section.sectionId, sectionName: section.sectionName },
-             panelClass: 'section-dialog'
+            data: 
+            { 
+              id: section.id, 
+              sectionName: section.name,
+              sections: this.sections 
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+              var updtSection: Section = {
+                id: result.id,
+                name: result.name,
+                templateId: section.templateId,
+                type: section.type,
+                sortType: section.sortType,
+                sortReferenceType: section.sortReferenceType
+              };
+              this.sectionService.updateSection(updtSection);
 
+              let updateSection = this.sections.find(l=> l.id == result.id);
+              let index = this.sections.indexOf(updateSection);
+              this.sections[index].name = result.name;
             }
         });
     }
 
     deleteSectionDialog(section: Section): void {
         const dialogRef = this.dialog.open(DeleteSectionDialogComponent, {
-            data: { sectionId: section.sectionId, sectionName: section.sectionName },
-             panelClass: 'section-dialog'
+            data: 
+            { 
+              id: section.id, 
+              name: section.name 
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+              this.sectionService.deleteSection(section.id);
+              this.sections = this.sections.filter(t=> t.id != section.id);
             }
         });
     }
@@ -126,10 +172,8 @@ export class TemplateComponent implements OnInit {
 
              if(nativeElement.style.display !== "none"){
                 this.enableAddTopicBtn = false;
-                section.addBtnShow = false;
             }else{
                 this.enableAddTopicBtn = true;
-                section.addBtnShow = true;
             }
     
     }
@@ -155,7 +199,7 @@ export class TemplateComponent implements OnInit {
           x.index = index
         });
     
-        section.sortType = SortType.index;
+        section.sortReferenceType = SortType.index;
         //update
       }
     

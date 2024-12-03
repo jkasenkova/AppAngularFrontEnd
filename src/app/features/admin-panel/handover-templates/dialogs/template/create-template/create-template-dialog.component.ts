@@ -65,7 +65,7 @@ export class CreateTemplateDialogComponent implements OnInit{
 
         var templateName = this.templateForm.get('templateName').value;
 
-        if(this.templates.find(l=>l.name == templateName) != null){
+        if(this.templates.find(l=>l.name.toLocaleLowerCase() == templateName.toLocaleLowerCase()) != null){
             this.templateForm.get('templateName').setErrors({'existTemplateName': true})
         }
 

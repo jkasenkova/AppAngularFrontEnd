@@ -7,7 +7,8 @@
         <mat-tab label="Handover Templates">
             <div class="select-template">
                 <mat-form-field appearance="outline">
-                    <mat-select (selectionChange)="onSelectTemplate($event)" placeholder="Select a Template">
+                    <mat-select  formControlName="name" 
+                     (selectionChange)="onSelectTemplate($event)" placeholder="Select a Template">
                         <mat-option>None</mat-option>
                         @for (template of templates; track template) {
                             <mat-option [value]="template">{{template.name}}</mat-option>

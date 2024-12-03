@@ -7,12 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
-import { SectionDialogModel } from "../../../models/sectionDialogModel";
+import { Section } from "src/app/models/section";
+import { SectionService } from "src/app/services/sectionService";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'edit-section-dialog',
     templateUrl: './edit-section-dialog.component.html',
-    styleUrl: '../../../../../../styles/pop-up.less',
+    styleUrl: './edit-section-dialog.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -27,22 +29,25 @@ import { SectionDialogModel } from "../../../models/sectionDialogModel";
         ReactiveFormsModule,
         MatIconModule,
         MatDialogModule,
-        MatGridListModule
+        MatGridListModule,
+        CommonModule
     ],
 })
 export class EditSectionDialogComponent {
     sectionForm: FormGroup;
+    sections?: Section[];
 
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<EditSectionDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: SectionDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-        debugger;
         this.sectionForm = this.fb.group({
-            sectionId: [data.sectionId],
-            sectionName: [data.sectionName, Validators.required]
+            id: data.id,
+            name: [data.sectionName, Validators.required]
         });
+
+        this.sections = data.sections as Section[];
     }
 
     onNoClick(): void {
@@ -50,6 +55,11 @@ export class EditSectionDialogComponent {
     }
 
     onSave(): void {
+        var sectionName = this.sectionForm.get('name').value;
+
+        if(this.sections.find(l => l.name.toLocaleLowerCase() == sectionName.toLocaleLowerCase()) != null){
+            this.sectionForm.get('name').setErrors({'existSectionName': true})
+        }
         if (this.sectionForm.valid) {
             this.dialogRef.close(this.sectionForm.value);
         }
