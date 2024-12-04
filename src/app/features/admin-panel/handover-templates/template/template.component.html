@@ -11,7 +11,7 @@
                             <div class="navbar navbar-blue">
                                 <div class="navbar-inline">
                                     <span class="label">{{section.name}}</span>
-                                    @if(!section.iHandoverSection){
+                                    @if(section.type == 2){
                                         <span class="editSection" (click)="editSectionDialog(section)"></span>
                                         <span class="removeSection" (click)="deleteSectionDialog(section)"></span>
                                     }

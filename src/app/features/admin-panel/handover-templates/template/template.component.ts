@@ -109,7 +109,7 @@ export class TemplateComponent implements OnInit, OnChanges {
                   this.sections = [];
                   this.sections.push(newSection);
                 }
-              })
+              });
             }
         });
     }

@@ -21,12 +21,15 @@
                         (click)="createTemplateDialog()">
                     New
                 </button>
-                @if (isSelectedTemplate && !isHandoverTemplate){
+                @if (isSelectedTemplate){
                     <app-modal-popup></app-modal-popup>
-                    <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(template)">Edit</button>
-                    <button mat-stroked-button class="btnDeleteTemplate" (click)="deleteTemplateDialog(template)">Delete</button>
+                    @if(!isHandoverTemplate){
+                        <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(template)">Edit</button>
+                        <button mat-stroked-button class="btnDeleteTemplate" (click)="deleteTemplateDialog(template)">Delete</button>
+                    }
                     <button mat-stroked-button class="btnCopyTemplate" (click)="copyTemplateDialog(template)">Copy this Template</button>
                 }
+                
             </div>
             @if(template && isSelectedTemplate){
                 <app-template  [selectedTemplate]="template"></app-template>

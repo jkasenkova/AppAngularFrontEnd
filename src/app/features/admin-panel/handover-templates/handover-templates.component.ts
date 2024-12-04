@@ -39,7 +39,7 @@ import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/co
 export class HandoverTemplatesComponent implements OnInit {
     templates: Template[];
     template: Template;
-    selectedIndex = 1;
+    selectedIndex = 0;
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
@@ -78,6 +78,7 @@ export class HandoverTemplatesComponent implements OnInit {
             this.isSelectedTemplate = true;
             this.template = event.value;
             this.selectedTemplate = event.value;
+            this.isHandoverTemplate =  this.template.isHandover;
         }
         else {
             this.isSelectedTemplate = false;

@@ -8,8 +8,8 @@ export class Section {
   public id?: Guid;
   public templateId: Guid;
   public iHandoverSection?: boolean = false;
-  public type?: SectionType = 2;
-  public sortType?: SortType = 0;
-  public sortReferenceType?: SortType = 0;
+  public type?: SectionType;
+  public sortType?: SortType;
+  public sortReferenceType?: SortType;
   public sectionTopics?: TemplateTopic[] = [];
 }
