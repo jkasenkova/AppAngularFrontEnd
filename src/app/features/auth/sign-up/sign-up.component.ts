@@ -37,10 +37,10 @@ import {startWith, map} from 'rxjs/operators';
 
 export class SignUpComponent implements OnInit{
     signUpForm: FormGroup;
-    timeZones: Timezone[] = [];
+    public timeZones: Timezone[] = [];
     showPassword: boolean;
-    isAgree: boolean = false;
-    filteredTimezones: Observable<string[]>;
+    public isAgree: boolean = false;
+    public filteredTimezones: Observable<string[]>;
 
     constructor(
         private accountService: AccountService,
