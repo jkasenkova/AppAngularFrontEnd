@@ -12,7 +12,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 @Component({
     selector: 'delete-template-dialog',
     templateUrl: './delete-template-dialog.component.html',
-    styleUrl: '../../../../../../styles/pop-up.less',
+    styleUrl: './delete-template-dialog.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

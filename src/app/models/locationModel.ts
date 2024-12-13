@@ -7,5 +7,6 @@ export class LocationModel {
     address?: string;
     mapLink?: string;
     timeZone: string = '';
+    isAccountLocation: boolean;
     timeZones?: Timezone[];
 }

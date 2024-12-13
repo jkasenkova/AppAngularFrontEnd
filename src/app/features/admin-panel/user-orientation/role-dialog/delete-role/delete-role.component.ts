@@ -36,6 +36,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 })
 export class DeleteRoleDialogComponent {
     roleForm: FormGroup;
+    isCanDelete: boolean = false;
 
 
     constructor(
@@ -44,8 +45,8 @@ export class DeleteRoleDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: RoleModel
     ) {
         this.roleForm = this.fb.group({
-            roleName: [data.roleName, Validators.required],
-            roleId: [data.roleId]
+            roleName: [data.name, Validators.required],
+            roleId: [data.id]
         });
 
     }
@@ -60,4 +61,8 @@ export class DeleteRoleDialogComponent {
         }
     }
 
+    allowDeleteRole(){
+        //If user have this role and have active rotation - didn't delete the role
+    }
+    
 }

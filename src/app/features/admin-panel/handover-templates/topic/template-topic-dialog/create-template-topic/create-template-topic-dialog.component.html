@@ -56,7 +56,7 @@
                                     <mat-select placeholder="Select a Template" (selectionChange)="onSelectTemplate($event)">
                                         <mat-option>--</mat-option>
                                         @for (template of data.templates; track template) {
-                                            <mat-option [value]="template">{{template.templateName}}</mat-option>
+                                            <mat-option [value]="template">{{template.name}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -72,7 +72,7 @@
                                     <mat-select placeholder="Select a Template" [disabled]="!selectTemplate">
                                         <mat-option>--</mat-option>
                                         @for (section of data.sections; track section) {
-                                            <mat-option [value]="section">{{section.sectionName}}</mat-option>
+                                            <mat-option [value]="section">{{section}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>

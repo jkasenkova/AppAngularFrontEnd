@@ -2,7 +2,7 @@
     @if(selectedTemplate){
         <div Id="templatePanel" class="panel panel-primary">
             <div class="panel-heading clearfix">
-                <span class="panel-title"> {{selectedTemplate.templateName}}</span>
+                <span class="panel-title"> {{selectedTemplate.name}}</span>
             </div>
             <div class="report-panel">
                 <div Id="section">
@@ -10,8 +10,8 @@
                         <div class="panel-body grey-panel">
                             <div class="navbar navbar-blue">
                                 <div class="navbar-inline">
-                                    <span class="label">{{section.sectionName}}</span>
-                                    @if(!section.iHandoverSection){
+                                    <span class="label">{{section.name}}</span>
+                                    @if(section.type == 2){
                                         <span class="editSection" (click)="editSectionDialog(section)"></span>
                                         <span class="removeSection" (click)="deleteSectionDialog(section)"></span>
                                     }
@@ -160,11 +160,9 @@
 
                                         </div>
                                     </div>
-                                    @if(section.addBtnShow){
-                                        <div class="navbar navbar-white">
-                                            <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
-                                        </div>
-                                    }
+                                    <div class="navbar navbar-white">
+                                        <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
+                                    </div>
                                 </div>
                             </div>
                         </div> 
@@ -173,7 +171,7 @@
                         <div class="navbar navbar-blue"></div>
                     </div>
                     <div class="navbar navbar-white">
-                        <div type="button" class="add-section center-block" (click)="createSectionDialog(selectedTemplate.templateId)">Add Section</div>
+                        <div type="button" class="add-section center-block" (click)="createSectionDialog(selectedTemplate.id)">Add Section</div>
                     </div>
                 </div>
             </div>

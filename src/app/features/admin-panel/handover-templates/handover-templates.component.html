@@ -7,10 +7,11 @@
         <mat-tab label="Handover Templates">
             <div class="select-template">
                 <mat-form-field appearance="outline">
-                    <mat-select (selectionChange)="onSelectTemplate($event)" placeholder="Select a Template">
+                    <mat-select  formControlName="name" 
+                     (selectionChange)="onSelectTemplate($event)" placeholder="Select a Template">
                         <mat-option>None</mat-option>
                         @for (template of templates; track template) {
-                            <mat-option [value]="template">{{template.templateName}}</mat-option>
+                            <mat-option [value]="template">{{template.name}}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
@@ -20,12 +21,15 @@
                         (click)="createTemplateDialog()">
                     New
                 </button>
-                @if (isSelectedTemplate && !isHandoverTemplate){
+                @if (isSelectedTemplate){
                     <app-modal-popup></app-modal-popup>
-                    <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(template)">Edit</button>
-                    <button mat-stroked-button class="btnDeleteTemplate" (click)="deleteTemplateDialog(template)">Delete</button>
+                    @if(!isHandoverTemplate){
+                        <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(template)">Edit</button>
+                        <button mat-stroked-button class="btnDeleteTemplate" (click)="deleteTemplateDialog(template)">Delete</button>
+                    }
                     <button mat-stroked-button class="btnCopyTemplate" (click)="copyTemplateDialog(template)">Copy this Template</button>
                 }
+                
             </div>
             @if(template && isSelectedTemplate){
                 <app-template  [selectedTemplate]="template"></app-template>

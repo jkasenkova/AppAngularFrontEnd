@@ -27,8 +27,8 @@
                                         <mat-error>Name is required</mat-error>
                                     }
                                 </mat-form-field>
+                                <mat-error *ngIf="teamForm.get('teamName').hasError('existTeamName')">A team with this name already exists in the location!</mat-error>
                             </div>
-                            
                         </div>
                     </div>
                 </div>

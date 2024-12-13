@@ -102,8 +102,10 @@ export class SignUpComponent implements OnInit{
 
                 const location: Location = {
                     name: this.signUpForm.value.officeLocation,
-                    timeZone: timezone.abbr
+                    timeZone: timezone.abbr,
+                    isAccountLocation: true
                 };
+
                 this.locationService.createLocation(location);
 
                 this.signUpForm.reset();

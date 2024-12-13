@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormControl } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -13,6 +13,9 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { Timezone } from "../../../../../models/timezoneModel";
 import { LocationModel } from "../../../../../models/locationModel";
 import { TimezoneProvider } from '../../../../../shared/timezone.provider';
+import { LocationService } from "src/app/services/locationService";
+import { CommonModule } from "@angular/common";
+import { Location } from "../../../../../models/location";
 
 @Component({
     selector: 'location-dialog',
@@ -34,17 +37,20 @@ import { TimezoneProvider } from '../../../../../shared/timezone.provider';
         MatSelectModule,
         MatDialogModule,
         NgbDatepickerModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        CommonModule
     ],
 })
-export class EditLocationDialogComponent {
+export class EditLocationDialogComponent implements OnInit{
     locationForm: FormGroup;
     filteredTimeZone: string[];
     timeZones: Timezone[] = [];
+    locations: Location[];
 
     constructor(
         private timezoneProvider: TimezoneProvider,
         private fb: FormBuilder,
+        private locationService: LocationService,
         public dialogRef: MatDialogRef<EditLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
     ) {
@@ -54,12 +60,18 @@ export class EditLocationDialogComponent {
             mapLink: [data.mapLink],
             id: [data.id],
             timeZoneControl: new FormControl(''),
-            timeZone: [data.timeZone, Validators.required]
+            timeZone: [data.timeZone, Validators.required],
+            isAccountLocation: data.isAccountLocation
         });
     }
 
 
     ngOnInit(){
+
+        this.locationService.getLocations().subscribe(locations =>{
+            this.locations = locations;
+        });
+
         this.timeZones = this.timezoneProvider.getTimezones();
     }
 
@@ -68,6 +80,12 @@ export class EditLocationDialogComponent {
     }
 
     onSave(): void {
+        var locationName = this.locationForm.get('name').value;
+
+        if(this.locations.find(l=>l.name == locationName) != null){
+            this.locationForm.get('name').setErrors({'existLocationName': true})
+        }
+
         if (this.locationForm.valid) {
             this.dialogRef.close(this.locationForm.value);
         }

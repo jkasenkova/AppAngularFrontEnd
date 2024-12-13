@@ -21,11 +21,11 @@ export class LocationService {
     }
 
     updateLocation(locationModel: Location) {
-        this.http.put(this.url, locationModel, this.httpHeaders).subscribe();
+        this.http.patch(this.url, locationModel, this.httpHeaders).subscribe();
     }
 
-    deleteLocation(locationId: Guid) {
-      return this.http.delete(this.url + '/' + locationId);
+    deleteLocation(id: Guid) {
+      return this.http.delete(this.url + '/' + id).subscribe();
     }
 
     getLocationById(locationId: Guid): Observable<Location> {

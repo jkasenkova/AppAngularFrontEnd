@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { Team } from "src/app/models/team";
+import { RoleModel } from "src/app/models/role";
+import { TeamService } from "src/app/services/teamServices";
 
 @Component({
     selector: 'team-dialog',
@@ -32,11 +34,14 @@ import { Team } from "src/app/models/team";
         NgbDatepickerModule
     ],
 })
-export class DeleteTeamDialogComponent {
+export class DeleteTeamDialogComponent implements OnInit{
     teamForm: FormGroup;
+    isCanDelete: boolean = false;
+    roles: RoleModel[];
 
     constructor(
         private fb: FormBuilder,
+        private teamService: TeamService,
         public dialogRef: MatDialogRef<DeleteTeamDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Team
     ) {
@@ -45,6 +50,15 @@ export class DeleteTeamDialogComponent {
             teamId:[data.id]
         });
     }
+
+    ngOnInit(): void {
+
+        this.teamService.getRolesByTeamId(this.data.id)
+        .subscribe(roles =>
+         {
+            this.isCanDelete = roles.length > 0;
+         });
+     }
 
     onNoClick(): void {
         this.dialogRef.close();

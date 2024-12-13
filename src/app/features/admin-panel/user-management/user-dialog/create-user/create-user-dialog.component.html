@@ -69,7 +69,7 @@
                                     <mat-label>Role</mat-label>
                                     <mat-select placeholder="Select a Role" (selectionChange)="onSelectRole($event)">
                                         @for (role of rolesOfTeam; track role) {
-                                            <mat-option [value]="role">{{role.roleName}}</mat-option>
+                                            <mat-option [value]="role">{{role.name}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>

@@ -41,7 +41,7 @@
                                     <mat-select placeholder="Select Template"  formControlName="copyToTemplate">
                                         @for (template of data.templates; track template) {
                                             <mat-option [value]="template">
-                                                {{template.templateName}}
+                                                {{template.name}}
                                             </mat-option>
                                         }
                                     </mat-select>

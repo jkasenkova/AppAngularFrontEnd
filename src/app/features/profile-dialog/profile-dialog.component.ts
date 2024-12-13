@@ -54,7 +54,7 @@ export class ProfileDialogComponent implements OnInit {
         });
 
         this.roleService.getRoleById(data.roleId).subscribe(role =>  
-            this.profileForm.get('roleName').setValue(role.roleName));
+            this.profileForm.get('roleName').setValue(role.name));
 
     }
 

@@ -1,4 +1,4 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
@@ -8,11 +8,14 @@ import { TemplateDialogModel } from "../../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { TemplateService } from "src/app/services/templateService";
+import { Template } from "src/app/models/template";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'edit-template-dialog',
     templateUrl: './edit-template-dialog.component.html',
-    styleUrl: '../../../../../../styles/pop-up.less',
+    styleUrl: './edit-template-dialog.component.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -27,20 +30,30 @@ import { MatGridListModule } from '@angular/material/grid-list';
         ReactiveFormsModule,
         MatIconModule,
         MatGridListModule,
-        MatDialogModule
+        MatDialogModule,
+        CommonModule
     ],
 })
-export class EditTemplateDialogComponent {
+export class EditTemplateDialogComponent implements OnInit{
     templateForm: FormGroup;
+    templates: Template[];
 
     constructor(
         private fb: FormBuilder,
+        private templateService: TemplateService,
         public dialogRef: MatDialogRef<EditTemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: Template
     ) {
         this.templateForm = this.fb.group({
-            templateId: [data.templateId],
-            templateName: [data.templateName, Validators.required]
+            id: data.id,
+            name: [data.name, Validators.required],
+            isHandover: data.isHandover
+        });
+    }
+
+    ngOnInit(): void {
+        this.templateService.getTemplates().subscribe(templates =>{
+            this.templates = templates.sort((a, b) => a.name.localeCompare(b.name));
         });
     }
 
@@ -49,6 +62,14 @@ export class EditTemplateDialogComponent {
     }
 
     onSave(): void {
+
+        var templateName = this.templateForm.get('name').value;
+
+        if(this.templates.find(l=>l.name.toLocaleLowerCase() == templateName.toLocaleLowerCase()) != null){
+            this.templateForm.get('name').setErrors({'existTemplateName': true})
+        }
+
+
         if (this.templateForm.valid) {
             this.dialogRef.close(this.templateForm.value);
         }

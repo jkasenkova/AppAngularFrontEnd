@@ -6,4 +6,5 @@ export interface Location {
     address?: string;
     mapLink?: string;
     timeZone: string;
+    isAccountLocation: boolean;
 }

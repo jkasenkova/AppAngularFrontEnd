@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../models/template';
-import { environment } from '../../environments/environment';
 import { Guid } from 'guid-typescript';
+import configurl from '../../assets/config/config.json'
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class TemplateService {
         this.baseUrl = baseUrl;
     }
 
-    url = environment.routerUrl + '/template';
+    url = configurl.apiServer.url + '/template';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTemplates(): Observable<Template[]> {
@@ -25,12 +25,12 @@ export class TemplateService {
         return this.http.post<Template>(this.url, template, this.httpHeaders);
     }
 
-    updateTemplate(template: Template): Observable<Template> {
-        return this.http.put<Template>(this.url, template, this.httpHeaders);
+    updateTemplate(template: Template): void {
+        this.http.patch<Template>(this.url, template, this.httpHeaders).subscribe();
     }
 
-    deleteTemplateById(id: Guid): Observable<string> {
-        return this.http.delete<string>(this.url + '/' + id);
+    deleteTemplateById(id: Guid) {
+        this.http.delete(this.url + '/' + id).subscribe();
     }
 
     getTemplateById(id: Guid): Observable<Template> {
