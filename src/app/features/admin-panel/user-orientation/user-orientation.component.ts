@@ -212,7 +212,6 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var templateId: any;
-                debugger;
                 if(result.template){
                     if(result.template.id != null){
                         templateId = result.template.id;

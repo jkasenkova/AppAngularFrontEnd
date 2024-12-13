@@ -22,11 +22,20 @@ export class SectionService {
     }
 
     updateSection(section: Section) {
-        this.http.put(this.url, section, this.httpHeaders).subscribe();
+        this.http.patch<Section>(this.url, section, this.httpHeaders).subscribe({
+            next: (response) => {
+                debugger;
+              console.log('Resource updated successfully:', response);
+            },
+            error: (err) => {
+                debugger;
+              console.error('Error updating resource:', err);
+            },
+        });
     }
 
-    deleteSection(sectionId: Guid): Observable<string> {
-        return this.http.delete<string>(this.url + '/' + sectionId);
+    deleteSection(id: Guid) {
+        this.http.delete(this.url + '/' + id).subscribe();
     }
 
     getSections(templateId: Guid): Observable<Section[]> {
