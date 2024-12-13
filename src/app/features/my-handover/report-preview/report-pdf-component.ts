@@ -359,7 +359,7 @@ handoverTmp: Handover =
         });
 
         this.locationService.getLocationById(this.handoverOwner.locationId).subscribe(location => {
-            this.timeZoneReport = location.timeZoneId;
+            this.timeZoneReport = location.timeZone;
         });
 
         if(this.handoverOwner.contributors){
@@ -374,7 +374,7 @@ handoverTmp: Handover =
             this.handoverRecipient = recipient;
         }); 
 
-        this.pdfReportModel = this.initilizeReportData(this.handover);
+        this.pdfReportModel = this.initializeReportData(this.handover);
         this.reportComments = this.handover.reportComments;
     }
 
@@ -398,7 +398,7 @@ handoverTmp: Handover =
         });
     }
 
-    initilizeReportData(handover: Handover): pdfReportModel{
+    initializeReportData(handover: Handover): pdfReportModel{
         
         var shared = handover.shareUsers ? handover.shareUsers.flatMap(u=>u.ownerName)
         .concat(handover.shareEmails).join(", "): handover.shareEmails.join(", ");

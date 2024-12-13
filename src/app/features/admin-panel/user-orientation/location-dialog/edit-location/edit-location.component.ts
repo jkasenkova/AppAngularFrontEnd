@@ -12,11 +12,12 @@ import moment from 'moment-timezone';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { Timezone } from "../../../../../models/timezoneModel";
 import { LocationModel } from "../../../../../models/locationModel";
+import { TimezoneProvider } from '../../../../../shared/timezone.provider';
 
 @Component({
     selector: 'location-dialog',
     templateUrl: './edit-location.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -42,6 +43,7 @@ export class EditLocationDialogComponent {
     timeZones: Timezone[] = [];
 
     constructor(
+        private timezoneProvider: TimezoneProvider,
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<EditLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
@@ -52,19 +54,13 @@ export class EditLocationDialogComponent {
             mapLink: [data.mapLink],
             id: [data.id],
             timeZoneControl: new FormControl(''),
-            timeZoneId: [data.timeZoneId, Validators.required]
+            timeZone: [data.timeZone, Validators.required]
         });
     }
 
 
     ngOnInit(){
-        this.timeZones = moment.tz.names().map((zoneName) => {
-            return {
-                zoneName: zoneName,
-                utc: moment.tz(zoneName).format('Z'),
-                zoneAbbr: moment.tz(zoneName).zoneAbbr()
-            }
-        });
+        this.timeZones = this.timezoneProvider.getTimezones();
     }
 
     onNoClick(): void {

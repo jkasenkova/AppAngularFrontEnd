@@ -12,32 +12,14 @@ import * as AuthSelectors from '../auth/store/auth.selectors';
 import { Subscription } from 'src/app/models/subscription';
 import { AuthFacade } from './store/auth.facade';
 import { JWTTokenService } from './token/jwt-token.service';
-import { Guid } from 'guid-typescript';
+import { SignUpResponse } from '../../models/signUpResponse';
+import { SignUpData } from '../../models/signUpData';
 
 export interface AccessData {
   token_type: 'Bearer';
   expires_in: number;
   access_token: string;
   scope: string;
-}
-
-export interface SignUpData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  companyName: string;
-  position: string;
-  officeLocation: string;
-  timeZoneControl: string;
-  password: string;
-  passwordConfirm: string;
-}
-
-export interface SignUpResponse {
-  error: string;
-  companyId: Guid;
-  companyName: string;
-  succeeded: boolean;
 }
 
 @Injectable({
@@ -58,55 +40,44 @@ export class AuthService {
   private readonly clientId = this.configService.getAuthSettings().clientId;
   private readonly scope = this.configService.getAuthSettings().scope;
   private readonly clientSecret = this.configService.getAuthSettings().secretId;
+  private isLoggedIn: boolean;
   
-  /**
-   * Returns a promise that waits until
-   * refresh token and get auth user
-   *
-   * @returns {Promise<AuthState>}
-   */
   init(): Promise<AuthState> {
-    this.store.dispatch(RefreshTokenActions.request());
+    const token = this.tokenStorageService.getAccessToken();
+    this.authFacade.isLoggedIn$.subscribe(value => this.isLoggedIn = value);
 
-    const defaultAuthState: AuthState = {
-      isSignedIn: false,
-      isLoadingLogin: true,
-      hasLoginError: false,
-      refreshTokenStatus: TokenStatus.INVALID,
-      accessTokenStatus: TokenStatus.INVALID,
-      authUser: null,
-    };
+    if(this.isLoggedIn && token) {
+      this.store.dispatch(RefreshTokenActions.request());
 
-    const authState$ = this.store.select(AuthSelectors.selectAuth).pipe(
-      filter(
-        auth =>
-          auth &&
-          (auth.refreshTokenStatus === TokenStatus.INVALID ||
-          (auth.refreshTokenStatus === TokenStatus.VALID && !!auth.authUser))
-      ),
-      take(1)
-    );
+      const authState$ = this.store.select(AuthSelectors.selectAuth).pipe(
+        filter(
+          auth =>
+            auth.refreshTokenStatus === TokenStatus.INVALID ||
+            (auth.refreshTokenStatus === TokenStatus.VALID && !!auth.authUser)
+        ),
+        take(1)
+      );
 
-    if(authState$.subscribe) {
       return lastValueFrom(authState$);
     } else {
-      return lastValueFrom(of(defaultAuthState));
+      const defaultAuthState: AuthState = {
+        isSignedIn: false,
+        isLoadingLogin: true,
+        hasLoginError: false,
+        refreshTokenStatus: TokenStatus.INVALID,
+        accessTokenStatus: TokenStatus.INVALID,
+        authUser: null,
+      };
+      return lastValueFrom(of(defaultAuthState)); 
     }
+    
   }
 
-  /**
-   * Performs a request with user credentials
-   * in order to get auth tokens
-   *
-   * @param {string} username
-   * @param {string} password
-   * @returns Observable<AccessData>
-   */
-  signIn(username: string, password: string): Observable<AccessData> {
+  signIn(userEmail: string, password: string): Observable<AccessData> {
     const payload = new HttpParams()
     .set('client_id', this.clientId)
     .set('grant_type', 'password')
-    .set('username', username)
+    .set('username', userEmail)
     .set('password', password);
 
     return this.http.post<AccessData>(`${this.hostUrl}/connect/token`, payload.toString(),
@@ -119,9 +90,22 @@ export class AuthService {
     });
   }
 
+  login(userEmail: string, password: string): Observable<any> {
+    const payload = { email: userEmail, password: password };
+
+    return this.http.post(`${this.hostUrl}/login?useCookies=true&useSessionCookies=true`, payload,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Cache-control': 'no-cache',
+      }
+    });
+  }
+
   signUp(signUpData: SignUpData): Observable<SignUpResponse> {
     let body = JSON.stringify(signUpData);
-    return this.http.post<SignUpResponse>(`${this.hostUrl}/api/Accounts/sing-up`, body,
+    return this.http.post<SignUpResponse>(`${this.hostUrl}/api/accounts/sing-up`, body,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -129,56 +113,22 @@ export class AuthService {
     });
   }
 
-  /**
-   * Performs a request for logout authenticated user
-   *
-   * @param {('all' | 'allButCurrent' | 'current')} [clients='current']
-   * @returns Observable<void>
-   */
   logout(clients: 'all' | 'allButCurrent' | 'current' = 'current'): Observable<void> {
     const params = new HttpParams().append('clients', clients);
 
     return this.http.post<void>(`${this.hostUrl}/api/accounts/sign-up`, { params });
   }
 
-  /**
-   * Asks for a new access token given
-   * the stored refresh token
-   *
-   * @returns {Observable<AccessData>}
-   */
   refreshToken(): Observable<AccessData> {
     const refreshToken = this.tokenStorageService.getRefreshToken();
     if (!refreshToken) {
       return throwError(() => new Error('Refresh token does not exist'));
     }
 
-    return this.http.post<AccessData>(`${this.hostUrl}/api/auth/login`, {
-      client_id: this.clientId,
-      client_secret: this.clientSecret,
-      grant_type: 'refresh_token',
+    return this.http.post<AccessData>(`${this.hostUrl}/refresh`, {
       refresh_token: refreshToken,
     });
   }
-
-  /**
-   * Returns authenticated user
-   * based on saved access token
-   *
-   * @returns {Observable<AuthUser>}
-   */
-  getAuthUser(): Observable<AuthUser> {
-
-    const authUser: AuthUser = {
-      id: this.jwtTokenService.getUserId(),
-      accountId: this.jwtTokenService.getAccountId(),
-      role: this.jwtTokenService.getRole(),
-      userName: this.jwtTokenService.getUserName(),
-      email: this.jwtTokenService.getEmail(),
-    };
-    return of(authUser);
-  }
-
   getAccounts(): Observable<Subscription[]> {
     return this.http.get<Subscription[]>(`${this.hostUrl}/api/accounts`);
   }

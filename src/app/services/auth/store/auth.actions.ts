@@ -1,11 +1,21 @@
 import { createAction, props, emptyProps, createActionGroup } from '@ngrx/store';
 import { AuthUser } from './auth.models';
 
+// Login
+export const LoginActions = createActionGroup({
+  source: '[Auth] Login',
+  events: {
+    request: props<{ email: string; password: string }>(),
+    success: props<{ email: string; password: string }>(),
+    failure: props<{ error: Error }>(),
+  }
+});
+
 // Sign In
 export const SignInActions = createActionGroup({
   source: '[Auth] Sign In',
   events: {
-    request: props<{ username: string; password: string }>(),
+    request: props<{ email: string; password: string }>(),
     success: emptyProps(),
     failure: props<{ error: Error }>(),
   },
@@ -18,8 +28,8 @@ export const signOut = createAction('[Auth] Sign Out');
 export const GetAuthUserActions = createActionGroup({
   source: '[Auth] Auth User',
   events: {
-    request: emptyProps(),
-    success: props<{ user: AuthUser }>(),
+    request: props<{ user: AuthUser }>(),
+    success: emptyProps(),
     failure: emptyProps(),
   }
 });

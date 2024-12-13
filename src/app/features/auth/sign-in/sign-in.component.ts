@@ -1,10 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit  } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { Router, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { AuthFacade } from '../store/auth.facade';
+import { AuthFacade } from '../../../services/auth/store/auth.facade';
 
 @Component({
     selector: 'sign-in',

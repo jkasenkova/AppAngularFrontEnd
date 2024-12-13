@@ -73,7 +73,7 @@ export class UserOrientationComponent implements OnInit {
                 debugger;
                 var location: Location = {
                     name: result.name,
-                    timeZoneId: result.timeZoneId,
+                    timeZone: result.timeZone,
                     mapLink: result.result,
                     address: result.address
                 };
@@ -107,7 +107,7 @@ export class UserOrientationComponent implements OnInit {
                 id: location.id,
                 address: location.address,
                 mapLink: location.mapLink,
-                timeZoneId: location.timeZoneId
+                timeZone: location.timeZone
             }
         });
 

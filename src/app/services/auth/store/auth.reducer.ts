@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
 import * as AuthActions from './auth.actions';
-import { SignInActions, RefreshTokenActions, GetAuthUserActions } from './auth.actions';
+import { SignInActions, RefreshTokenActions, GetAuthUserActions, LoginActions } from './auth.actions';
 import { AuthState, TokenStatus, AuthUser, AUTH_FEATURE_KEY } from './auth.models';
 
 export const initialState: AuthState = {
@@ -22,12 +22,23 @@ export const initialState: AuthState = {
 export const authReducer = createReducer(
   initialState,
 
+  // Login
+  on(
+    LoginActions.success,
+    (state): AuthState => ({
+      ...state,
+      accessTokenStatus: TokenStatus.VALIDATING,
+      isLoadingLogin: true,
+      hasLoginError: false,
+    })
+  ),
+
   // Sign In
   on(
     SignInActions.request,
     (state): AuthState => ({
       ...state,
-      isSignedIn: true,
+      isSignedIn: false,
       accessTokenStatus: TokenStatus.VALIDATING,
       isLoadingLogin: true,
       hasLoginError: false,
@@ -77,17 +88,10 @@ export const authReducer = createReducer(
 
   // Auth user
   on(
-    GetAuthUserActions.success,
+    GetAuthUserActions.request,
     (state, action): AuthState => ({
       ...state,
       authUser: action.user,
-
     })
   ),
-  on(
-    GetAuthUserActions.failure,
-    (): AuthState => ({
-      ...initialState,
-    })
-  )
 );

@@ -100,7 +100,7 @@
                                             [matAutocomplete]="auto">
                                             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                                             @for (option of timeZones; track option) {
-                                                <mat-option [value]="option.zoneName">(UTC{{option.utc}}) {{option.zoneName}}</mat-option>
+                                                <mat-option [value]="option.name">{{option.name}}</mat-option>
                                             }
                                             </mat-autocomplete>
                                         </mat-form-field>

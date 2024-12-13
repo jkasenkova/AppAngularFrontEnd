@@ -1,5 +1,4 @@
 export class Timezone {
-    zoneName: string;
-    utc: string;
-    zoneAbbr: string;
+    name: string;
+    abbr: string;
 }

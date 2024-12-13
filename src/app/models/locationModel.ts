@@ -6,6 +6,6 @@ export class LocationModel {
     name: string = '';
     address?: string;
     mapLink?: string;
-    timeZoneId: string = '';
+    timeZone: string = '';
     timeZones?: Timezone[];
 }

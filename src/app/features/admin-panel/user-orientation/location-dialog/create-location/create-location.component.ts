@@ -13,11 +13,12 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { AsyncPipe } from '@angular/common';
 import { Timezone } from "../../../../../models/timezoneModel";
 import { LocationModel } from "../../../../../models/locationModel";
+import { TimezoneProvider } from '../../../../../shared/timezone.provider';
 
 @Component({
     selector: 'location-dialog',
     templateUrl: './create-location.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -34,8 +35,7 @@ import { LocationModel } from "../../../../../models/locationModel";
         MatSelectModule,
         MatDialogModule,
         NgbDatepickerModule,
-        MatAutocompleteModule,
-        AsyncPipe
+        MatAutocompleteModule
     ],
 })
 export class CreateLocationDialogComponent implements OnInit {
@@ -44,6 +44,7 @@ export class CreateLocationDialogComponent implements OnInit {
     timeZones: Timezone[] = [];
 
     constructor(
+        private timezoneProvider: TimezoneProvider,
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<CreateLocationDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: LocationModel
@@ -57,13 +58,7 @@ export class CreateLocationDialogComponent implements OnInit {
     }
 
     ngOnInit(){
-        this.timeZones = moment.tz.names().map((zoneName) => {
-            return {
-                zoneName: zoneName,
-                utc: moment.tz(zoneName).format('Z'),
-                zoneAbbr: moment.tz(zoneName).zoneAbbr()
-            }
-        });
+        this.timeZones = this.timezoneProvider.getTimezones();
     }
 
     onNoClick(): void {

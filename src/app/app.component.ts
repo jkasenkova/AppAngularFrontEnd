@@ -15,7 +15,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
-import { SignInComponent } from './services/auth/sign-in/sign-in.component';
 import { FooterComponent } from './features/footer/footer.component';
 import { AuthFacade } from './services/auth/store/auth.facade';
 
@@ -27,16 +26,11 @@ import { AuthFacade } from './services/auth/store/auth.facade';
         RouterOutlet,
         MatToolbarModule,
         MatIconModule,
-        AdminPanelComponent,
-        MyTeamComponent,
-        MyHandoverComponent,
         MatMenuModule,
         RouterModule,
-        UserOrientationComponent,
         MatDialogModule,
         MatInputModule,
         MatFormFieldModule,
-        SignInComponent,
         FooterComponent
     ],
     templateUrl: './app.component.html',
@@ -44,14 +38,15 @@ import { AuthFacade } from './services/auth/store/auth.facade';
 })
 export class AppComponent implements OnInit {
     userName: string;
-    readonly dialog = inject(MatDialog);
+    //readonly dialog = inject(MatDialog);
     isAdmin: boolean;
     admin: UserModel = new UserModel();
     isAuth: boolean;
 
     constructor(
         private authFacade: AuthFacade,
-        private router: Router) {}
+        private router: Router,
+        private readonly dialog: MatDialog) {}
 
     ngOnInit(): void {
         this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
@@ -61,14 +56,16 @@ export class AppComponent implements OnInit {
             this.isAdmin = isAdmin;
         });
 
-        this.authFacade.getIsAdmin().subscribe(isAdmin => {
-            this.isAdmin = isAdmin;
-        });
-
-        this.isAdmin = true; //test
+        if(!this.isAuth) {
+            this.router.navigate(['/sign-in']);
+        }
     }
 
     getProfileName(): string {
+        this.authFacade.state.subscribe(data => {
+            console.log(data);
+        });
+
         if(Boolean(this.admin.firstName) && Boolean(this.admin.lastName)){
             var getLetters = [this.admin.firstName[0] + this.admin.lastName[0]].join("");
             return getLetters;
@@ -89,8 +86,8 @@ export class AppComponent implements OnInit {
     }
 
     logOut(){
-      //  this.isAuth = false; reset this data
-        this.router.navigate(['/sign-in']);
+        this.isAuth = false;
+        //this.router.navigate(['/sign-in']);
     }
 }
 

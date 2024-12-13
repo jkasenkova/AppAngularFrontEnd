@@ -10,16 +10,13 @@ import { Location } from "../models/location";
     providedIn: 'root'
 })
 export class LocationService {
-    private baseUrl: string;
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(private http: HttpClient) {
     }
 
-    url = configurl.apiServer.url + '/location'; 
+    url = configurl.apiServer.url + '/locations'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createLocation(locationModel: Location): Observable<Location> {
-        debugger;
         return this.http.post<Location>(this.url, locationModel, this.httpHeaders);
     }
 

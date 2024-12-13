@@ -5,5 +5,5 @@ export interface Location {
     name: string;
     address?: string;
     mapLink?: string;
-    timeZoneId: string;
+    timeZone: string;
 }
