@@ -5,7 +5,7 @@ import { lastValueFrom, Observable, of, throwError, from } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
 import { TokenStorageService } from './token/token-storage.service';
-import { ConfigService } from './token/config.service';
+import { ConfigService } from '../config.service';
 import { RefreshTokenActions } from '../auth/store/auth.actions';
 import { AuthState, AuthUser, TokenStatus, AuthPartialState } from '../auth/store/auth.models';
 import * as AuthSelectors from '../auth/store/auth.selectors';

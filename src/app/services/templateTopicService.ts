@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TemplateTopic } from '../models/templateTopic';
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Reference } from '../models/reference';
 import { AddTopic } from '../models/addTopic';
@@ -11,9 +11,11 @@ import { AddTopic } from '../models/addTopic';
 })
 export class TemplateTopicService {
 
-  url = configurl.apiServer.url + '/topic';
+  url = this.configService.getRouterUrl() + '/topic';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private readonly configService: ConfigService) { }
 
   getTemplateTopicList(): Observable<TemplateTopic[]> {
     return this.http.get<TemplateTopic[]>(this.url);

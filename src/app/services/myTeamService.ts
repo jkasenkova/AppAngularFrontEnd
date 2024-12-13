@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
 import { MyTeamModel } from "../models/myTeamModel";
@@ -10,11 +10,12 @@ import { MyTeamModel } from "../models/myTeamModel";
 })
 export class MyTeamService {
     private baseUrl: string;
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = configurl.apiServer.url + '/userManagement'; 
+    url = this.configService.getRouterUrl() + '/userManagement'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTeamUser(teamUserId: Guid): Observable<MyTeamModel> {

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import { ConfigService } from './config.service';
+import { ConfigService } from '../../config.service';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({ providedIn: 'root' })

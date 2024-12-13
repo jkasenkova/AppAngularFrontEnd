@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
 import { Team } from "../models/team";
@@ -10,10 +10,12 @@ import { Location } from "../models/location";
     providedIn: 'root'
 })
 export class LocationService {
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = configurl.apiServer.url + '/locations'; 
+    url = this.configService.getRouterUrl() + '/locations'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createLocation(locationModel: Location): Observable<Location> {

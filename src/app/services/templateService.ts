@@ -3,18 +3,19 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Template } from '../models/template';
 import { Guid } from 'guid-typescript';
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TemplateService {
     private baseUrl: string;
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = configurl.apiServer.url + '/template';
+    url = this.configService.getRouterUrl() + '/template';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTemplates(): Observable<Template[]> {

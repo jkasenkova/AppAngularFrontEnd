@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RotationReference } from '../models/rotationReference';
 import { Guid } from 'guid-typescript';
@@ -10,9 +10,11 @@ import { Guid } from 'guid-typescript';
 })
 export class RotationReferenceService {
 
-  url = configurl.apiServer.url + '/reference';
+  url = this.configService.getRouterUrl() + '/reference';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private readonly configService: ConfigService) { }
 
   getRotationReferences(topicId: Guid): Observable<RotationReference[]> {
     return this.http.get<RotationReference[]>(this.url + '/' + topicId);

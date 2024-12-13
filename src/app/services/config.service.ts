@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 type AppEnv = typeof environment;
 
@@ -36,6 +36,10 @@ export class ConfigService {
    */
   getAPIUrl(): string {
     return environment?.settings.auth.authBaseUrl ?? '';
+  }
+
+  getRouterUrl(): string {
+    return environment.routerUrl ?? '';
   }
 
   /**

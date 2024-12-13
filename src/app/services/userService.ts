@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { Section } from '../models/section';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
@@ -11,11 +11,12 @@ import { UserModel } from "../models/user";
 })
 export class UserService {
     private baseUrl: string;
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = configurl.apiServer.url + '/users';
+    url = this.configService.getRouterUrl() + '/users';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createUser(userModel: UserModel): Observable<UserModel> {

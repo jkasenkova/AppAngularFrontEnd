@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
-import configurl from '../../assets/config/config.json'
+import { ConfigService } from './config.service';
 import { Section } from '../models/section';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
@@ -10,10 +10,12 @@ import { AccountModel } from "../models/accountModel";
     providedIn: 'root'
 })
 export class AccountService {
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = configurl.apiServer.url + '/accounts';
+    url = this.configService.getRouterUrl() + '/accounts';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createAccount(accountModel: AccountModel): Observable<AccountModel> {
