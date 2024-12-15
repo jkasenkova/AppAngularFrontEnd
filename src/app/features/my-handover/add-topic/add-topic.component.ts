@@ -54,7 +54,7 @@ export class AddTopicComponent {
             });
     }
 
-    cloaseNewLine(): void {
+    closeNewLine(): void {
         this.dataEmitter.emit(false); 
       }
 

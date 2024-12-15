@@ -5,11 +5,15 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TopicDataModel } from "../../model/topicDataModel";
+import { SectionService } from "src/app/services/sectionService";
+import { Section } from "src/app/models/section";
+import { TemplateTopic } from "src/app/models/templateTopic";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @Component({
     selector: 'create-template-topic-dialog',
@@ -31,23 +35,29 @@ import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstra
         MatSelectModule,
         MatDialogModule,
         MatGridListModule,
-        NgbDatepickerModule
+        NgbDatepickerModule,
+        MatAutocompleteModule
     ],
 })
 export class CreateTemplateTopicDialogComponent {
     templateTopicForm: FormGroup;
     selectTemplate: boolean = false;
-
+    sections: Section[];
+    
     constructor(
         private fb: FormBuilder,
+        private sectionService: SectionService, 
         public dialogRef: MatDialogRef<CreateTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateTopicDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: TopicDataModel
     ) {
         this.templateTopicForm = this.fb.group({
             templateTopicName: ['', Validators.required],
             templateReferenceName: ['', Validators.required],
-            templateDescription: [''],
-            templates: [data.templates]
+            templateDescription: null,
+            sectionId: null,
+            templates: data.templates,
+            topics: data.topics,
+            templateTopicId: null
         });
     }
 
@@ -64,11 +74,28 @@ export class CreateTemplateTopicDialogComponent {
     onSelectTemplate(selectTemplate:any){
         if(selectTemplate.value != undefined){
             this.selectTemplate = true;
-
-            this.data.sections = selectTemplate.value.sections;
+            this.sectionService.getSections(selectTemplate.value.id).subscribe(sections => 
+            {
+                this.sections = sections;
+            });
         
         }else{
             this.selectTemplate = false;
         }
+    }
+
+    onSelectSection(selectSection:any){
+        if(selectSection.value != undefined){
+            this.templateTopicForm.get('sectionId').setValue(selectSection.value.id);
+        }
+    }
+
+    onSelectAddTopic(event: any): void {
+        var topic = event.option.value as TemplateTopic;
+
+        this.templateTopicForm.patchValue({
+            templateTopicId: topic.id,
+            templateTopicName: topic.name
+        });
     }
 }

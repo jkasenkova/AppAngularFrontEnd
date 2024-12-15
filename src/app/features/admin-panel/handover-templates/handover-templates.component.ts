@@ -140,8 +140,8 @@ export class HandoverTemplatesComponent implements OnInit {
         {
             data: 
             { 
-                templateId: template.id, 
-                templateName: template.name 
+                id: template.id, 
+                name: template.name 
             },
             panelClass: 'template-dialog'
         });

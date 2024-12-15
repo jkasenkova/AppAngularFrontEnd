@@ -9,7 +9,6 @@ import { ConfigService } from './config.service';
     providedIn: 'root'
 })
 export class TemplateService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient,
         private readonly configService: ConfigService) {

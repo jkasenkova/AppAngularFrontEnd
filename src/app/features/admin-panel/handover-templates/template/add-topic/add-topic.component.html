@@ -1,6 +1,7 @@
 <div class="rowTopicData">
     <div class="divRow">
-        <div class="actions-body">
+        <form [formGroup]="addTopicForm" class="add-topic-form">
+          <div class="actions-body">
             <div class="btn btn-circle draganddrop"></div>
             <div class="btn btn-circle remove-btn" 
                  matTooltip="Cancel"
@@ -8,16 +9,21 @@
                     <span class="glyphicon span"></span>
             </div>
         </div>
-
-        <form [formGroup]="addTopicForm" class="add-topic-form">
             <div class="type-body">
-            <mat-form-field class="example-full-width">
-                <mat-select formControlName="topic" placeholder="Select Topic" (selectionChange)="onSelectAddTopic($event)">
-                    @for (topic of sectionOut.sectionTopics; track topic) {
-                        <mat-option [value]="topic">{{topic.name}}</mat-option>
-                    }
-                  </mat-select>
-
+              <mat-form-field class="example-full-width">
+                <input
+                  type="text"
+                  placeholder="Select/Add Topic"
+                  matInput
+                  formControlName="topicName"
+                  [matAutocomplete]="auto"
+                />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                  [displayWith]="displayRefFn" (optionSelected)="onSelectAddTopic($event)">
+                  @for (topic of sectionOut.sectionTopics; track topic) {
+                    <mat-option [value]="topic">{{topic.name}}</mat-option>
+                  }
+                </mat-autocomplete>
               </mat-form-field>
             </div>
             <div class="reference-body">
@@ -27,9 +33,9 @@
             placeholder="Select/Add Reference"
             matInput
             formControlName="referenceName"
-            [matAutocomplete]="auto"
+            [matAutocomplete]="autoREf"
           />
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+          <mat-autocomplete autoActiveFirstOption #autoREf="matAutocomplete"
           [displayWith]="displayRefFn" (optionSelected)="onSelectAddReference($event)">
               @for (reference of references; track reference) {
                   <mat-option [value]="reference">{{reference.name}}</mat-option>

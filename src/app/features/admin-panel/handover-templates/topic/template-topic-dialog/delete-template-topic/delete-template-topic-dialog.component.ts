@@ -5,10 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { TopicDataModel } from "../../model/topicDataModel";
 
 @Component({
     selector: 'delete-template-topic-dialog',
@@ -38,7 +38,7 @@ export class DeleteTemplateTopicDialogComponent {
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<DeleteTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateTopicDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: TopicDataModel
     ) {
         this.templateTopicForm = this.fb.group({
             templateTopicName: data.templateTopicName,

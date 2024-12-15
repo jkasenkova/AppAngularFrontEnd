@@ -10,7 +10,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoleModel } from "src/app/models/role";
 import { Template } from "src/app/models/template";
-import { Guid } from "guid-typescript";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { map, Observable, startWith } from "rxjs";
 import { RotationType } from "../../../../../models/rotationType";
@@ -69,7 +68,7 @@ export class CreateRoleDialogComponent {
         this.roleForm = this.fb.group({
             name: [null, Validators.required],
             teamId: data.teamId,
-            template: null,
+            template: [],
             userType: [null, Validators.required],
             rotationType: [null, Validators.required],
             shiftPatternType: null
@@ -89,13 +88,6 @@ export class CreateRoleDialogComponent {
                 map(value => this.filterOptions(value || '')),
             );
         });
-   /*  
-        if(this.templates){
-            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
-                startWith(''),
-                map(value => this.filterOptions(value || '')),
-            );
-        }  */
     }
 
     

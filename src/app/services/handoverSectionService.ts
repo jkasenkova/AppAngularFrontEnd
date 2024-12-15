@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
@@ -9,7 +9,6 @@ import { HandoverSection } from "../models/handoverSection";
     providedIn: 'root'
 })
 export class HandoverSectionService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient, 
         private readonly configService: ConfigService) {

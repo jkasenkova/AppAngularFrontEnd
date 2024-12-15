@@ -168,26 +168,25 @@
                               display: inline-block;
                 
                               .actions-title {
-                                width: 10rem;
-                                min-width: 10rem;
+                                width: 140px;
                                 display: inline-block;
                                 padding: 5px 0px 6px 10px;
                               }
                 
                               .type-title {
-                                width: 10rem !important;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
-                                display: inline-block;
-                                padding: 5px 0px 6px 10px;
-                              }
-                
-                              .reference-title {
                                 width: 12rem !important;
                                 min-width: 12rem !important;
                                 max-width: 12rem !important;
                                 display: inline-block;
-                                padding: 5px 0px 6px 10px;
+                                padding: 5px 0px 6px 0px;
+                              }
+                
+                              .reference-title {
+                                width: 14rem !important;
+                                min-width: 14rem !important;
+                                max-width: 14rem !important;
+                                display: inline-block;
+                                padding: 5px 0px 6px 0px;
                               }
                 
                               .notes-title {
@@ -196,7 +195,7 @@
                                 min-width: 35rem !important;
                                 max-width: 35rem !important;
                                 display: inline-block;
-                                padding: 5px 0px 6px 10px;
+                                padding: 5px 0px 6px 0px;
                               }
                 
                               .intel-title {
@@ -226,9 +225,11 @@
                                 padding-left: 0px;
 
                                 .type-body{
+                                  width: 12rem !important;
+                                  min-width: 12rem !important;
+                                  max-width: 12rem !important;
+
                                    .example-form {
-                                    min-width: 150px;
-                                    max-width: 10rem;
                                     width: 100%;
                                   }
                                   
@@ -252,9 +253,7 @@
 
                               .actions-body {
                                 display: inline-block;
-                                width: 10rem !important;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
+                                width: 130px;
 
                                 .draganddrop {
                                   width: 25px;
@@ -280,6 +279,12 @@
                                       }
                                     }
                                   }
+                                }
+
+                                .locked {
+                                  pointer-events: none;
+                                  opacity: 0.5;
+                                  cursor: not-allowed;
                                 }
 
                                 .remove-btn, .cancel-btn {
@@ -321,13 +326,41 @@
                                 vertical-align: middle;
                                 color: #0096C8;
                                 font-weight: bold;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
-                                width: 10rem !important;
+                                min-width: 12rem !important;
+                                max-width: 12rem !important;
+                                width: 12rem !important;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
                                 padding: 6px 0px;
                                 cursor: pointer;
+
+                                .edit-type{
+                                  display: inline-block;
+                                  min-width: 8rem !important;
+                                  max-width: 8rem !important;
+                                  width: 8rem !important;
+                                  height: 40px;
+        
+                                  .mat-mdc-form-field{
+                                    width: 100%;
+                                    text-overflow: ellipsis;
+                                    overflow: hidden;
+                                    cursor: text;
+                                    height: 35px;
+                                  }
+        
+                                  .mat-mdc-form-field-infix{
+                                    padding: 0px;
+                                  }
+        
+                                  .mat-mdc-text-field-wrapper {
+                                    height: 40px;
+                                    padding: 0px;
+                                  }
+                                  .mat-mdc-form-field-subscript-wrapper{
+                                    height: 10px;
+                                  }
+                                }
                 
                                 span {
                                   color: #0096C8;
@@ -346,14 +379,42 @@
                                 vertical-align: middle;
                                 color: #0096C8;
                                 font-weight: bold;
-                                min-width: 12rem !important;
-                                max-width: 12rem !important;
-                                width: 12rem !important;
+                                width: 14rem !important;
+                                min-width: 14rem !important;
+                                max-width: 14rem !important;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
-                                padding: 6px 0px 0px 15px;
+                                padding: 6px 0px 0px 10px;
                                 cursor: pointer;
+
+                                .edit-type{
+                                  display: inline-block;
+                                  min-width: 12rem !important;
+                                  max-width: 12rem !important;
+                                  width: 12rem !important;
+                                  height: 40px;
+        
+                                  .mat-mdc-form-field{
+                                    width: 100%;
+                                    text-overflow: ellipsis;
+                                    overflow: hidden;
+                                    cursor: text;
+                                    height: 35px;
+                                  }
+        
+                                  .mat-mdc-form-field-infix{
+                                    padding: 0px;
+                                  }
+        
+                                  .mat-mdc-text-field-wrapper {
+                                    height: 40px;
+                                    padding: 0px;
+                                  }
+                                  .mat-mdc-form-field-subscript-wrapper{
+                                    height: 10px;
+                                  }
+                                }
                 
                                 span {
                                   color: #0096C8;
@@ -362,7 +423,7 @@
                               }
                 
                               .notes-body {
-                                display: inline-block;
+                                display: inline-flex;
                                 vertical-align: middle;
                                 color: #0096C8;
                                 font-weight: bold;
@@ -375,10 +436,165 @@
                                 padding: 6px 0px;
                                 cursor: pointer;
                                 padding-left: 5px;
+
+                                .icon-text{
+                                  width: 20px;
+                                  height: 25px;
+                                  background-repeat: no-repeat;
+                                  background-image: url("/assets/img/icon-text.svg");
+                                  cursor: pointer;
+                                  display: inline-block;
+                                  left: 0;
+                                }
+        
+                                .note-short{
+                                  background-color: #F0F0F0;
+                                  border-radius: 5px;
+                                  padding: 5px;
+                                  cursor: pointer;
+                                  overflow: hidden;
+                                  text-overflow: ellipsis;
+                                  white-space: nowrap;
+                                  width: 39rem !important;
+                                  display: inline-block;
+                                }
+        
+                                .field-of-edit {
+                                  margin-left: 15px;
+                                  display: inline-block;
+                                  height: auto;
+                                  min-height: 80px;
+                                  max-height: 100px;
+                                  position: relative;
+                                  border-radius: 5px;
+                                  min-width: 32rem !important;
+                                  max-width: 32rem !important;
+                                  width: 32rem !important;
+                                  background-color: #F0F0F0;
+                                  color: #464646;
+                                  border-radius: 5px;
+                                  cursor: pointer;
+                                
+        
+                                  .change-note {
+                                    color: grey !important;
+                                    resize: none;
+                                    padding: 5px;
+                                    border: none;
+                                    background-color: #F0F0F0;
+                                    border-radius: 5px;
+                                    display: inline-block;
+                                    width: 100%;
+                                    max-height: 100px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+        
+                                    .save-note{
+                                      font-size: 18px !important;
+                                      margin-top: 3px;
+                                    }
+        
+                                    .textarea-note{
+                                      background-color: #F0F0F0;
+                                      color: #0096C8 !important;
+                                      cursor: text;
+                                      width: 100%;
+                                      border: none;
+                                      outline: none;
+                                      resize: none;
+                                      white-space: nowrap;
+                                    }
+                                    
+                                  }
+                                }
+                              }
+
+                              .buttons-edit{
+                                width: 120px;
+                                display: inline-block;
+        
+                                .save-edit-btn{
+                                  display: inline-block;
+                                  width: 85px;
+                                  height: 26px;
+                                  border-radius: 13px;
+                                  text-align: center;
+                                  font-size: 16px;
+                                  padding-top: 1px;
+                                  cursor: pointer;
+                                  margin-right: auto;
+                                  margin-left: auto;
+                                  color: white;
+                                  background-color: #B4B4B4;
+        
+                                  &:hover {
+                                    background-color: #0096C8;
+                                  }
+                                }
+        
+                                .cancel-btn {
+                                  display: inline-block;
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/remove.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                                  margin-right: 10px;
+                
+                                  &:hover {
+                                    background-image: url("/assets/img/remove_active.svg");
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                  }
+                                }
+                              }
+        
+                              .buttons-body{
+                                width: 120px;
+                                display: inline-block;
+        
+                                .save-edit-btn{
+                                  display: inline-block;
+                                  width: 85px;
+                                  height: 26px;
+                                  border-radius: 13px;
+                                  text-align: center;
+                                  font-size: 16px;
+                                  padding-top: 1px;
+                                  cursor: pointer;
+                                  margin-right: auto;
+                                  margin-left: auto;
+                                  color: white;
+                                  background-color: #B4B4B4;
+        
+                                  &:hover {
+                                    background-color: #0096C8;
+                                  }
+                                }
+        
+                                .cancel-btn {
+                                  display: inline-block;
+                                  margin-right: 10px;
+                                  width: 25px;
+                                  height: 25px;
+                                  padding: 0;
+                                  cursor: pointer;
+                                  background-image: url("/assets/img/remove.svg");
+                                  background-repeat: no-repeat;
+                                  background-position: center;
+                
+                                  &:hover {
+                                    background-image: url("/assets/img/remove_active.svg");
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                  }
+                                }
                               }
                 
                               .intel-body {
-                                padding-top: 20px;
+                                padding-top: 30px;
                                 padding-left: 20px;
                                 display: inline-block;
                                 width: 10rem !important;
@@ -405,78 +621,10 @@
                                 padding: 0px !important;
                               }
                             }
-                
-                            .addDataRow {
-                              font-size: 14px;
-                              line-height: 1.3em;
-                              vertical-align: middle;
-                              border-top: none;
-                            /*   font-family: 'Proxima-Nova-Regular'; */
-                              color: #0096C8 !important;
-                
-                              .actions-body {
-                                padding-left: 10px;
-                                display: inline-block;
-                                width: 10rem !important;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
-                                padding-top: 30px;
-                              }
-                
-                              .type-body {
-                                display: inline-block;
-                                padding-right: 15px;
-                                padding-left: 15px;
-                                vertical-align: middle;
-                                color: #0096C8;
-                                font-weight: bold;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
-                                width: 10rem !important;
-                                text-overflow: ellipsis;
-                                overflow: hidden;
-                                padding: 6px 0px;
-                                cursor: pointer;
-                              }
-                
-                              .reference-body {
-                                display: inline-block;
-                                vertical-align: middle;
-                                color: #0096C8;
-                                font-weight: bold;
-                                min-width: 12rem !important;
-                                max-width: 12rem !important;
-                                width: 12rem !important;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                overflow: hidden;
-                                padding: 6px 0px;
-                                cursor: pointer;
-                                padding-left: 5px;
-                              }
-                
-                              .notes-body {
-                                display: inline-block;
-                                vertical-align: middle;
-                                color: #0096C8;
-                                font-weight: bold;
-                                min-width: 35rem !important;
-                                max-width: 35rem !important;
-                                width: 35rem !important;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                overflow: hidden;
-                                padding: 6px 0px;
-                                cursor: pointer;
-                                padding-left: 5px;
-                              }
-                
-                              .intel-body {
-                                display: inline-block;
-                                width: 10rem !important;
-                                min-width: 10rem !important;
-                                max-width: 10rem !important;
-                              }
+
+                            .addDataRow{
+                              display: none;
+                              width: 100%;
                             }
                         }                            
                     }
@@ -510,23 +658,67 @@
   background-color: white !important;
 }
 
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: white !important; 
+}
+
+.mat-mdc-button-persistent-ripple::before {
+  background-color: white !important;
+}
+
+.mat-mdc-button::before {
+  background-color: white !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-form-field-bottom-align {
+  display: none;
+}
+
+.mat-mdc-form-field-focus-overlay{
+  background-color: white !important;
+}
+
+.mat-mdc-form-field-infix{
+  padding-bottom: 10px !important;
+}
+
 ::-webkit-scrollbar {
-    width: 10px;
-    border-radius: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888; 
-    border-radius: 8px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
+  width: 10px;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.divRow:last-child {
+  border: none;
+}
+
+.rowTopicData.cdk-drop-list-dragging .divRow:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

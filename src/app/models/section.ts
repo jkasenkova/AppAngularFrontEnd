@@ -9,7 +9,7 @@ export class Section {
   public templateId: Guid;
   public iHandoverSection?: boolean = false;
   public type?: SectionType;
-  public sortType?: SortType;
+  public sortTopicType?: SortType;
   public sortReferenceType?: SortType;
   public sectionTopics?: TemplateTopic[] = [];
 }
