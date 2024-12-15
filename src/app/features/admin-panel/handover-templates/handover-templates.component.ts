@@ -16,6 +16,7 @@ import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
+import { UpdateTemplateService } from "src/app/services/updateTemplateService";
 
 @Component({
     selector: 'app-handover-templates',
@@ -47,15 +48,23 @@ export class HandoverTemplatesComponent implements OnInit {
 
     constructor(
         private templateService: TemplateService,
+        private updateTemplateService: UpdateTemplateService,
         private sessionStorageService: SessionStorageService) 
         {
         }
-
+  
     ngOnInit(): void {
         this.templateService.getTemplates().subscribe(templates =>
             this.templates = templates
         );
+        this.updateTemplateService.data$.subscribe((data) => {
+            this.templates = this.templates.concat(data);
+        });
     }
+
+    updateTemplateArray(): void {
+        this.templates = [...this.templates];
+      }
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(

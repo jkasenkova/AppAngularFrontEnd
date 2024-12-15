@@ -17,7 +17,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="list-group">
-                        @for (location of locations; track location) {
+                        @for (location of locations; track location.id) {
                             @if(selectedLocation == location){
                                 <div class="list-group-item selected" (click)="selectLocation(location)">
                                     {{location.name}}
@@ -63,7 +63,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="list-group">
-                        @for (team of teams; track team) {
+                        @for (team of teams; track team.id) {
                             @if(selectedTeam == team){
                                 <div class="list-group-item selected" (click)="selectTeam(team)">
                                     {{team.name}}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, EventEmitter, inject, Input, OnInit } from "@angular/core";
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,7 @@ import { TeamService } from "src/app/services/teamServices";
 import { Location } from "src/app/models/location";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
-import { S } from "@angular/cdk/keycodes";
+import { UpdateTemplateService } from "src/app/services/updateTemplateService";
 
 @Component({
     selector: 'app-user-orientation',
@@ -40,6 +40,7 @@ export class UserOrientationComponent implements OnInit {
     roles: RoleModel[];
 
     constructor(
+        private updateTemplateService: UpdateTemplateService,
         private locationService: LocationService,
         private teamService: TeamService,
         private templateService: TemplateService,
@@ -241,7 +242,8 @@ export class UserOrientationComponent implements OnInit {
                             isHandover: false
                         };
                 
-                        this.templateService.addTemplate(newTemplate).subscribe(template =>{
+                        this.templateService.addTemplate(newTemplate).subscribe(template =>
+                        {
                             var role: RoleModel = {
                                 id: Guid.create(),
                                 name: result.name,
@@ -253,6 +255,8 @@ export class UserOrientationComponent implements OnInit {
                             };
                             this.roleService.createRole(role);
                             this.roles.push(role);
+
+                            this.updateTemplateService.addItem(template);
                         });
                     }
                 }

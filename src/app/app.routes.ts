@@ -10,6 +10,7 @@ import { AppComponent } from './app.component'
 import { SubscriptionManagementComponent } from './subscriptions-management/subscriptions-management.component';
 import { Routes } from '@angular/router';
 import { ReportPDFPreviewComponent } from './features/my-handover/report-preview/report-pdf-component';
+import { HandoverTemplatesComponent } from './features/admin-panel/handover-templates/handover-templates.component';
 
 export const APP_ROUTES: Routes =
 [
@@ -59,6 +60,11 @@ export const APP_ROUTES: Routes =
         path: 'sign-up',
         canActivate: [noAuthGuard],
         component: SignUpComponent,
+      },
+      {
+        path: 'app-handover-templates',
+        canActivate: [noAuthGuard],
+        component: HandoverTemplatesComponent,
       },
     /*   {
         path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)
