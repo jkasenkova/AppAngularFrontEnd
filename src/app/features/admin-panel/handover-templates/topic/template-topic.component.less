@@ -8,8 +8,15 @@
     height: auto;
     min-height: calc(75vh - 100px);
 
+
+    .form-inline{
+        float: left;
+        margin-bottom: 5px;
+    }
+
     .button-row{
         padding: 5px 5px 5px 0px;
+        float: right;
 
         .btn-add-topic{
             overflow: hidden;
@@ -41,6 +48,14 @@
         background: #ccc;
         justify-content: space-between;
     }
+
+    .table{
+        .empty-body{
+            background-color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    }
 }
 
 
@@ -58,6 +73,7 @@
 
 .tableTab {
     margin-bottom: 0;
+
 
     .headRow {
         font-family: 'Proxima-Nova-Regular';
@@ -243,3 +259,10 @@
         color: white;
     }
 } 
+ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: #0096C8 !important;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+   color: #0096C8 !important;
+}

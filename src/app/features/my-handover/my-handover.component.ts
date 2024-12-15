@@ -118,7 +118,7 @@ export class MyHandoverComponent implements OnInit {
             });
         }
       
-      if(this.owner.isActiveRotation && this.owner.curentRotationId) {
+      if(this.owner && this.owner.curentRotationId) {
             this.handoverService.getHandoverById(this.owner.curentRotationId).subscribe(rotation =>
             {
                 this.handover = rotation;
@@ -149,7 +149,7 @@ export class MyHandoverComponent implements OnInit {
                 handoverId: handover.handoverId,
                 iHandoverSection: false,
                 sectionType: section.type,
-                sortType: section.sortType,
+                sortType: section.sortTopicType,
                 addBtnShow: true,
                 sortReferenceType: section.sortReferenceType,
                 templateSection: true,
@@ -228,7 +228,7 @@ export class MyHandoverComponent implements OnInit {
     initilizeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
 
         let rotationReferences: RotationReference[] = [];
-        templateTopic.references.filter(t => t.enabled).forEach(reference => {
+        templateTopic.templateReferences.filter(t => t.enabled).forEach(reference => {
 
             var convertedReference = { 
                 id: Guid.create(),

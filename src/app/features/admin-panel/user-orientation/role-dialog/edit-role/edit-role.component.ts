@@ -72,11 +72,11 @@ export class EditRoleDialogComponent {
         if(data.rotationType == 1){
             this.selectedRotation = true;
         }
-
+    debugger;
         this.roleForm = this.fb.group({
             name: [data.name, Validators.required],
             teamId: data.teamId,
-            template: [''],
+            template: data.templateId,
             userType: [data.userType, Validators.required],
             id: data.id,
             rotationType: [data.rotationType, Validators.required],

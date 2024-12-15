@@ -1,9 +1,9 @@
-<div class="app-template-topic container">
+<!-- <div class="app-template-topic container">
     <div class="button-row">
         <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
     </div>
     <ag-grid-angular class="ag-theme-quartz" #agGrid
-                     [rowData]="topicsData"
+                     [rowData]="rowData"
                      [columnDefs]="colDefs"
                      [pagination]="true"
                      [detailRowAutoHeight]="true"
@@ -12,4 +12,74 @@
                      [alwaysShowHorizontalScroll]="false"
                      [overlayNoRowsTemplate]="noRowsDisplay">
     </ag-grid-angular> 
+</div> -->
+
+<div class="app-template-topic container">
+    <div class="button-row">
+        <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
+    </div>
+
+    <form>
+        <div class="form-group form-inline">
+          Search topic by name:
+          <input
+            class="form-control ml-2"
+            type="text"
+            name="searchTerm"
+            [(ngModel)]="searchTerm"
+            (input)="search($event)"
+          />
+        </div>
+      </form>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" sortable="name">Topic</th>
+            <th scope="col" sortable="reference">Reference</th>
+            <th scope="col" sortable="section">Section</th>
+            <th scope="col" sortable="section">Template</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        @if(displayDataRow.length > 0){
+          <ng-container *ngFor="let data of displayDataRow; index as i">
+            <tr
+              [style.display]="
+                i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null
+              "
+            >
+              <th scope="row">{{ (page - 1) * pageSize + i + 1 }}</th>
+              <td>{{ data.templateTopicName }}</td>
+              <td>{{ data.templateReferenceName }}</td>
+              <td>{{ data.sectionName }}</td>
+              <td>{{ data.templateList }}</td>
+              <td>
+                <button mat-stroked-button class="btn-delete-topic" (click)="deleteTopic(data)">Delete</button>
+              </td>
+              <td>
+                <button mat-stroked-button class="btn-edit-topic" (click)="editTopic(data)">Edit</button>
+              </td>
+            </tr>
+          </ng-container>
+        }
+        @else{
+          <tr>
+            <div class="empty-body">No display topics to show</div>
+          </tr>
+          
+        }
+        </tbody>
+      </table>
+    
+      <ngb-pagination
+        [collectionSize]="collectionSize"
+        [(page)]="page"
+        [maxSize]="5"
+        [boundaryLinks]="true"
+        [pageSize]="pageSize"
+        class="d-flex justify-content-center"
+      ></ngb-pagination>
 </div>

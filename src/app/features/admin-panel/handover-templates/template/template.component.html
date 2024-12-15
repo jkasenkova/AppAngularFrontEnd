@@ -29,26 +29,45 @@
                                       <div class="reference-title">Reference</div>
                                       <div class="notes-title">Notes</div>
                                     </div>
-    
-                                    <div class="rowTopicData" cdkDropList
+                                    <form [formGroup]="topicForm">
+                                        <div class="rowTopicData" cdkDropList
                                         (cdkDropListDropped)="dropTopic($event,  section.sectionTopics, section)">
                     
                                         @for (topic of section.sectionTopics; track topic) {
-
-                                            <div class="divRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="topic">
+                                            @if(topic.enabled)
+                                            {
+                                                <div class="divRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="topic">
                                                 <div class="actions-body">
                                                     <div class="btn btn-circle draganddrop">
                                                         <mat-icon class="dragCursor">reorder</mat-icon>
                                                     </div>
-                                                    <div class="btn btn-circle remove-btn">
+                                                    <div class="btn btn-circle remove-btn"
+                                                        matTooltip="Remove"
+                                                        (click)="removeTopic(topic, section)"
+                                                        [ngClass]="{'locked': topic.editing }">
                                                         <span class="glyphicon span"></span>
                                                     </div>
-                                                    <div class="btn btn-circle edit-btn">
+                                                    <div class="btn btn-circle edit-btn" 
+                                                        matTooltip="Edit"
+                                                        (click)="editTopic(topic)">
                                                         <span class="glyphicon span"></span>
                                                     </div>
                                                 </div>
                                                 <div class="type-body">
-                                                  <span>{{topic.name}}</span>
+                                                    @if(topic.editing)
+                                                    {
+                                                        <div class="edit-type">
+                                                            <mat-form-field calss="edit-topic">
+                                                                <input matInput placeholder="Name"
+                                                                        formControlName="topicName"
+                                                                        (keydown.enter)="updateTopic(topic, section)">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    }
+                                                    @else
+                                                    {
+                                                        <span>{{topic.name}}</span>
+                                                    }
                                                  @if(expanded(topic)){
                                                     <mat-icon class="mat-icon-rtl-mirror"
                                                     (click)="topic.isExpand = !topic.isExpand">
@@ -61,105 +80,106 @@
                                                   ({{getCountReferences(topic)}})
                                                 </div>
                                                 <div class="notes-body"></div>
-                                            </div>
-                                          @if(topic.isExpand){
-                                                <div cdkDropList class="rowReferenceData"
-                                                (cdkDropListDropped)="dropReference($event, topic.references, section)">
-
-                                                    @for(reference of topic.references; track reference){
-
-                                                        <div class="divTopicRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="reference">
-                                                        <div class="actions-body">
-                                                            <div class="btn btn-circle draganddrop">
-                                                                <mat-icon class="dragCursor">reorder</mat-icon>
-                                                            </div>
-                                                            <div class="btn btn-circle remove-btn">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                            <div class="btn btn-circle edit-btn">
-                                                                <span class="glyphicon span"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="type-body"></div>
-                                                        <div class="reference-body tr-blue-text">
-                                                            <span>{{reference.name}}</span>
-                                                        </div>
-                                                        <div class="notes-body">
-                                                            <span>{{reference.description}}</span>
-                                                        </div>
-                                                        </div>
-                                                    }
+                                                @if(topic.editing)
+                                                {
+                                                    <div class="buttons-body">
+                                                    <div class="btn btn-circle cancel-btn" 
+                                                        (click)="topic.editing = !topic.editing"
+                                                        matTooltip="Cancel">
+                                                            <span class="glyphicon span"></span>
+                                                    </div>
+                                                    <div type="button" class="btn btn-circle save-edit-btn"
+                                                        (click)="updateTopic(topic, section)">Save</div>
+                                                    </div>
+                                                }
                                                 </div>
+                                                @if(topic.isExpand){
+                                                    <div cdkDropList class="rowReferenceData"
+                                                    (cdkDropListDropped)="dropReference($event, topic.templateReferences, section)">
+
+                                                    @for(reference of topic.templateReferences; track reference){
+                                                        @if(reference.enabled)
+                                                        {
+                                                            <div class="divTopicRow" cdkDrag cdkDragLockAxis="y" [cdkDragData]="reference">
+                                                                <div class="actions-body">
+                                                                    <div class="btn btn-circle draganddrop">
+                                                                        <mat-icon class="dragCursor">reorder</mat-icon>
+                                                                    </div>
+                                                                    <div class="btn btn-circle remove-btn"
+                                                                        matTooltip="Remove"
+                                                                        (click)="removeReference(reference, topic)"
+                                                                        [ngClass]="{'locked': reference.editing }">
+                                                                        <span class="glyphicon span"></span>
+                                                                    </div>
+                                                                    <div class="btn btn-circle edit-btn"
+                                                                        matTooltip="Edit"
+                                                                        (click)="editReference(reference)">
+                                                                        <span class="glyphicon span"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="type-body"></div>
+                                                                <div class="reference-body tr-blue-text">
+                                                                    @if(reference.editing)
+                                                                    { 
+                                                                        <div class="edit-type">
+                                                                            <mat-form-field calss="edit-topic">
+                                                                                <input matInput placeholder="Name"
+                                                                                    formControlName="referenceName"
+                                                                                    (keydown.enter)="updateReference(reference, topic)">
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                    }
+                                                                    @else
+                                                                    {
+                                                                        <span>{{reference.name}}</span>
+                                                                    }
+                                                                </div>
+                                                                <div class="notes-body" (click)="expandNotes(reference)">
+                                                                    @if(reference.expand != true){
+                                                                        <div class="note-short">
+                                                                            {{reference.description}}
+                                                                        </div>
+                                                                    }
+                                                                    @if(reference.expand)
+                                                                    {
+                                                                        <span class="icon-text"></span>
+                                                                            <div class="field-of-edit" (click)="reference.expand = true">
+                                                                                <div class="change-note">
+                                                                                    <textarea autfocus maxlength="1000" class="textarea-note"
+                                                                                        #textArea
+                                                                                        clickOutside
+                                                                                        (clickOutside)="clickOutside(reference, topic, textArea.value)">{{reference.description}}</textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                    }
+                                                                </div>
+                                                                <div class="buttons-edit">
+                                                                    @if(reference.editing)
+                                                                    {
+                                                                        <div class="btn btn-circle cancel-btn" 
+                                                                            (click)="cancelReferenceEdit(reference)"
+                                                                            matTooltip="Cancel">
+                                                                                <span class="glyphicon span"></span>
+                                                                        </div>
+                                                                        <div type="button" class="btn btn-circle save-edit-btn"
+                                                                            (click)="updateReference(reference, topic)">Save</div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    </div>
+                                                }
                                             }
                                         }
                     
-                                    </div>
-                                    
-                                    <div #addRowElement style="display:none;" class="rowTopicData">
-                                        <div class="divRow">
-                                            <div class="actions-body">
-                                                <div class="btn btn-circle draganddrop">
-                                                </div>
-                                                <div class="btn btn-circle cancel-btn" (click)="addHideRowTopicForm(section,i)">
-                                                    <span class="glyphicon span"></span>
-                                                </div>
-                                            </div>
-
-                                            <form [formGroup]="topicForm" class="add-topic-form">
-                                                <div class="type-body">
-                                                    <mat-form-field class="example-full-width">
-                                                        <input
-                                                          type="text"
-                                                          placeholder="Select/Add Topic"
-                                                          matInput
-                                                          formControlName="topicName"
-                                                          [matAutocomplete]="autoRef"
-                                                        />
-                                                        <mat-autocomplete autoActiveFirstOption #autoRef="matAutocomplete"
-                                                        [displayWith]="displayFn" (optionSelected)="onSelectAddTopic($event)">
-                                                            @for (topic of section.sectionTopics; track topic) {
-                                                                <mat-option [value]="topic">{{topic.name}}</mat-option>
-                                                            }
-                                                        </mat-autocomplete>
-                                                      </mat-form-field>
-                                                </div>
-                                                <div class="reference-body">
-                                                  <mat-form-field class="example-full-width">
-                                                    <input
-                                                    type="text"
-                                                    placeholder="Select/Add Reference"
-                                                    matInput
-                                                    formControlName="referenceName"
-                                                    [matAutocomplete]="auto"
-                                                  />
-                                                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
-                                                  [displayWith]="displayRefFn" (optionSelected)="onSelectAddReference($event)">
-                                                      @for (reference of references; track reference) {
-                                                          <mat-option [value]="reference">{{reference.name}}</mat-option>
-                                                      }
-                                                  </mat-autocomplete>
-                                                  </mat-form-field>
-                                                </div>
-                                                <div class="notes-body">
-                                                  <mat-form-field class="example-full-width">
-                                                      <textarea matInput
-                                                            cdkTextareaAutosize
-                                                            placeholder="Notes"
-                                                            #autosize="cdkTextareaAutosize"
-                                                            cdkAutosizeMinRows="1"
-                                                            formControlName="description" 
-                                                            cdkAutosizeMaxRows="5"></textarea>
-                                                  </mat-form-field>
-                                                </div>
-                                                <div class="intel-body">
-                                                    <button type="button" class="inline-add-btn" trigger="hover focus" side="top" delay="1000">
-                                                        Add
-                                                    </button>
-                                                </div>
-                                            </form>
-
                                         </div>
+                                    </form> 
+                                    
+                                    <div #addRowElement class="addDataRow">
+                                        <add-topic (dataEmitter)="toggleDiv(section, i)" [sectionOut]="section"></add-topic>
                                     </div>
+
                                     <div class="navbar navbar-white">
                                         <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
                                     </div>

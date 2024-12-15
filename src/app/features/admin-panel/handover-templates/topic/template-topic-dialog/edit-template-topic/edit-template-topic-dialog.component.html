@@ -88,8 +88,8 @@
                                 <mat-form-field>
                                     <mat-label> Select Section</mat-label>
                                     <mat-select placeholder="Select a Section" [disabled]="!selectTemplate">
-                                        @for (section of data.sections; track section) {
-                                            <mat-option [value]="section">{{section.sectionName}}</mat-option>
+                                        @for (section of sections; track section) {
+                                            <mat-option [value]="section">{{section.name}}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
