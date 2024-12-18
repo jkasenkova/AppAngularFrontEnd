@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Template } from '../models/template';
+import { TemplateTopic } from '../models/templateTopic';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UpdateTemplateService {
-  private dataSubject = new BehaviorSubject<Template[]>([]);
+export class UpdateTemplateTopicService {
+  private dataSubject = new BehaviorSubject<TemplateTopic[]>([]);
   data$ = this.dataSubject.asObservable();
 
   addItem(newItem: any): void {
     const currentData = this.dataSubject.value;
     const updatedData = [...currentData, newItem];
     this.dataSubject.next(updatedData);
+
+    this.setData(updatedData);
   }
 
-  updateItem(index: number, updatedItem: any): void {
+  updateItem(updatedItem: any): void {
     const currentData = this.dataSubject.value;
     const updatedData = [...currentData];
+    let index = currentData.indexOf(updatedItem);
     updatedData[index] = updatedItem;
     this.dataSubject.next(updatedData);
   }
@@ -29,6 +32,7 @@ export class UpdateTemplateService {
   }
 
   setData(data: any): void {
+    const currentData = this.dataSubject.value;
     this.dataSubject.next(data);
   }
 

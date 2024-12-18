@@ -30,10 +30,11 @@ export class SectionService {
     }
 
     getSections(templateId: Guid): Observable<Section[]> {
-        return this.http.get<Section[]>(this.url + '/' + templateId);
+        return this.http.get<Section[]>(this.url + '/' + templateId + '/sections');
     }
 
     getSectionById(id: Guid): Observable<Section> {
+        debugger;
         return this.http.get<Section>(this.url + '/' + id);
     }
 }

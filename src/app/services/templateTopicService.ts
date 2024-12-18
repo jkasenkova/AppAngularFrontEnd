@@ -33,11 +33,15 @@ export class TemplateTopicService {
      this.http.patch(this.url, topic, this.httpHeaders).subscribe();
   }
 
-  deleteTemplateTopicById(id: string): Observable<string> {
-    return this.http.delete<string>(this.url + '/' + id);
+  deleteTemplateTopicById(id: string): void {
+    this.http.delete<string>(this.url + '/' + id).subscribe();
   }
 
   updateOrderTopics(topics: TemplateTopic[]): void{
     this.http.post(this.url + '/updateOrder', topics, this.httpHeaders).subscribe();
+  }
+
+  getTemplateTopicById(id: Guid): Observable<TemplateTopic> {
+    return this.http.get<TemplateTopic>(this.url + '/' + id);
   }
 }

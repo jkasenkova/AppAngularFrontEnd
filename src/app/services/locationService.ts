@@ -14,7 +14,7 @@ export class LocationService {
         private http: HttpClient,
         private readonly configService: ConfigService) {
     }
-
+ 
     url = this.configService.getRouterUrl() + '/location'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 

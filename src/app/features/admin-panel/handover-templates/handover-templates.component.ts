@@ -39,7 +39,6 @@ import { UpdateTemplateService } from "src/app/services/updateTemplateService";
 
 export class HandoverTemplatesComponent implements OnInit {
     templates: Template[];
-    template: Template;
     selectedIndex = 0;
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
@@ -49,16 +48,13 @@ export class HandoverTemplatesComponent implements OnInit {
     constructor(
         private templateService: TemplateService,
         private updateTemplateService: UpdateTemplateService,
-        private sessionStorageService: SessionStorageService) 
-        {
-        }
+        private sessionStorageService: SessionStorageService) {}
   
     ngOnInit(): void {
         this.templateService.getTemplates().subscribe(templates =>
-            this.templates = templates
-        );
-        this.updateTemplateService.data$.subscribe((data) => {
-            this.templates = this.templates.concat(data);
+        {
+            this.templates = templates;
+            this.updateTemplateService.setData(templates);
         });
     }
 
@@ -70,7 +66,7 @@ export class HandoverTemplatesComponent implements OnInit {
         this.templateService.getTemplates().pipe(
             map(templates => templates.find(template => template.id === id))
         ).subscribe(template => {
-            this.template = template;
+            this.selectedTemplate = template;
             this.isSelectedTemplate = true;
         });
     }
@@ -83,11 +79,9 @@ export class HandoverTemplatesComponent implements OnInit {
 
     onSelectTemplate(event: MatSelectChange): void {
         if (event.value != undefined) {
-            this.sessionStorageService.setItem('templateId', event.value.templateId);
             this.isSelectedTemplate = true;
-            this.template = event.value;
             this.selectedTemplate = event.value;
-            this.isHandoverTemplate =  this.template.isHandover;
+            this.isHandoverTemplate =  this.selectedTemplate.isHandover;
         }
         else {
             this.isSelectedTemplate = false;
@@ -117,7 +111,6 @@ export class HandoverTemplatesComponent implements OnInit {
                 {
                     this.selectedTemplate = newTemplate;
                     this.isSelectedTemplate = true;
-                    this.template = newTemplate;
                     this.templates.push(newTemplate);
                     this.templates = this.templates.sort((a, b) => a.name.localeCompare(b.name));
                 });
@@ -135,7 +128,6 @@ export class HandoverTemplatesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.templateService.updateTemplate(result);
-                this.template = result;
                 this.selectedTemplate = result;
                 let updateTemplate = this.templates.find(l=> l.id == result.id);
                 let index = this.templates.indexOf(updateTemplate);
@@ -160,7 +152,6 @@ export class HandoverTemplatesComponent implements OnInit {
                 this.templateService.deleteTemplateById(template.id);
                 this.templates = this.templates.filter(t=>t.id != template.id);
                 this.isSelectedTemplate = false;
-                this.template = null;
                 this.selectedTemplate = null;
             }
         });

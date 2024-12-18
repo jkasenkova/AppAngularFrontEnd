@@ -129,10 +129,12 @@ export class MyHandoverComponent implements OnInit {
             });
       }
 
-      this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
-        this.template = template;
-        this.handover = this.initilizeTemplateSection(this.template, this.handover);
-    });
+      if(this.ownerRole){
+        this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
+            this.template = template;
+            this.handover = this.initilizeTemplateSection(this.template, this.handover);
+        });
+      }
 
         this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;

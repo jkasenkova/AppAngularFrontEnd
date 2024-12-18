@@ -25,6 +25,7 @@ import { TemplateReferenceService } from 'src/app/services/templateReferenceServ
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClickOutsideDirective } from 'src/app/shared/clickoutside.directive';
+import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopicService';
 
 @Component({
     selector: 'app-template',
@@ -61,6 +62,7 @@ export class TemplateComponent implements OnInit, OnChanges {
     @Output() sectionOut: Section;
 
     constructor(
+      private updateTemplateTopicService: UpdateTemplateTopicService,
       private sectionService: SectionService, 
       private templatTopicService: TemplateTopicService,
       private templatReferenceService: TemplateReferenceService,
@@ -89,25 +91,25 @@ export class TemplateComponent implements OnInit, OnChanges {
     }
 
     getTemplateSections(template: Template): void{
-        this.sectionService.getSections(template.id).subscribe(sections => 
+      this.sections = this.sortSectionsByTypeAndName(template.sections);
+      
+        this.sections.forEach(section => 
+        {
+          var allTopics = this.updateTemplateTopicService.getData() as TemplateTopic[];
+          section.sectionTopics = allTopics.filter(t => t.sectionId == section.id);
+
+          if(section.sortTopicType == 1)
           {
-            this.sections = this.sortSectionsByTypeAndName(sections);
-            this.sections.forEach(section => 
-            {
-              this.templatTopicService.getTemplateTopicsBySectionId(section.id).subscribe(topics =>
-              {
-                section.sectionTopics = topics;
-                if(section.sortTopicType == 1){
-                  section.sectionTopics = section.sectionTopics.sort((a,b) => a.index - b.index);
-                }else{
-                  section.sectionTopics = section.sectionTopics.sort((a,b) => a.name.localeCompare(b.name))
-                }
-              })
-            });
+            section.sectionTopics = section.sectionTopics.sort((a,b) => a.index - b.index);
+          }
+          else
+          {
+            section.sectionTopics = section.sectionTopics.sort((a,b) => a.name.localeCompare(b.name))
+          }
         });
     }
 
-    sortSectionsByTypeAndName(sections: Section[]) {
+  sortSectionsByTypeAndName(sections: Section[]) {
       return sections.sort((a, b) => {
         if (a.type < b.type) return -1;
         if (a.type > b.type) return 1;
@@ -115,11 +117,11 @@ export class TemplateComponent implements OnInit, OnChanges {
         if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
         return 0;
       });
-    }
+  }
 
-    toggleDiv(section: Section, index: number): void {
-      this.addHideRowTopicForm(section, index);
-    }
+  toggleDiv(section: Section, index: number): void {
+    this.addHideRowTopicForm(section, index);
+  }
 
     //---------Section Dialogs------------
 
@@ -134,13 +136,13 @@ export class TemplateComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-
               var newSection: Section = {
                 name: result.name,
                 templateId: result.templateId,
                 type: SectionType.Other
               };
-              this.sectionService.createSection(newSection).subscribe(newSection =>{
+              this.sectionService.createSection(newSection).subscribe(newSection =>
+              {
                 if(this.sections != null){
                   this.sections.push(newSection);
                 }
@@ -164,15 +166,17 @@ export class TemplateComponent implements OnInit, OnChanges {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result) 
+            {
               var updtSection: Section = {
-                id: result.id,
-                name: result.name,
-                templateId: section.templateId,
-                type: section.type,
-                sortTopicType: section.sortTopicType,
-                sortReferenceType: section.sortReferenceType
+                  id: result.id,
+                  name: result.name,
+                  templateId: section.templateId,
+                  type: section.type,
+                  sortTopicType: section.sortTopicType,
+                  sortReferenceType: section.sortReferenceType
               };
+              
               this.sectionService.updateSection(updtSection);
 
               let updateSection = this.sections.find(l=> l.id == result.id);
@@ -228,6 +232,8 @@ export class TemplateComponent implements OnInit, OnChanges {
 
     topic.name = this.topicForm.get('topicName').value;
     this.updateTopicInArray(topic, section);
+
+    this.updateTemplateTopicService.updateItem(topic);
   }
 
   updateTopicInArray(topic: TemplateTopic, section: Section){
@@ -290,7 +296,6 @@ export class TemplateComponent implements OnInit, OnChanges {
     dropReference(event: CdkDragDrop<Reference[]>, references: Reference[], section: Section) {
     
         moveItemInArray(references, event.previousIndex, event.currentIndex);
-    debugger;
         references.forEach((x, index) => {
           x.index = index
         });
@@ -357,6 +362,8 @@ export class TemplateComponent implements OnInit, OnChanges {
         reference.enabled = false;
         this.templatReferenceService.updateTemplateReference(reference);
       });
+
+      this.templatTopicService.updateTopic(topic);
     }
 
     removeReference(reference: Reference, topic: TemplateTopic){

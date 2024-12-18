@@ -19,43 +19,62 @@
         <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
     </div>
 
-    <form>
-        <div class="form-group form-inline">
-          Search topic by name:
-          <input
-            class="form-control ml-2"
-            type="text"
-            name="searchTerm"
-            [(ngModel)]="searchTerm"
-            (input)="search($event)"
-          />
-        </div>
-      </form>
-      <table class="table table-striped">
+   <table class="table table-hover">
         <thead>
-          <tr>
-            <th scope="col">#</th>
+          <tr class="panel-head">
             <th scope="col" sortable="name">Topic</th>
             <th scope="col" sortable="reference">Reference</th>
-            <th scope="col" sortable="section">Section</th>
             <th scope="col" sortable="section">Template</th>
             <th></th>
             <th></th>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field class="search-field" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Search"
+                  [(ngModel)]="searchTopicTerm"
+                  (input)="searchTopic()"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </td>
+            <td>   
+              <mat-form-field class="search-field" appearance="outline">
+              <input
+                matInput
+                type="text"
+                placeholder="Search"
+                [(ngModel)]="searchRefTerm"
+                (input)="searchReference()"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field></td>
+            <td>
+              <mat-form-field class="search-field" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Search"
+                  [(ngModel)]="searchTemplateTerm"
+                  (input)="searchTemlate()"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
         @if(displayDataRow.length > 0){
           <ng-container *ngFor="let data of displayDataRow; index as i">
-            <tr
-              [style.display]="
-                i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null
-              "
-            >
-              <th scope="row">{{ (page - 1) * pageSize + i + 1 }}</th>
+            <tr [style.display]="i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null">
               <td>{{ data.templateTopicName }}</td>
               <td>{{ data.templateReferenceName }}</td>
-              <td>{{ data.sectionName }}</td>
-              <td>{{ data.templateList }}</td>
+              <td>{{ data.templateList}}</td>
               <td>
                 <button mat-stroked-button class="btn-delete-topic" (click)="deleteTopic(data)">Delete</button>
               </td>
@@ -67,9 +86,10 @@
         }
         @else{
           <tr>
-            <div class="empty-body">No display topics to show</div>
+            <td colspan="5" class="empty-message">
+              <div class="empty-body">No display topics to show</div>
+            </td>
           </tr>
-          
         }
         </tbody>
       </table>

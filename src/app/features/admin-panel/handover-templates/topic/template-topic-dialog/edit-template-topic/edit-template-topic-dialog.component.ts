@@ -35,28 +35,27 @@ export class EditTemplateTopicDialogComponent {
     templateTopicForm: FormGroup;
     selectTemplate: boolean = false;
     sections: Section[];
+    templates: Template[];
     
     constructor(
         private fb: FormBuilder,
         private sectionService: SectionService,
         public dialogRef: MatDialogRef<EditTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TopicDataModel
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         debugger;
-        if(data.sectionId){
-           /*  this.sectionService.getSectionById(data.sectionId).subscribe(section =>{
-                var templates = data.templates.find(t => t.id == section.templateId);
-            }) */
-        }
-       
+        var templates = data.topicData.templates as Template[];
+        this.templates = templates.filter(t=> !data.associatedTemplates.includes(t));
 
         this.templateTopicForm = this.fb.group({
-            templateTopicName: [data.templateTopicName, Validators.required],
-            templateReferenceName: [data.templateReferenceName, Validators.required],
-            templateDescription: data.templateDescription,
-            templates: data.templates,
-            associatedTemplates: null,
-            sectionName: null
+            templateTopicName: [data.topicData.templateTopicName, Validators.required],
+            templateReferenceName: [data.topicData.templateReferenceName, Validators.required],
+            templateDescription: data.topicData.templateDescription,
+            templates: [templates],
+            associatedTemplates: [data.associatedTemplates],
+            selectedSection: null,
+            attachToTemplate: null,
+            topic: data.topicData.topic
         });
     }
 
@@ -66,6 +65,7 @@ export class EditTemplateTopicDialogComponent {
     }
 
     onSave(): void {
+        debugger;
         if (this.templateTopicForm.valid) {
             this.dialogRef.close(this.templateTopicForm.value);
         }
@@ -74,6 +74,8 @@ export class EditTemplateTopicDialogComponent {
     onSelectTemplate(selectTemplate:any){
         if(selectTemplate.value != undefined){
             this.selectTemplate = true;
+
+            this.templateTopicForm.get('attachToTemplate').setValue(selectTemplate);
 
             this.sectionService.getSections(selectTemplate.value.id).subscribe(sections => 
             {

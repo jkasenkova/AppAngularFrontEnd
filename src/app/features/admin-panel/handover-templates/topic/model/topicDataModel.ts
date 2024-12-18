@@ -1,5 +1,5 @@
 import { Guid } from "guid-typescript";
-import { StringValueToken } from "html2canvas/dist/types/css/syntax/tokenizer";
+import { Observable } from "rxjs";
 import { Section } from "src/app/models/section";
 import { Template } from "src/app/models/template";
 import { TemplateTopic } from "src/app/models/templateTopic";
@@ -8,7 +8,6 @@ export class TopicDataModel {
     templateTopicId?: Guid;
     templateTopicName: string;
     sectionId?: Guid;
-    sectionName: string;
     templateReferenceId?:Guid;
     templateReferenceName: string;
     templateDescription?: string;
@@ -18,4 +17,5 @@ export class TopicDataModel {
     associatedTemplates?: Template[];
     topics?: TemplateTopic[];
     templateList: string;
+    topic: TemplateTopic;
 }

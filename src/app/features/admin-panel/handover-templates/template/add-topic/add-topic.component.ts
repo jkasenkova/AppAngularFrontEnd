@@ -7,11 +7,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { Guid } from "guid-typescript";
+import { map } from "rxjs";
 import { Reference } from "src/app/models/reference";
 import { Section } from "src/app/models/section";
 import { TemplateTopic } from "src/app/models/templateTopic";
 import { TemplateReferenceService } from "src/app/services/templateReferenceService";
 import { TemplateTopicService } from "src/app/services/templateTopicService";
+import { UpdateTemplateTopicService } from "src/app/services/updateTemplateTopicService";
 import { ClickOutsideDirective } from "src/app/shared/clickoutside.directive";
 
 @Component({
@@ -41,6 +43,7 @@ export class AddTopicComponent {
     @Output() dataEmitter = new EventEmitter<boolean>();
 
     constructor( 
+        private updateTemplateTopicService: UpdateTemplateTopicService,
         private templateTopicService: TemplateTopicService,
         private templateReferenceService: TemplateReferenceService,
         private fb: FormBuilder) 
@@ -94,6 +97,8 @@ export class AddTopicComponent {
                     topic.index = this.sectionOut.sectionTopics.length ?? 0;
 
                     this.templateTopicService.updateTopic(topic);
+
+                    this.updateTemplateTopicService.updateItem(topic);
                 }
                 if(this.addTopicForm.value.reference)
                 {
@@ -143,16 +148,22 @@ export class AddTopicComponent {
                 {
                     newReference.templateTopicId = newTopic.id;
                     newReference.enabled = true;
-                    this.templateReferenceService.addTemplateReference(newReference);
-        
-                    newTopic.templateReferences = [];
-                    newTopic.templateReferences.push(newReference);
-                    newTopic.templateReferences = newTopic.templateReferences.sort((a, b) => a.name.localeCompare(b.name));
+                    
+                    this.templateReferenceService.addTemplateReference(newReference)
+                    .subscribe(response => 
+                    {
+                        newTopic.templateReferences = [];
+                        newTopic.templateReferences.push(response);
+                        debugger;
+                        this.updateTemplateTopicService.addItem(newTopic);
 
-                    if(this.sectionOut.sectionTopics == null){
-                        this.sectionOut.sectionTopics = [];
-                    }
-                    this.sectionOut.sectionTopics.push(newTopic);
+                        newTopic.templateReferences = newTopic.templateReferences.sort((a, b) => a.name.localeCompare(b.name));
+
+                        if(this.sectionOut.sectionTopics == null){
+                            this.sectionOut.sectionTopics = [];
+                        }
+                        this.sectionOut.sectionTopics.push(newTopic);
+                    });
                 });
             }
         }
@@ -173,7 +184,6 @@ export class AddTopicComponent {
         };
 
         this.templateReferenceService.addTemplateReference(newReference);
-
         return newReference;
     }
 }

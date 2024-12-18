@@ -74,10 +74,7 @@ export class CreateTemplateTopicDialogComponent {
     onSelectTemplate(selectTemplate:any){
         if(selectTemplate.value != undefined){
             this.selectTemplate = true;
-            this.sectionService.getSections(selectTemplate.value.id).subscribe(sections => 
-            {
-                this.sections = sections;
-            });
+            this.sections = selectTemplate.value.sections;
         
         }else{
             this.selectTemplate = false;

@@ -42,7 +42,7 @@ export class DeleteTemplateTopicDialogComponent {
     ) {
         this.templateTopicForm = this.fb.group({
             templateTopicName: data.templateTopicName,
-            templateTopicId: data.templateTopicId
+            templateTopicId: data.topic.id
         });
     }
 

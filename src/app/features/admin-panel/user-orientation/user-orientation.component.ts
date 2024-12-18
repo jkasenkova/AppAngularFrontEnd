@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit } from "@angular/core";
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +29,7 @@ import { UpdateTemplateService } from "src/app/services/updateTemplateService";
     standalone: true,
     imports: [NgbTooltipModule, MatButtonModule],
     templateUrl: './user-orientation.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./user-orientation.component.less']
 })
 export class UserOrientationComponent implements OnInit {
@@ -40,6 +41,7 @@ export class UserOrientationComponent implements OnInit {
     roles: RoleModel[];
 
     constructor(
+        private cdr: ChangeDetectorRef,
         private updateTemplateService: UpdateTemplateService,
         private locationService: LocationService,
         private teamService: TeamService,
@@ -51,6 +53,10 @@ export class UserOrientationComponent implements OnInit {
             this.locations = locations.sort((a, b) => a.name.localeCompare(b.name));
         });
     }
+
+    ngAfterViewChecked(){
+        this.cdr.detectChanges();
+     }
 
     selectLocation(location: LocationModel): void{
         this.selectedLocation = location;

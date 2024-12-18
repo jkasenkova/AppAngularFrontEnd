@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MyTeamModel } from 'src/app/models/myTeamModel';
 import { MyTeamService } from 'src/app/services/myTeamService';
@@ -29,7 +29,9 @@ export class MyTeamComponent implements OnInit {
     readonly dialog = inject(MatDialog);
     urlMyTeam: string = "my-team";
     
-    constructor(private myTeamService: MyTeamService){}
+    constructor(
+        private cdr: ChangeDetectorRef,
+        private myTeamService: MyTeamService){}
 
     ngOnInit(): void {
         this.myTeamService.getTeamUsers().subscribe(teams =>{
@@ -37,13 +39,22 @@ export class MyTeamComponent implements OnInit {
         });
     }
 
-    getLetters(teamRotation: MyTeamModel): string {
-        var getLetters = teamRotation.ownerName
-        .split(" ")
-        .map(n => n[0])
-        .join("");
+    ngAfterViewChecked(){
+        this.cdr.detectChanges();
+     }
 
-        return getLetters;
+    getLetters(teamRotation: MyTeamModel): string {
+        if(teamRotation.ownerName){
+            var getLetters = teamRotation.ownerName
+            .split(" ")
+            .map(n => n[0])
+            .join("");
+    
+            return getLetters;
+        }
+       else{
+        return "";
+       }
     }
 
     hadoverInfo(teamRotation: MyTeamModel){
