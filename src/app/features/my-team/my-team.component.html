@@ -4,7 +4,7 @@
 </mat-tab-group>
 
 <div class="container app-my-team">
-    @if(teamRotations){
+    @if(teamRotations.length > 0){
         <div class="row panels-block">
         @for (teamRotation of teamRotations; track teamRotation) {
             <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12">

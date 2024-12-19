@@ -14,7 +14,7 @@ export class MyTeamService {
         private readonly configService: ConfigService) {
     }
 
-    url = this.configService.getRouterUrl() + '/team'; 
+    url = this.configService.getRouterUrl() + '/users'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getTeamUser(teamUserId: Guid): Observable<MyTeamModel> {

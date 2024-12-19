@@ -225,12 +225,12 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) 
             {
+                debugger;
                 if(result.template)
                 {
                     if(result.template.id != null)
                     {
                         var role: RoleModel = {
-                            id: Guid.create(),
                             name: result.name,
                             userType: result.userType,
                             teamId: result.teamId,
@@ -238,8 +238,10 @@ export class UserOrientationComponent implements OnInit {
                             shiftPatternType: result.shiftPatternType,
                             templateId: result.template.id
                         };
-                        this.roleService.createRole(role);
-                        this.roles.push(role);
+
+                        this.roles.push(role)
+                        this.roleService.createRole(role).subscribe(newRole => role = newRole);
+                        
                     }
                     else
                     {
@@ -251,7 +253,6 @@ export class UserOrientationComponent implements OnInit {
                         this.templateService.addTemplate(newTemplate).subscribe(template =>
                         {
                             var role: RoleModel = {
-                                id: Guid.create(),
                                 name: result.name,
                                 userType: result.userType,
                                 teamId: result.teamId,
@@ -259,9 +260,9 @@ export class UserOrientationComponent implements OnInit {
                                 shiftPatternType: result.shiftPatternType,
                                 templateId: template.id
                             };
-                            this.roleService.createRole(role);
-                            this.roles.push(role);
 
+                            this.roles.push(role)
+                            this.roleService.createRole(role).subscribe(newRole => role = newRole);
                             this.updateTemplateService.addItem(template);
                         });
                     }

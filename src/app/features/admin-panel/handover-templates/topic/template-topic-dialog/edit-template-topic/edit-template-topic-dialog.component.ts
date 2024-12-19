@@ -65,7 +65,6 @@ export class EditTemplateTopicDialogComponent {
     }
 
     onSave(): void {
-        debugger;
         if (this.templateTopicForm.valid) {
             this.dialogRef.close(this.templateTopicForm.value);
         }

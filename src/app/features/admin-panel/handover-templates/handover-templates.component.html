@@ -21,7 +21,7 @@
                         (click)="createTemplateDialog()">
                     New
                 </button>
-                @if (isSelectedTemplate){
+                @if (isSelectedTemplate == true){
                     <app-modal-popup></app-modal-popup>
                     @if(!isHandoverTemplate){
                         <button mat-stroked-button class="btnEditAddTemplate" (click)="editTemplateDialog(selectedTemplate)">Edit</button>
@@ -31,7 +31,7 @@
                 }
                 
             </div>
-            @if(selectedTemplate && isSelectedTemplate){
+            @if(selectedTemplate != null && isSelectedTemplate == true){
                 <app-template  [selectedTemplate]="selectedTemplate"></app-template>
             } 
         </mat-tab>

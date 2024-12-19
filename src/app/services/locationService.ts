@@ -15,7 +15,7 @@ export class LocationService {
         private readonly configService: ConfigService) {
     }
  
-    url = this.configService.getRouterUrl() + '/location'; 
+    url = this.configService.getRouterUrl() + '/locations'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createLocation(locationModel: Location): Observable<Location> {

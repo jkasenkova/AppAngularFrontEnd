@@ -1,19 +1,14 @@
-import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { TemplateTopicService } from '../../../../services/templateTopicService';
 import { AgGridAngular } from 'ag-grid-angular';
 import { MatButtonModule } from '@angular/material/button';
 import { TemplateTopic } from 'src/app/models/templateTopic';
-import { ColDef } from "ag-grid-community";
 import { MatDialog } from '@angular/material/dialog';
 import { CreateTemplateTopicDialogComponent } from './template-topic-dialog/create-template-topic/create-template-topic-dialog.component';
-import { EditButtonComponent } from './editButtonComponent';
 import { Template } from 'src/app/models/template';
-import { DeleteButtonComponent } from './deleteButtonComponent';
-import { TemplateService } from 'src/app/services/templateService';
 import { TopicDataModel } from './model/topicDataModel';
 import { Reference } from 'src/app/models/reference';
 import { TemplateReferenceService } from 'src/app/services/templateReferenceService';
-import { DisplayDataRowModel } from './model/displaDataRowModel';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,8 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SectionService } from 'src/app/services/sectionService';
-import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
-import { Section } from 'src/app/models/section';
+import { catchError, map, Observable, of } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { UpdateTemplateService } from 'src/app/services/updateTemplateService';
 import { DeleteTemplateTopicDialogComponent } from './template-topic-dialog/delete-template-topic/delete-template-topic-dialog.component';
@@ -46,7 +40,7 @@ import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopic
     templateUrl: './template-topic.component.html',
     styleUrls: ['./template-topic.component.less']
 })
-export class TemplateTopicComponent implements OnInit, OnChanges{
+export class TemplateTopicComponent implements OnInit{
     public paginationPageSize = 10;
     templatesList: Template[];
     public paginationPageSizeSelector: number[] | boolean = [10, 20, 50, 100];
@@ -60,69 +54,23 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
     searchTemplateTerm: string = '';
     page = 1;
     pageSize = 5;
-    collectionSize: number = 100;
+    collectionSize: number;
     currentRate = 8;
     
-    colDefs: ColDef[] = [
-        {
-            field: "topic",
-            width: 260,
-            resizable: false,
-            sortable: true,
-            cellClass: "line-col"
-        },
-        {
-            field: "reference",
-            width: 260,
-            resizable: false,
-            sortable: true,
-            cellClass: "line-col"
-        },
-        {
-            field: "section",
-            width: 360,
-            sortable: true,
-            resizable: false
-        },
-        {
-            field: "template",
-            width: 360,
-            sortable: true,
-            resizable: false
-        },
-        {
-            field: "actions",
-            headerName: "",
-            width: 100,
-            resizable: false,
-            cellRenderer: EditButtonComponent 
-        },
-        {
-            field: "actions",
-            headerName: "",
-            width: 110,
-            resizable: false,
-            cellRenderer: DeleteButtonComponent 
-        }
-    ];
-
   constructor(
     private updateTemplateTopicService: UpdateTemplateTopicService,
     private templatTopicService: TemplateTopicService,
     private topicService: TemplateTopicService, 
     private sectionService: SectionService,
     private templateReferenceService: TemplateReferenceService,
-    private updateTemplateService: UpdateTemplateService) 
-    {
-        debugger; // need check!!
-        this.templatesList = this.updateTemplateService.getData() as Template [];
-    }
+    private updateTemplateService: UpdateTemplateService) {}
 
   ngOnInit(): void {
     this.topicService.getTemplateTopics().subscribe(topics =>
     {
         this.templateTopicList = topics;
         this.updateTemplateTopicService.setData(topics);
+        this.collectionSize = this.templateTopicList.length;
 
         topics.map(topic => {
             topic.templateReferences.map(reference => {
@@ -130,6 +78,7 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
                 {
                     templateTopicName: topic.name,
                     templateReferenceName: reference.name,
+                    templateDescription: reference.description,
                     templateList: this.displayTemplatesName(topic),
                     sectionId: topic.sectionId,
                     topic: topic
@@ -140,14 +89,11 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
         this.sortData(this.displayDataRow);
         this.collectionSize = this.displayDataRow.length;
     });
- }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['displayDataRow']) {
-            debugger;
-            changes['data'].currentValue
-        }
-    }
+     this.updateTemplateService.arrayChanged.subscribe((newArray) => {
+        this.templatesList = newArray;
+    });
+ }
 
  getSectionName(sectionId: Guid): Observable<string> {
     return this.sectionService.getSectionById(sectionId).pipe(
@@ -253,23 +199,25 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
                             expand: false
                         };
 
-                       
                         this.templateReferenceService.addTemplateReference(newReference)
                         .subscribe(response => 
                         {
-                            debugger;
                             newTopic.templateReferences = [];
                             newTopic.templateReferences.push(response);
+
                             this.updateTemplateTopicService.addItem(newTopic);
                             
                             this.displayDataRow.push(
-                                {
-                                    templateTopicName: topic.name,
-                                    templateReferenceName: newReference.name,
-                                    templateList: this.displayTemplatesName(topic),
-                                    sectionId: topic.sectionId,
-                                    topic: topic
-                                });
+                            {
+                                templateTopicName: topic.name,
+                                templateReferenceName: newReference.name,
+                                templateDescription: newReference.description,
+                                templateList: this.displayTemplatesName(topic),
+                                sectionId: topic.sectionId,
+                                topic: newTopic
+                            });
+
+                            this.collectionSize = this.displayDataRow.length;
                         });
                     });
                 }
@@ -291,12 +239,13 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
                     {
                         templateTopicName: topic.name,
                         templateReferenceName: newReference.name,
+                        templateDescription: newReference.description,
                         templateList: this.displayTemplatesName(topic),
                         sectionId: topic.sectionId,
                         topic: topic
                     });
                 }
-
+                this.collectionSize = this.displayDataRow.length;
                this.sortData(this.displayDataRow);
             }
         });
@@ -314,16 +263,18 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.templatTopicService.deleteTemplateTopicById(result.templateTopicId);
-                this.displayDataRow = this.displayDataRow.filter(t => t.templateTopicId != result.templateTopicId);
-                debugger;
-                this.updateTemplateTopicService.deleteItem(result);
+
+                let index = this.displayDataRow.findIndex(d => d.templateTopicId === result.templateTopicId);
+                this.displayDataRow.splice(index, 1);
+                this.updateTemplateTopicService.deleteItem(data);
+
+                this.collectionSize = this.displayDataRow.length;
             }
         });
     }
 
     editTopic(data: TopicDataModel){
         data.templates = this.templatesList;
-
         const dialogRef = this.dialog.open(EditTemplateTopicDialogComponent, { 
             data: {
                 topicData: data,
@@ -337,12 +288,23 @@ export class TemplateTopicComponent implements OnInit, OnChanges{
             if (result) {
                 debugger;
                 var updTopic = result.topic as TemplateTopic;
-                if(result.selectedSection)
+                if(result.selectedSection != null)
                 {
                     updTopic.sectionId = result.selectedSection.id;
+                    updTopic.enabled = result.selectedSection.id != null ? true : false;
+
+                    this.templatTopicService.updateTopic(updTopic);
                 }
 
-                this.templatTopicService.updateTopic(updTopic);
+                if(updTopic.templateReferences){
+                    updTopic.templateReferences.forEach(reference =>{
+                        reference.enabled = true;
+                        reference.description = result.templateDescription;
+                        this.templateReferenceService.updateTemplateReference(reference);
+                    });
+                }
+
+                this.updateTemplateTopicService.updateItem(updTopic);
             }
         });
     }

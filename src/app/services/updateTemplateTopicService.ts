@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TemplateTopic } from '../models/templateTopic';
 
@@ -8,6 +8,7 @@ import { TemplateTopic } from '../models/templateTopic';
 export class UpdateTemplateTopicService {
   private dataSubject = new BehaviorSubject<TemplateTopic[]>([]);
   data$ = this.dataSubject.asObservable();
+  arrayChanged: EventEmitter<TemplateTopic[]> = new EventEmitter<TemplateTopic[]>();
 
   addItem(newItem: any): void {
     const currentData = this.dataSubject.value;
@@ -23,16 +24,21 @@ export class UpdateTemplateTopicService {
     let index = currentData.indexOf(updatedItem);
     updatedData[index] = updatedItem;
     this.dataSubject.next(updatedData);
+    
+    this.setData(updatedData);
   }
 
   deleteItem(deleteItem: any): void {
     const currentData = this.dataSubject.value;
-    var updatedData = currentData.filter(d => d.id != deleteItem.id);
-    this.dataSubject.next(updatedData);
+    let index = currentData.findIndex(d => d.id === deleteItem.id);
+    currentData.splice(index, 1);
+    this.dataSubject.next(currentData);
+
+    this.setData(currentData);
   }
 
   setData(data: any): void {
-    const currentData = this.dataSubject.value;
+    this.arrayChanged.emit(data);
     this.dataSubject.next(data);
   }
 

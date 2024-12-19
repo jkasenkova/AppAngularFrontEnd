@@ -14,7 +14,7 @@ export class UserService {
         private readonly configService: ConfigService) {
     }
 
-    url = this.configService.getRouterUrl() + '/userManagement';
+    url = this.configService.getRouterUrl() + '/users';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createUser(userModel: UserModel): Observable<UserModel> {

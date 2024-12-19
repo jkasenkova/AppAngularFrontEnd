@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, Input, ChangeDetectorRef, SimpleChanges, OnChanges } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -10,7 +10,7 @@ import { TemplateTopicComponent } from "./topic/template-topic.component";
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionStorageService } from "../../../services/sessionStorageService";
-import { map } from "rxjs";
+import { BehaviorSubject, map } from "rxjs";
 import { CreateTemplateDialogComponent } from "./dialogs/template/create-template/create-template-dialog.component";
 import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
@@ -37,18 +37,27 @@ import { UpdateTemplateService } from "src/app/services/updateTemplateService";
     ]
 })
 
-export class HandoverTemplatesComponent implements OnInit {
+export class HandoverTemplatesComponent implements OnInit, OnChanges {
     templates: Template[];
     selectedIndex = 0;
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
     readonly dialog = inject(MatDialog);
+    private variable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
+        private cdRef : ChangeDetectorRef,
         private templateService: TemplateService,
         private updateTemplateService: UpdateTemplateService,
-        private sessionStorageService: SessionStorageService) {}
+        private sessionStorageService: SessionStorageService) {
+            this.variable$.subscribe((newValue) => {
+                this.isSelectedTemplate = newValue;
+                if(newValue == false){
+                    this.selectedTemplate = null;
+                }
+              });
+        }
   
     ngOnInit(): void {
         this.templateService.getTemplates().subscribe(templates =>
@@ -56,11 +65,30 @@ export class HandoverTemplatesComponent implements OnInit {
             this.templates = templates;
             this.updateTemplateService.setData(templates);
         });
+
+        this.updateTemplateService.arrayChanged.subscribe((newArray) => {
+            this.templates = newArray; 
+        });
     }
 
-    updateTemplateArray(): void {
-        this.templates = [...this.templates];
+    changeValue(value: boolean): void {
+        this.variable$.next(value);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        debugger;
+        if (changes['selectedTemplate']) {
+          this.selectedTemplate = changes['selectedTemplate'].currentValue;
+          debugger;
+        }
       }
+
+
+
+    ngAfterViewChecked() {
+        this.cdRef.detectChanges();
+    }
+
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
@@ -150,7 +178,7 @@ export class HandoverTemplatesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.templateService.deleteTemplateById(template.id);
-                this.templates = this.templates.filter(t=>t.id != template.id);
+                this.templates = this.templates.filter(t => t.id != template.id);
                 this.isSelectedTemplate = false;
                 this.selectedTemplate = null;
             }

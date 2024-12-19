@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
 
     getProfileName(): string {
         this.authFacade.state.subscribe(data => {
-            console.log(data);
+           // console.log(data);
         });
 
         if(Boolean(this.admin.firstName) && Boolean(this.admin.lastName)){

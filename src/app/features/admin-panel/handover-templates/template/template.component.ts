@@ -59,6 +59,7 @@ export class TemplateComponent implements OnInit, OnChanges {
     topicForm: FormGroup;
     enableAddTopicBtn: boolean = true;
     references: Reference[];
+    globalTemplateTopic: TemplateTopic[] = [];
     @Output() sectionOut: Section;
 
     constructor(
@@ -84,10 +85,39 @@ export class TemplateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        if (this.selectedTemplate) {
-            this.isSelectedTemplate = true;
-            this.getTemplateSections(this.selectedTemplate);
-        }
+
+      this.updateTemplateTopicService.arrayChanged.subscribe((newArray) => 
+      {
+        debugger;
+        this.globalTemplateTopic = newArray;
+      });
+
+      if (this.selectedTemplate) {
+          this.isSelectedTemplate = true;
+          this.getTemplateSections(this.selectedTemplate);
+      }
+    }
+
+    filterTopics(templateTopics: TemplateTopic[], sectionId: Guid, template: Template): TemplateTopic[]
+    {
+      let suggestTopics: TemplateTopic[] = [];
+      if(templateTopics.length > 0)
+      {
+          templateTopics.forEach(topic =>
+          {
+            if(topic.sectionId == sectionId){
+              suggestTopics.push(topic);
+            }
+            else if(topic.sectionId == null){
+              suggestTopics.push(topic);
+            }
+            else if(topic.sectionId != null && template.sections.find(s => s.id != topic.sectionId) == null){
+              suggestTopics.push(topic);
+            }
+          });
+      }
+
+      return suggestTopics;
     }
 
     getTemplateSections(template: Template): void{
@@ -95,8 +125,9 @@ export class TemplateComponent implements OnInit, OnChanges {
       
         this.sections.forEach(section => 
         {
-          var allTopics = this.updateTemplateTopicService.getData() as TemplateTopic[];
-          section.sectionTopics = allTopics.filter(t => t.sectionId == section.id);
+          this.globalTemplateTopic = this.updateTemplateTopicService.getData() as TemplateTopic[];
+
+          section.sectionTopics = this.filterTopics(this.globalTemplateTopic, section.id, template);
 
           if(section.sortTopicType == 1)
           {
