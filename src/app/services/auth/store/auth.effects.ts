@@ -75,7 +75,8 @@ export class AuthEffects {
           id: this.jwtTokenService.getUserId(),
           accountId: this.jwtTokenService.getAccountId(),
           role: this.jwtTokenService.getRole(),
-          userName: this.jwtTokenService.getUserName(),
+          firstName: this.jwtTokenService.getFirstName(),
+          lastName: this.jwtTokenService.getLastName(),
           email: this.jwtTokenService.getEmail(),
         };
 

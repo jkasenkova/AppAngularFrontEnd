@@ -17,6 +17,7 @@ import { UserModel } from './models/user';
 import { Guid } from 'guid-typescript';
 import { FooterComponent } from './features/footer/footer.component';
 import { AuthFacade } from './services/auth/store/auth.facade';
+import { AuthUser } from './services/auth/store/auth.models';
 
 @Component({
     selector: 'app-root',
@@ -40,7 +41,7 @@ export class AppComponent implements OnInit {
     userName: string;
     //readonly dialog = inject(MatDialog);
     isAdmin: boolean;
-    admin: UserModel = new UserModel();
+    user: AuthUser;
     isAuth: boolean;
 
     constructor(
@@ -56,6 +57,10 @@ export class AppComponent implements OnInit {
             this.isAdmin = isAdmin;
         });
 
+        this.authFacade.state.subscribe(data => {
+            this.user = data.authUser;
+        });
+
         if(!this.isAuth) {
             this.router.navigate(['/sign-in']);
         }
@@ -66,28 +71,28 @@ export class AppComponent implements OnInit {
             console.log(data);
         });
 
-        if(Boolean(this.admin.firstName) && Boolean(this.admin.lastName)){
-            var getLetters = [this.admin.firstName[0] + this.admin.lastName[0]].join("");
+        if(Boolean(this.user.firstName) && Boolean(this.user.lastName)){
+            var getLetters = [this.user.firstName[0] + this.user.lastName[0]].join("");
             return getLetters;
         }
         return "";
     }
 
     getProfileDialog(){
-        const dialogRef = this.dialog.open(ProfileDialogComponent, { 
-            data: this.admin
+        /*const dialogRef = this.dialog.open(ProfileDialogComponent, { 
+            data: this.user
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
         
             }
-        });
+        });*/
     }
 
     logOut(){
         this.isAuth = false;
-        //this.router.navigate(['/sign-in']);
+        this.router.navigate(['/sign-in']);
     }
 }
 

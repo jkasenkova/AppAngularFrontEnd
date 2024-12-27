@@ -7,9 +7,8 @@ import { Guid } from "guid-typescript";
 
 @Injectable({
     providedIn: 'root'
-  })
-  export class SubscriptionService {
-    private baseUrl: string;
+})
+export class SubscriptionService {
     constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
         this.baseUrl = baseUrl;
     }

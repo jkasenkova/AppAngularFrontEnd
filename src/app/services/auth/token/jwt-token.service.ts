@@ -13,6 +13,10 @@ export class JWTTokenService {
     constructor() {
     }
 
+    isTokenSet(): boolean {
+      return this.jwtToken ? true : false;
+    }
+
     setToken(token: string) {
       if (token) {
         this.jwtToken = token;
@@ -21,7 +25,7 @@ export class JWTTokenService {
 
     decodeToken() {
       if (this.jwtToken) {
-      this.decodedToken = jwt_decode.jwtDecode(this.jwtToken);
+        this.decodedToken = jwt_decode.jwtDecode(this.jwtToken);
       }
     }
 
@@ -44,9 +48,9 @@ export class JWTTokenService {
         return this.decodedToken ? this.decodedToken['email'] : null;
     }
 
-    getUserName(): string {
+    getLastName(): string {
         this.decodeToken();
-        return this.decodedToken ? this.decodedToken['userName'] : null;
+        return this.decodedToken ? this.decodedToken['LastName'] : null;
     }
 
     getUserId(): string {
@@ -56,7 +60,17 @@ export class JWTTokenService {
 
     getAccountId(): string {
         this.decodeToken();
-        return this.decodedToken ? this.decodedToken['accountId'] : null;
+        return this.decodedToken ? this.decodedToken['AccountId'] : null;
+    }
+
+    getFirstName(): string {
+      this.decodeToken();
+      return this.decodedToken ? this.decodedToken['FirstName'] : null;
+    }
+
+    getTimeZone(): string {
+      this.decodeToken();
+      return this.decodedToken ? this.decodedToken['TimeZone'] : null;
     }
 
     isTokenExpired(): boolean {

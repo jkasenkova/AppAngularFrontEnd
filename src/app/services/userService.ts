@@ -10,7 +10,6 @@ import { UserModel } from "../models/user";
     providedIn: 'root'
 })
 export class UserService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient,
         private readonly configService: ConfigService) {

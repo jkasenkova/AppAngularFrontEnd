@@ -9,7 +9,6 @@ import { Guid } from "guid-typescript";
     providedIn: 'root'
 })
 export class SectionService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient,
         private readonly configService: ConfigService) {

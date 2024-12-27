@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
 import * as AuthActions from './auth.actions';
-import { SignInActions, RefreshTokenActions, GetAuthUserActions, LoginActions } from './auth.actions';
+import { SignInActions, RefreshTokenActions, GetAuthUserActions, LoginActions, TokenActions } from './auth.actions';
 import { AuthState, TokenStatus, AuthUser, AUTH_FEATURE_KEY } from './auth.models';
 
 export const initialState: AuthState = {
@@ -9,8 +9,9 @@ export const initialState: AuthState = {
   authUser: {
     id: null,
     accountId: null,
-    userName: null,
-    email: null,
+    firstName: '',
+    lastName: '',
+    email: '',
     role: '',
   },
   accessTokenStatus: TokenStatus.PENDING,
@@ -91,6 +92,18 @@ export const authReducer = createReducer(
     GetAuthUserActions.request,
     (state, action): AuthState => ({
       ...state,
+      authUser: action.user,
+    })
+  ),
+
+  on(
+    TokenActions.request,
+    (state, action): AuthState => ({
+      ...state,
+      isSignedIn: true,
+      isLoadingLogin: false,
+      accessTokenStatus: TokenStatus.VALID,
+      refreshTokenStatus: TokenStatus.VALID,
       authUser: action.user,
     })
   ),

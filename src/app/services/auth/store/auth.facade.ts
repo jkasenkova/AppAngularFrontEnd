@@ -2,9 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import * as AuthActions from './auth.actions';
-import { SignInActions, GetAuthUserActions, LoginActions } from './auth.actions';
+import { SignInActions, GetAuthUserActions, LoginActions, TokenActions } from './auth.actions';
 import * as AuthSelectors from './auth.selectors';
-import { AuthState, AuthPartialState } from './auth.models';
+import { AuthState, AuthPartialState, AuthUser, TokenStatus } from './auth.models';
+import { TokenStorageService } from '../token/token-storage.service';
+import { JWTTokenService } from '../token/jwt-token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +14,28 @@ import { AuthState, AuthPartialState } from './auth.models';
 export class AuthFacade {
 
   constructor(
-    private store: Store<AuthPartialState>
-  ) {}
+    private store: Store<AuthPartialState>,
+    private readonly tokenStorage: TokenStorageService,
+    private readonly jwtTokenService: JWTTokenService,
+  ) {
+    // const token = this.tokenStorage.getAccessToken();
+
+    // if(token && !this.jwtTokenService.isTokenSet()) {
+    //   this.jwtTokenService.setToken(token);
+    //   this.jwtTokenService.decodeToken();
+
+    //   const authUser: AuthUser = {
+    //     id: this.jwtTokenService.getUserId(),
+    //     accountId: this.jwtTokenService.getAccountId(),
+    //     role: this.jwtTokenService.getRole(),
+    //     firstName: this.jwtTokenService.getFirstName(),
+    //     lastName: this.jwtTokenService.getLastName(),
+    //     email: this.jwtTokenService.getEmail(),
+    //   };
+  
+    //   this.store.dispatch(TokenActions.request({ user: authUser }));
+    // }
+  }
   
   public readonly state = this.store.select(AuthSelectors.selectState);
   public readonly isLoggedIn$ = this.store.select(AuthSelectors.selectIsSignedIn);

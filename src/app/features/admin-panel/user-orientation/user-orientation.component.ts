@@ -22,6 +22,8 @@ import { TeamService } from "src/app/services/teamServices";
 import { Location } from "src/app/models/location";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
+import { Observable, of, pipe} from 'rxjs';
+import { map, filter, tap } from 'rxjs/operators'
 
 @Component({
     selector: 'app-user-orientation',
@@ -45,9 +47,7 @@ export class UserOrientationComponent implements OnInit {
         private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locationService.getLocations().subscribe(locations => {
-            this.locations = locations.sort((a, b) => a.name.localeCompare(b.name));
-        });
+        this.locationService.getLocations().pipe(map((x: LocationModel[]) => x)).subscribe(x => this.locations = x);
     }
 
     selectLocation(location:LocationModel){

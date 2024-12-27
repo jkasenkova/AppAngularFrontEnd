@@ -9,13 +9,12 @@ import { HandoverSection } from "../models/handoverSection";
     providedIn: 'root'
 })
 export class HandoverSectionService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient, 
         private readonly configService: ConfigService) {
     }
 
-    url = this.configService.getRouterUrl() + '/section';
+    private readonly url = this.configService.getRouterUrl() + '/section';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createSection(section: HandoverSection): Observable<HandoverSection> {

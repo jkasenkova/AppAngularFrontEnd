@@ -9,9 +9,7 @@ import { Guid } from 'guid-typescript';
     providedIn: 'root'
 })
 export class CommentsService {
-    private baseUrl: string;
-    constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(private http: HttpClient) {
     }
 
     url = environment.routerUrl + '/handover/comments';

@@ -9,7 +9,6 @@ import { RoleModel } from "../models/role";
     providedIn: 'root'
 })
 export class RoleService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient,
         private readonly configService: ConfigService) {

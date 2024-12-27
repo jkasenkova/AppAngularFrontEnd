@@ -43,3 +43,11 @@ export const RefreshTokenActions = createActionGroup({
     failure: emptyProps(),
   }
 });
+
+// Token
+export const TokenActions = createActionGroup({
+  source: '[App] Token',
+  events: {
+    request: props<{ user: AuthUser }>(),
+  }
+});

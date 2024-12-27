@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  routerUrl: "",
+  routerUrl: "https://rw-dev-gateway.azurewebsites.net/api",
 
   appVersion: "0.0.0",
 

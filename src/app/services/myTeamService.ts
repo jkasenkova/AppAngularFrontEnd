@@ -9,7 +9,6 @@ import { MyTeamModel } from "../models/myTeamModel";
     providedIn: 'root'
 })
 export class MyTeamService {
-    private baseUrl: string;
     constructor(
         private http: HttpClient,
         private readonly configService: ConfigService) {
