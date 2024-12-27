@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
-import { Section } from '../models/section';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
 import { UserModel } from "../models/user";

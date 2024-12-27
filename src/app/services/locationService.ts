@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
 import { Guid } from "guid-typescript";
@@ -14,7 +14,7 @@ export class LocationService {
         private http: HttpClient,
         private readonly configService: ConfigService) {
     }
-
+ 
     url = this.configService.getRouterUrl() + '/locations'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 

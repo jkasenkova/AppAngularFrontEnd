@@ -3,77 +3,45 @@ import { Observable } from 'rxjs';
 import { TemplateTopic } from '../models/templateTopic';
 import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Reference } from '../models/reference';
-import { AddTopic } from '../models/addTopic';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplateTopicService {
+  
+  constructor(private http: HttpClient,
+    private readonly configService: ConfigService
+  ) { }
 
-  url = this.configService.getRouterUrl() + '/topic';
+  url = this.configService.getRouterUrl() + '/templateTopic';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
-  constructor(
-    private http: HttpClient,
-    private readonly configService: ConfigService) { }
 
-  getTemplateTopicList(): Observable<TemplateTopic[]> {
-    return this.http.get<TemplateTopic[]>(this.url);
+  getTemplateTopicsBySectionId(sectionId?: Guid): Observable<TemplateTopic[]> {
+    return this.http.get<TemplateTopic[]>(this.url + '/' + sectionId + '/topics');
   }
 
-  getReferenceList(): Observable<Reference[]> {
-    return this.http.get<Reference[]>(this.url + '/getAllReferences');
+  getTemplateTopics(): Observable<TemplateTopic[]> {
+    return this.http.get<TemplateTopic[]>(this.url);
   }
 
   addTemplateTopic(topic: TemplateTopic): Observable<TemplateTopic> {
     return this.http.post<TemplateTopic>(this.url, topic, this.httpHeaders);
   }
 
-  addNewTopicReference(topic: AddTopic): Observable<TemplateTopic> {
-    return this.http.post<TemplateTopic>(this.url + '/addNewTopicReference', topic, this.httpHeaders);
+  updateTopic(topic: TemplateTopic): void {
+     this.http.patch(this.url, topic, this.httpHeaders).subscribe();
   }
 
-  updateTopic(topic: TemplateTopic): Observable<TemplateTopic> {
-    return this.http.post<TemplateTopic>(this.url + '/updateTopic', topic, this.httpHeaders);
+  deleteTemplateTopicById(id: string): void {
+    this.http.delete<string>(this.url + '/' + id).subscribe();
   }
 
-  deleteTemplateTopicById(id: string): Observable<string> {
-    return this.http.delete<string>(this.url + '/' + id);
+  updateOrderTopics(topics: TemplateTopic[]): void{
+    this.http.post(this.url + '/updateOrder', topics, this.httpHeaders).subscribe();
   }
 
-  getTopicsBySectionId(id: string): Observable<TemplateTopic[]> {
-    return this.http.get<TemplateTopic[]>(this.url + '/getTopicsBySectionId/' + id);
-  }
-
-  getTemplateTopicById(id: string): Observable<TemplateTopic> {
-    return this.http.get<TemplateTopic>(this.url + '/getTopic/' + id);
-  }
-
-  getReferenceById(id: string): Observable<Reference> {
-    return this.http.get<Reference>(this.url + '/getReferenceById/' + id);
-  }
-
-  updateReference(reference: Reference): Observable<Reference> {
-    return this.http.post<Reference>(this.url + '/updateReference', reference, this.httpHeaders);
-  }
-
-  addReference(reference: Reference): Observable<Reference> {
-    return this.http.post<Reference>(this.url + '/addReference', reference, this.httpHeaders);
-  }
-
-  getAllReferencesByTopic(topicId: string): Observable<Reference[]> {
-    return this.http.get<Reference[]>(this.url + '/getAllReferencesByTopic/' + topicId);
-  }
-
-  updateTopics(topics: TemplateTopic[]) {
-    this.http.post(this.url + '/updateTopics', topics, this.httpHeaders).subscribe();
-  }
-
-  updateReferences(references: Reference[]) {
-    this.http.post(this.url + '/updateReferences', references, this.httpHeaders).subscribe();
-  }
-
-  updateReferencesByTemplateId(templateId: string): Observable<Reference[]> {
-    return this.http.post<Reference[]>(this.url + '/updateReferencesByTemplateId/' + templateId, this.httpHeaders);
+  getTemplateTopicById(id: Guid): Observable<TemplateTopic> {
+    return this.http.get<TemplateTopic>(this.url + '/' + id);
   }
 }

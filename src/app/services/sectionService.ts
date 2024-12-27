@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Section } from '../models/section';
 import { Observable } from "rxjs";
@@ -22,16 +22,7 @@ export class SectionService {
     }
 
     updateSection(section: Section) {
-        this.http.patch<Section>(this.url, section, this.httpHeaders).subscribe({
-            next: (response) => {
-                debugger;
-              console.log('Resource updated successfully:', response);
-            },
-            error: (err) => {
-                debugger;
-              console.error('Error updating resource:', err);
-            },
-        });
+        this.http.patch<Section>(this.url, section, this.httpHeaders).subscribe();
     }
 
     deleteSection(id: Guid) {
@@ -39,6 +30,11 @@ export class SectionService {
     }
 
     getSections(templateId: Guid): Observable<Section[]> {
-        return this.http.get<Section[]>(this.url + '/' + templateId);
+        return this.http.get<Section[]>(this.url + '/' + templateId + '/sections');
+    }
+
+    getSectionById(id: Guid): Observable<Section> {
+        debugger;
+        return this.http.get<Section>(this.url + '/' + id);
     }
 }

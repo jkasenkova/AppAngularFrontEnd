@@ -1,18 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { Handover } from '../models/handover';
 import { Guid } from 'guid-typescript';
+import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HandoverService {
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient, 
+        private readonly configService: ConfigService) {
     }
 
-    url = environment.routerUrl + '/handover';
+    url = this.configService.getRouterUrl() + '/handover';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getHandovers(): Observable<Handover[]> {

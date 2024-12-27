@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject } from "@angular/core";
+import { Component, OnInit, Output, ViewEncapsulation, CUSTOM_ELEMENTS_SCHEMA, inject, Input, ChangeDetectorRef, SimpleChanges, OnChanges } from "@angular/core";
 import { Template } from "../../../models/template";
 import { TemplateService } from "../../../services/templateService";
 import { MatTabChangeEvent } from "@angular/material/tabs";
@@ -10,12 +10,13 @@ import { TemplateTopicComponent } from "./topic/template-topic.component";
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionStorageService } from "../../../services/sessionStorageService";
-import { map } from "rxjs";
+import { BehaviorSubject, map } from "rxjs";
 import { CreateTemplateDialogComponent } from "./dialogs/template/create-template/create-template-dialog.component";
 import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
+import { UpdateTemplateService } from "src/app/services/updateTemplateService";
 
 @Component({
     selector: 'app-handover-templates',
@@ -36,32 +37,64 @@ import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/co
     ]
 })
 
-export class HandoverTemplatesComponent implements OnInit {
+export class HandoverTemplatesComponent implements OnInit, OnChanges {
     templates: Template[];
-    template: Template;
     selectedIndex = 0;
     isSelectedTemplate: boolean = false;
     isHandoverTemplate: boolean = false;
     @Output() selectedTemplate: Template;
     readonly dialog = inject(MatDialog);
+    private variable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
+        private cdRef : ChangeDetectorRef,
         private templateService: TemplateService,
-        private sessionStorageService: SessionStorageService) 
-        {
+        private updateTemplateService: UpdateTemplateService,
+        private sessionStorageService: SessionStorageService) {
+            this.variable$.subscribe((newValue) => {
+                this.isSelectedTemplate = newValue;
+                if(newValue == false){
+                    this.selectedTemplate = null;
+                }
+              });
         }
-
+  
     ngOnInit(): void {
         this.templateService.getTemplates().subscribe(templates =>
-            this.templates = templates
-        );
+        {
+            this.templates = templates;
+            this.updateTemplateService.setData(templates);
+        });
+
+        this.updateTemplateService.arrayChanged.subscribe((newArray) => {
+            this.templates = newArray; 
+        });
     }
+
+    changeValue(value: boolean): void {
+        this.variable$.next(value);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        debugger;
+        if (changes['selectedTemplate']) {
+          this.selectedTemplate = changes['selectedTemplate'].currentValue;
+          debugger;
+        }
+      }
+
+
+
+    ngAfterViewChecked() {
+        this.cdRef.detectChanges();
+    }
+
 
     getTemplateById(id: Guid): void {
         this.templateService.getTemplates().pipe(
             map(templates => templates.find(template => template.id === id))
         ).subscribe(template => {
-            this.template = template;
+            this.selectedTemplate = template;
             this.isSelectedTemplate = true;
         });
     }
@@ -74,11 +107,9 @@ export class HandoverTemplatesComponent implements OnInit {
 
     onSelectTemplate(event: MatSelectChange): void {
         if (event.value != undefined) {
-            this.sessionStorageService.setItem('templateId', event.value.templateId);
             this.isSelectedTemplate = true;
-            this.template = event.value;
             this.selectedTemplate = event.value;
-            this.isHandoverTemplate =  this.template.isHandover;
+            this.isHandoverTemplate =  this.selectedTemplate.isHandover;
         }
         else {
             this.isSelectedTemplate = false;
@@ -108,7 +139,6 @@ export class HandoverTemplatesComponent implements OnInit {
                 {
                     this.selectedTemplate = newTemplate;
                     this.isSelectedTemplate = true;
-                    this.template = newTemplate;
                     this.templates.push(newTemplate);
                     this.templates = this.templates.sort((a, b) => a.name.localeCompare(b.name));
                 });
@@ -126,7 +156,6 @@ export class HandoverTemplatesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.templateService.updateTemplate(result);
-                this.template = result;
                 this.selectedTemplate = result;
                 let updateTemplate = this.templates.find(l=> l.id == result.id);
                 let index = this.templates.indexOf(updateTemplate);
@@ -140,8 +169,8 @@ export class HandoverTemplatesComponent implements OnInit {
         {
             data: 
             { 
-                templateId: template.id, 
-                templateName: template.name 
+                id: template.id, 
+                name: template.name 
             },
             panelClass: 'template-dialog'
         });
@@ -149,9 +178,8 @@ export class HandoverTemplatesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.templateService.deleteTemplateById(template.id);
-                this.templates = this.templates.filter(t=>t.id != template.id);
+                this.templates = this.templates.filter(t => t.id != template.id);
                 this.isSelectedTemplate = false;
-                this.template = null;
                 this.selectedTemplate = null;
             }
         });

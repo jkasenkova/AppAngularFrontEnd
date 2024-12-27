@@ -1,18 +1,21 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ReportCommentsModel } from '../models/reportCommentsModel';
 import { Guid } from 'guid-typescript';
+import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CommentsService {
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private readonly configService: ConfigService) {
     }
 
-    url = environment.routerUrl + '/handover/comments';
+    url = this.configService.getRouterUrl() + '/handover/comments';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     getCommentsByHandoverId(handoverId: Guid): Observable<ReportCommentsModel[]> {

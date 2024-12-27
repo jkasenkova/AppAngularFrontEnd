@@ -118,7 +118,7 @@ export class MyHandoverComponent implements OnInit {
             });
         }
       
-      if(this.owner.isActiveRotation && this.owner.curentRotationId) {
+      if(this.owner && this.owner.curentRotationId) {
             this.handoverService.getHandoverById(this.owner.curentRotationId).subscribe(rotation =>
             {
                 this.handover = rotation;
@@ -129,10 +129,12 @@ export class MyHandoverComponent implements OnInit {
             });
       }
 
-      this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
-        this.template = template;
-        this.handover = this.initilizeTemplateSection(this.template, this.handover);
-    });
+      if(this.ownerRole){
+        this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
+            this.template = template;
+            this.handover = this.initilizeTemplateSection(this.template, this.handover);
+        });
+      }
 
         this.myTeamService.getTeamUsers().subscribe(teams => {
             this.teamMembers = teams;
@@ -149,7 +151,7 @@ export class MyHandoverComponent implements OnInit {
                 handoverId: handover.handoverId,
                 iHandoverSection: false,
                 sectionType: section.type,
-                sortType: section.sortType,
+                sortType: section.sortTopicType,
                 addBtnShow: true,
                 sortReferenceType: section.sortReferenceType,
                 templateSection: true,
@@ -228,7 +230,7 @@ export class MyHandoverComponent implements OnInit {
     initilizeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
 
         let rotationReferences: RotationReference[] = [];
-        templateTopic.references.filter(t => t.enabled).forEach(reference => {
+        templateTopic.templateReferences.filter(t => t.enabled).forEach(reference => {
 
             var convertedReference = { 
                 id: Guid.create(),

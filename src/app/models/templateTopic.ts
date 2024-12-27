@@ -5,7 +5,7 @@ import { Guid } from "guid-typescript";
 export class TemplateTopic {
     public section?: Section;
     public sectionId?: Guid;
-    public id: Guid;
+    public id?: Guid;
     public name: string;
     public enabled: boolean;
     public index: number;
@@ -14,5 +14,5 @@ export class TemplateTopic {
     public parentTopicId?: Guid;
     public parentTopic?: TemplateTopic;
     public childTopics?: TemplateTopic[] = [];
-    public references: Reference[] = [];
+    public templateReferences: Reference[] = [];
 }

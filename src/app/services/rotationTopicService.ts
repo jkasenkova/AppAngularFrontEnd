@@ -11,12 +11,12 @@ import { Guid } from 'guid-typescript';
   providedIn: 'root'
 })
 export class RotationTopicService {
-
-  url = this.configService.getRouterUrl() + '/topic';
-  httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
   constructor(
     private http: HttpClient,
     private readonly configService: ConfigService) { }
+
+  url = this.configService.getRouterUrl() + '/topic';
+  httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
   getRotationTopicList(): Observable<RotationTopic[]> {
     return this.http.get<RotationTopic[]>(this.url);

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit } from "@angular/core";
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,12 +24,14 @@ import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
 import { Observable, of, pipe} from 'rxjs';
 import { map, filter, tap } from 'rxjs/operators'
+import { UpdateTemplateService } from "src/app/services/updateTemplateService";
 
 @Component({
     selector: 'app-user-orientation',
     standalone: true,
     imports: [NgbTooltipModule, MatButtonModule],
     templateUrl: './user-orientation.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./user-orientation.component.less']
 })
 export class UserOrientationComponent implements OnInit {
@@ -41,6 +43,8 @@ export class UserOrientationComponent implements OnInit {
     roles: RoleModel[];
 
     constructor(
+        private cdr: ChangeDetectorRef,
+        private updateTemplateService: UpdateTemplateService,
         private locationService: LocationService,
         private teamService: TeamService,
         private templateService: TemplateService,
@@ -50,24 +54,28 @@ export class UserOrientationComponent implements OnInit {
         this.locationService.getLocations().pipe(map((x: LocationModel[]) => x)).subscribe(x => this.locations = x);
     }
 
-    selectLocation(location:LocationModel){
+    ngAfterViewChecked(){
+        this.cdr.detectChanges();
+     }
+
+    selectLocation(location: LocationModel): void{
         this.selectedLocation = location;
         this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
         {
-                this.teams = teams.sort((a, b) => a.name.localeCompare(b.name));
-                this.teams = this.teams.filter(t => t.locationId == location.id);
+            this.teams = teams.filter(t => t.locationId == location.id)
+                                    .sort((a, b) => a.name.localeCompare(b.name));
         });
         this.roles = [];
     }
 
-    selectTeam(team: Team){
+    selectTeam(team: Team): void{
         this.selectedTeam = team;
-
         this.teamService.getRolesByTeamId(team.id).subscribe(roles => 
         {
             this.roles = roles.sort((a, b) => a.name.localeCompare(b.name));
         });
     }
+    ///---------------Location------------------------------
 
     addLocation() {
         const dialogRef = this.dialog.open(CreateLocationDialogComponent);
@@ -142,6 +150,7 @@ export class UserOrientationComponent implements OnInit {
         });
     }
 
+    //-----------------------Team----------------------------
     addTeam(locationId: Guid){
         const dialogRef = this.dialog.open(CreateTeamDialogComponent, { 
             data: { 
@@ -201,7 +210,11 @@ export class UserOrientationComponent implements OnInit {
         });
     }
 
-    addRole(teamId: Guid, locationId: Guid){
+    ///----------------Role---------------------------------------
+
+    //add to template if create new (call ngChange() on template page)
+
+    addRole(teamId: Guid){
         const dialogRef = this.dialog.open(CreateRoleDialogComponent, { 
             data: { 
                 teamId: teamId,
@@ -210,45 +223,53 @@ export class UserOrientationComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                var templateId: any;
-                if(result.template){
-                    if(result.template.id != null){
-                        templateId = result.template.id;
-                    }else{
-                        var id = Guid.create();
-                        templateId = this.createTemplate(result.template, id);
+            if (result) 
+            {
+                debugger;
+                if(result.template)
+                {
+                    if(result.template.id != null)
+                    {
+                        var role: RoleModel = {
+                            name: result.name,
+                            userType: result.userType,
+                            teamId: result.teamId,
+                            rotationType: result.rotationType,
+                            shiftPatternType: result.shiftPatternType,
+                            templateId: result.template.id
+                        };
+
+                        this.roles.push(role)
+                        this.roleService.createRole(role).subscribe(newRole => role = newRole);
+                        
+                    }
+                    else
+                    {
+                        var newTemplate: Template = {
+                            name: result.template,
+                            isHandover: false
+                        };
+                
+                        this.templateService.addTemplate(newTemplate).subscribe(template =>
+                        {
+                            var role: RoleModel = {
+                                name: result.name,
+                                userType: result.userType,
+                                teamId: result.teamId,
+                                rotationType: result.rotationType,
+                                shiftPatternType: result.shiftPatternType,
+                                templateId: template.id
+                            };
+
+                            this.roles.push(role)
+                            this.roleService.createRole(role).subscribe(newRole => role = newRole);
+                            this.updateTemplateService.addItem(template);
+                        });
                     }
                 }
-
-                var role: RoleModel = {
-                    id: Guid.create(),
-                    name: result.name,
-                    userType: result.userType,
-                    teamId: result.teamId,
-                    rotationType: result.rotationType,
-                    shiftPatternType: result.shiftPatternType,
-                    templateId: templateId
-                };
-
-                this.roleService.createRole(role);
-                this.roles.push(role);
                 this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
             }
         });
-    }
-
-    createTemplate(nameTemplate: string, id: any): Guid{
-
-        var newTemplate: Template = {
-            name: nameTemplate,
-            id: id.value,
-            isHandover: false
-        };
-
-        this.templateService.addTemplate(newTemplate);
-
-        return newTemplate.id;
     }
 
     editRole(role: RoleModel){
@@ -265,31 +286,42 @@ export class UserOrientationComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                var templateId: any;
-
-                if(result.template.id != null){
-                    templateId = result.template.id;
-                }else{
-                    var id = Guid.create();
-                    templateId = this.createTemplate(result.template, id);
-                }
-                
-                var updRole: RoleModel = {
+            if (result) 
+            {
+                var role: RoleModel = {
                     id: result.id,
                     name: result.name,
                     userType: result.userType,
                     teamId: result.teamId,
                     rotationType: result.rotationType,
-                    shiftPatternType: result.shiftPatternType,
-                    templateId: templateId
+                    shiftPatternType: result.shiftPatternType
                 };
 
-                this.roleService.updateRole(updRole);
+                if(result.template)
+                {
+                    if(result.template.id != null)
+                    {
+                        role.templateId = result.template.id;
+                        this.roleService.updateRole(role);
+                    }
+                    else
+                    {
+                        var newTemplate: Template = {
+                            name: result.template,
+                            isHandover: false
+                        };
+                    
+                        this.templateService.addTemplate(newTemplate).subscribe(template => {
+                            role.templateId = template.id;
+                            this.roleService.updateRole(role);
+                        });
+                    }
+                }
 
+                
                 let updateRole = this.roles.find(t=> t.id == role.id);
                 let index = this.roles.indexOf(updateRole);
-                this.roles[index] = updRole;
+                this.roles[index] = role;
 
                 this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
             }

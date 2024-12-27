@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
         private readonly dialog: MatDialog) {}
 
     ngOnInit(): void {
-        this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
+         this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
             this.isAuth = isLoggedIn;   
         });
         this.authFacade.isAdmin$.subscribe(isAdmin => {
@@ -63,12 +63,12 @@ export class AppComponent implements OnInit {
 
         if(!this.isAuth) {
             this.router.navigate(['/sign-in']);
-        }
+        } 
     }
 
     getProfileName(): string {
         this.authFacade.state.subscribe(data => {
-            console.log(data);
+           // console.log(data);
         });
 
         if(Boolean(this.user.firstName) && Boolean(this.user.lastName)){

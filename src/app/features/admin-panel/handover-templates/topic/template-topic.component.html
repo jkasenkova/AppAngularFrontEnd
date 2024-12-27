@@ -1,9 +1,9 @@
-<div class="app-template-topic container">
+<!-- <div class="app-template-topic container">
     <div class="button-row">
         <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
     </div>
     <ag-grid-angular class="ag-theme-quartz" #agGrid
-                     [rowData]="topicsData"
+                     [rowData]="rowData"
                      [columnDefs]="colDefs"
                      [pagination]="true"
                      [detailRowAutoHeight]="true"
@@ -12,4 +12,94 @@
                      [alwaysShowHorizontalScroll]="false"
                      [overlayNoRowsTemplate]="noRowsDisplay">
     </ag-grid-angular> 
+</div> -->
+
+<div class="app-template-topic container">
+    <div class="button-row">
+        <button mat-stroked-button class="btn-add-topic" (click)="addTemplateTopic()">Add Topic</button>
+    </div>
+
+   <table class="table table-hover">
+        <thead>
+          <tr class="panel-head">
+            <th scope="col" sortable="name">Topic</th>
+            <th scope="col" sortable="reference">Reference</th>
+            <th scope="col" sortable="section">Template</th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field class="search-field" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Search"
+                  [(ngModel)]="searchTopicTerm"
+                  (input)="searchTopic()"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </td>
+            <td>   
+              <mat-form-field class="search-field" appearance="outline">
+              <input
+                matInput
+                type="text"
+                placeholder="Search"
+                [(ngModel)]="searchRefTerm"
+                (input)="searchReference()"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field></td>
+            <td>
+              <mat-form-field class="search-field" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Search"
+                  [(ngModel)]="searchTemplateTerm"
+                  (input)="searchTemlate()"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+        @if(displayDataRow.length > 0){
+          <ng-container *ngFor="let data of displayDataRow; index as i">
+            <tr [style.display]="i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null">
+              <td>{{ data.templateTopicName }}</td>
+              <td>{{ data.templateReferenceName }}</td>
+              <td>{{ data.templateList}}</td>
+              <td>
+                <button mat-stroked-button class="btn-delete-topic" (click)="deleteTopic(data)">Delete</button>
+              </td>
+              <td>
+                <button mat-stroked-button class="btn-edit-topic" (click)="editTopic(data)">Edit</button>
+              </td>
+            </tr>
+          </ng-container>
+        }
+        @else{
+          <tr>
+            <td colspan="5" class="empty-message">
+              <div class="empty-body">No display topics to show</div>
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    
+      <ngb-pagination
+        [collectionSize]="collectionSize"
+        [(page)]="page"
+        [maxSize]="5"
+        [boundaryLinks]="true"
+        [pageSize]="pageSize"
+        class="d-flex justify-content-center"
+      ></ngb-pagination>
 </div>

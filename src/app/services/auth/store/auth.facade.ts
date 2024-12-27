@@ -1,10 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-
 import * as AuthActions from './auth.actions';
-import { SignInActions, GetAuthUserActions, LoginActions, TokenActions } from './auth.actions';
+import { LoginActions, TokenActions } from './auth.actions';
 import * as AuthSelectors from './auth.selectors';
-import { AuthState, AuthPartialState, AuthUser, TokenStatus } from './auth.models';
+import { AuthPartialState, AuthUser, TokenStatus } from './auth.models';
 import { TokenStorageService } from '../token/token-storage.service';
 import { JWTTokenService } from '../token/jwt-token.service';
 

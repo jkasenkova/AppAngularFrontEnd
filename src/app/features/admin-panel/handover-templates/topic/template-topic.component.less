@@ -8,8 +8,15 @@
     height: auto;
     min-height: calc(75vh - 100px);
 
+
+    .form-inline{
+        float: left;
+        margin-bottom: 5px;
+    }
+
     .button-row{
         padding: 5px 5px 5px 0px;
+        float: left;
 
         .btn-add-topic{
             overflow: hidden;
@@ -41,8 +48,57 @@
         background: #ccc;
         justify-content: space-between;
     }
-}
 
+     .table{
+       // border: 1px solid #b4b4b4;
+        border-radius: 10px;
+
+        .panel-head{
+            border-bottom: solid 4px #035A7A;
+        }
+        .empty-body{
+            background-color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        thead{
+            border-radius: 10px;
+            tr:first-child th:first-child { 
+                border-top-left-radius: 10px; 
+            }
+            tr:first-child th:last-child { 
+                border-top-right-radius: 10px; 
+            }
+        }
+       
+
+        .search-field ::ng-deep .mat-mdc-text-field-wrapper{
+            height: 40px !important;
+        }
+
+        .search-field ::ng-deep .mat-mdc-form-field-flex{
+            height: 30px !important;
+        }
+
+        .search-field ::ng-deep .mat-mdc-form-field{
+            width: 160px !important;
+        }
+        
+
+        .search-field ::ng-deep .mat-mdc-form-field-subscript-wrapper{
+            height: 0px !important;
+        }
+
+        ::ng-deep .mat-mdc-form-field{
+            width: 210px !important;
+            height: 30px !important;
+        }
+
+        .search-field ::ng-deep .mat-mdc-form-field-infix{
+           padding-top: 5px !important;
+        }
+    }
+}
 
 .plus-btn {
     background-image: url("/assets/img/plus_light_icon.svg");
@@ -58,6 +114,7 @@
 
 .tableTab {
     margin-bottom: 0;
+
 
     .headRow {
         font-family: 'Proxima-Nova-Regular';
@@ -243,3 +300,11 @@
         color: white;
     }
 } 
+ngb-pagination ::ng-deep ul > li.active > a {
+    background-color: #0096C8 !important;
+}
+
+ngb-pagination ::ng-deep ul > li:not(.active) > a {
+   color: #0096C8 !important;
+}
+

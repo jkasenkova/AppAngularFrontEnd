@@ -1,13 +1,13 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
-import { TemplateDialogModel } from "../../../models/templateDialogModel";
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { Template } from "src/app/models/template";
 
 @Component({
     selector: 'delete-template-dialog',
@@ -32,15 +32,16 @@ import { MatGridListModule } from '@angular/material/grid-list';
 })
 export class DeleteTemplateDialogComponent {
     templateForm: FormGroup;
+    @Input() selectedTemplate: EventEmitter<boolean> = new EventEmitter<boolean>();;
 
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<DeleteTemplateDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: Template
     ) {
         this.templateForm = this.fb.group({
-            templateId: [data.templateId],
-            templateName: [data.templateName, Validators.required]
+            templateId: data.id,
+            name: [data.name, Validators.required]
         });
     }
 
@@ -49,7 +50,9 @@ export class DeleteTemplateDialogComponent {
     }
 
     onSave(): void {
+        debugger;
         if (this.templateForm.valid) {
+            this.selectedTemplate.emit(false);
             this.dialogRef.close(this.templateForm.value);
         }
     }

@@ -17,15 +17,8 @@ export class RoleService {
     url = this.configService.getRouterUrl() + '/role';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createRole(roleModel: RoleModel): void{
-        this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders).subscribe({
-            next: (response) => {
-              console.log('Resource updated successfully:', response);
-            },
-            error: (err) => {
-              console.error('Error updating resource:', err);
-            },
-        });
+    createRole(roleModel: RoleModel): Observable<RoleModel>{
+        return this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders);
     }
 
     updateRole(roleModel: RoleModel): void {

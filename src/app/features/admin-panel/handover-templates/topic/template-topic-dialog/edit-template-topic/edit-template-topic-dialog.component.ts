@@ -5,9 +5,11 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TemplateTopicDialogModel } from "../../model/templateTopicDialogModel";
 import { MatSelectModule } from '@angular/material/select';
 import { Template } from "src/app/models/template";
+import { TopicDataModel } from "../../model/topicDataModel";
+import { SectionService } from "src/app/services/sectionService";
+import { Section } from "src/app/models/section";
 
 @Component({
     selector: 'edit-template-topic-dialog',
@@ -32,28 +34,31 @@ import { Template } from "src/app/models/template";
 export class EditTemplateTopicDialogComponent {
     templateTopicForm: FormGroup;
     selectTemplate: boolean = false;
-
+    sections: Section[];
+    templates: Template[];
+    
     constructor(
         private fb: FormBuilder,
+        private sectionService: SectionService,
         public dialogRef: MatDialogRef<EditTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TemplateTopicDialogModel
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-
-        data.templates = data.associatedTemplates ? this.getSelectTemplates(data.templates, data.associatedTemplates) : data.templates;
+        debugger;
+        var templates = data.topicData.templates as Template[];
+        this.templates = templates.filter(t=> !data.associatedTemplates.includes(t));
 
         this.templateTopicForm = this.fb.group({
-            templateTopicName: [data.templateTopicName, Validators.required],
-            templateReferenceName: [data.templateReferenceName, Validators.required],
-            templateDescription: data.templateDescription,
-            templates: data.templates,
-            associatedTemplates: [data.associatedTemplates]
+            templateTopicName: [data.topicData.templateTopicName, Validators.required],
+            templateReferenceName: [data.topicData.templateReferenceName, Validators.required],
+            templateDescription: data.topicData.templateDescription,
+            templates: [templates],
+            associatedTemplates: [data.associatedTemplates],
+            selectedSection: null,
+            attachToTemplate: null,
+            topic: data.topicData.topic
         });
     }
 
-    getSelectTemplates(sourceArr: Template[], targetArr: Template[]): Template[]
-    {
-        return  sourceArr.filter( ( el ) => !targetArr.includes( el ));
-    }   
 
     onNoClick(): void {
         this.dialogRef.close();
@@ -69,7 +74,12 @@ export class EditTemplateTopicDialogComponent {
         if(selectTemplate.value != undefined){
             this.selectTemplate = true;
 
-            this.data.sections = selectTemplate.value.sections;
+            this.templateTopicForm.get('attachToTemplate').setValue(selectTemplate);
+
+            this.sectionService.getSections(selectTemplate.value.id).subscribe(sections => 
+            {
+                this.sections = sections;
+            });
         
         }else{
             this.selectTemplate = false;
