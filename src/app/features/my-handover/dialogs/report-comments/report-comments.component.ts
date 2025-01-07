@@ -42,31 +42,6 @@ export class ReportCommentsDialogComponent implements OnInit {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     currentTime = moment().tz(this.timezone).format('YYYY-MM-DD HH:mm');
 
-    teamUserTmp: MyTeamModel = {
-        ownerName: "Julia Kasenkova",
-        ownerEmail: "jkasenkova@gmail.com",
-        userId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        ownerRole: "Developer",
-        ownerRoleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        isActiveRotation: true, //get state from back by currentRotationId
-        recipientId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        selected: false
-    };
-
-    authorizedUserTmp: UserModel = {
-        userId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb",
-        firstName: "John",
-        lastName: "Smith",
-        email: "john@gmail.com",
-        //password: "johnDoe123!",
-        roleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
-        teamId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb",
-        companyId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb"
-    };
-
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<ReportCommentsDialogComponent>,
@@ -86,8 +61,6 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     ngOnInit(): void {
         //get from system authorized User
-        //for test
-        this.authorizedUser = this.authorizedUserTmp;
     }
 
     expandCommentLines(){
@@ -123,7 +96,7 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
         else{
             const comment = Object.assign( new ReportCommentsModel(), {
-                owner: this.teamUserTmp,
+                owner: [],
                 comment: this.commentsForm.get('comment').value,
                 handoverId: this.data.handoverId,
                 createDate: this.currentTime,

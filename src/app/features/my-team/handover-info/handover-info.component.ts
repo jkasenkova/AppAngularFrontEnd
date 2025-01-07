@@ -10,6 +10,8 @@ import { MyTeamModel } from "src/app/models/myTeamModel";
 import { RotationType } from "src/app/models/rotationType";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { LocationService } from "src/app/services/locationService";
+import { AsyncPipe } from '@angular/common';
+import {Observable } from 'rxjs';
 
 @Component({
     selector: 'handover-info',
@@ -30,12 +32,13 @@ import { LocationService } from "src/app/services/locationService";
         MatIconModule,
         MatSelectModule,
         MatDialogModule,
+        AsyncPipe
     ],
 })
 
 export class HandoverInfoComponent implements OnInit {
     handoverInfoForm: FormGroup;
-    users: MyTeamModel[];
+    users$: Observable<MyTeamModel[]>;
     locationName: string;
 
     constructor(
@@ -48,7 +51,7 @@ export class HandoverInfoComponent implements OnInit {
        
         this.handoverInfoForm = this.fb.group({
             handoverOwner: data.ownerName,
-            role: data.ownerRole,
+            role: [], //data.ownerRole,
             location: this.locationName,
             lineManager: data.lineManagerId,
             recipient: data.recipientId,
@@ -63,7 +66,7 @@ export class HandoverInfoComponent implements OnInit {
         this.locationService.getLocationById(this.data.locationId)
         .subscribe(location => this.locationName = location.name);
 
-        this.myTeamService.getTeamUsers().subscribe(teams => this.users = teams);
+        this.users$ = this.myTeamService.getTeamUsers();
     }
 
 

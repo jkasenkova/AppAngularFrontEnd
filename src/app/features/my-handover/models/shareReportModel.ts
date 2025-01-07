@@ -1,9 +1,9 @@
-import { MyTeamModel } from 'src/app/models/myTeamModel';
+import { UserModel } from 'src/app/models/user';
 
 export class ShareReportModel {
     ownerId: string;
     handoverId: string;
-    shareUsers: MyTeamModel[] = [];
+    shareUsers: UserModel[] = [];
     shareEmails: string[] = []
-    teamMembers: MyTeamModel[];
+    teamMembers?: UserModel[];
 }

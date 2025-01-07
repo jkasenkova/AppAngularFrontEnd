@@ -35,7 +35,6 @@
                   matInput
                   type="text"
                   placeholder="Search"
-                  [(ngModel)]="searchTopicTerm"
                   (input)="searchTopic()"
                 />
                 <mat-icon matSuffix>search</mat-icon>
@@ -47,7 +46,6 @@
                 matInput
                 type="text"
                 placeholder="Search"
-                [(ngModel)]="searchRefTerm"
                 (input)="searchReference()"
               />
               <mat-icon matSuffix>search</mat-icon>
@@ -58,8 +56,7 @@
                   matInput
                   type="text"
                   placeholder="Search"
-                  [(ngModel)]="searchTemplateTerm"
-                  (input)="searchTemlate()"
+                  (input)="searchTemplate()"
                 />
                 <mat-icon matSuffix>search</mat-icon>
               </mat-form-field>
@@ -69,11 +66,11 @@
           </tr>
         </thead>
         <tbody>
-        @if(displayDataRow.length > 0){
-          <ng-container *ngFor="let data of displayDataRow; index as i">
+        @if(displayDataTemplateTopic.length > 0){
+          <ng-container *ngFor="let data of displayDataTemplateTopic; index as i">
             <tr [style.display]="i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null">
-              <td>{{ data.templateTopicName }}</td>
-              <td>{{ data.templateReferenceName }}</td>
+              <td>{{ data.templateTopic.name }}</td>
+              <td>{{ data.templateReference.name }}</td>
               <td>{{ data.templateList}}</td>
               <td>
                 <button mat-stroked-button class="btn-delete-topic" (click)="deleteTopic(data)">Delete</button>

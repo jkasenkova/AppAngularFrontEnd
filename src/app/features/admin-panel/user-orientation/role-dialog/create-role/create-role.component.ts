@@ -11,13 +11,11 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoleModel } from "src/app/models/role";
 import { Template } from "src/app/models/template";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { map, Observable, startWith } from "rxjs";
 import { RotationType } from "../../../../../models/rotationType";
 import { UserType } from "src/app/models/userType";
 import { ShiftPatternType } from "src/app/models/shiftPatternType";
-import { TemplateService } from "src/app/services/templateService";
-import { TeamService } from "src/app/services/teamServices";
 import { CommonModule } from "@angular/common";
+import { TemplateManagementService } from "src/app/features/admin-panel/handover-templates/template/services/templateManagementService";
 
 @Component({
     selector: 'role-dialog',
@@ -45,13 +43,9 @@ import { CommonModule } from "@angular/common";
 })
 export class CreateRoleDialogComponent {
     roleForm: FormGroup;
-    userTypes: string[];
-    rotationTypes: string[];
-    shiftPatternTypes: string[];
     selectedRotation: boolean = false;
     templates: Template[];
     isRotationDisabled: boolean = false;
-    filteredOptions: Observable<Template[]>;
     roles: RoleModel[];
 
     rotationOptions = RotationType.getAll();
@@ -60,47 +54,34 @@ export class CreateRoleDialogComponent {
 
     constructor(
         private fb: FormBuilder,
-        private templateService: TemplateService,
-        private teamService: TeamService,
+        private templateManagementService: TemplateManagementService,
         public dialogRef: MatDialogRef<CreateRoleDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: RoleModel
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.roleForm = this.fb.group({
             name: [null, Validators.required],
             teamId: data.teamId,
-            template: [],
+            template: null,
             userType: [null, Validators.required],
             rotationType: [null, Validators.required],
-            shiftPatternType: null
+            shiftPatternType: null,
+            roles: data.roles.subscribe((response: RoleModel[]) => this.roles = response)
         });
     }
 
     ngOnInit() {
-        /* this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
-            this.roles = roles;
-        }); */
+        this.templates = this.templateManagementService.getData();
 
-        this.templateService.getTemplates().subscribe(templates =>{
-            this.templates = templates;
-
-            this.filteredOptions = this.roleForm.get('template').valueChanges.pipe(
-                startWith(''),
-                map(value => this.filterOptions(value || '')),
-            );
+        this.roleForm.get('userType')?.valueChanges.subscribe((value) => {
+            if (value === 2) {
+                this.roleForm.get('rotationType')?.setValue(1);
+                this.selectedRotation = true;
+            } else {
+                this.roleForm.get('rotationType').reset();
+                this.selectedRotation = false;
+            }
         });
     }
-
-    
-  private filterOptions(value: string): Template[] {
-    if(value != ''){
-        const filterValue = value.toLowerCase();
-        return this.templates.filter(template =>
-            template.name.toLowerCase().includes(filterValue)
-        );
-    }
-    return [];
-  }
-
 
     displayFn(template?: Template): string | undefined {
         return template ? template.name : undefined;
@@ -113,25 +94,12 @@ export class CreateRoleDialogComponent {
     onSave(): void {
         var roleName = this.roleForm.get('name').value;
 
-        /* if(this.roles.find(l=>l.name == roleName) != null){
+        if (this.doesRoleNameExist(roleName)) {
             this.roleForm.get('name').setErrors({'existRoleName': true})
-        } */
+        } 
 
         if (this.roleForm.valid) {
             this.dialogRef.close(this.roleForm.value);
-        }
-    }
-
-    onSelectUserType(event: any){
-        if(event.value == 2){
-            this.roleForm.get('rotationType')?.setValue(RotationType.Shift);
-            this.isRotationDisabled = true;
-            this.selectedRotation = true;
-        }
-        else{
-            this.roleForm.get('rotationType').reset();
-            this.selectedRotation = false;
-            this.isRotationDisabled = false;
         }
     }
 
@@ -142,5 +110,9 @@ export class CreateRoleDialogComponent {
             this.selectedRotation = false;
             this.isRotationDisabled = false;
         }
+    }
+
+    doesRoleNameExist(nameToCheck: string): boolean {
+        return this.roles.some((role) => role.name === nameToCheck);
     }
 }

@@ -8,20 +8,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { Handover } from "src/app/models/handover";
 import { RotationTopic } from "src/app/models/rotationTopic";
-import { SectionType } from "src/app/models/sectionType";
-import { SortType } from "src/app/models/sortType";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HandoverSection } from "src/app/models/handoverSection";
 import { RotationReference } from "src/app/models/rotationReference";
 import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
-import { DatesShiftDialogComponent } from "./dialogs/dates/dates-shift.component";
+import { DateShiftDialogComponent } from "./dialogs/dates/date-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
-import { HandoverService } from "src/app/services/handoverService";
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
-import { MyTeamModel } from "src/app/models/myTeamModel";
-import { MyTeamService } from "src/app/services/myTeamService";
 import { ShareReportModel } from "./models/shareReportModel";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
@@ -38,9 +33,12 @@ import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
 import { RoleModel } from "src/app/models/role";
-import { RoleService } from "src/app/services/roleService";
-import { DataService } from "src/app/services/data.service";
 import { AuthFacade } from "src/app/services/auth/store/auth.facade";
+import { RoleService } from "src/app/services/roleService";
+import { ShiftState } from "src/app/models/shiftState";
+import { HandoverService } from "src/app/services/handoverService";
+import { UserService } from "src/app/services/userService";
+import { UserModel } from "@models/user";
 
 @Component({
     selector: 'app-my-handover',
@@ -69,9 +67,7 @@ import { AuthFacade } from "src/app/services/auth/store/auth.facade";
 
 export class MyHandoverComponent implements OnInit {
     handover: Handover;
-    owner: MyTeamModel;
-    recipient: MyTeamModel; //for test
-    teamMembers: MyTeamModel[] = [];
+    teamMembers: UserModel[] = [];
     template: Template;
     ownerRole: RoleModel;
     expandAll: boolean = false;
@@ -79,51 +75,49 @@ export class MyHandoverComponent implements OnInit {
     isAdmin: boolean;
     
     readonly dialog = inject(MatDialog);
-    @Output() ownerHandoverName: string;
+    @Output() handoverOwner: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
+
+    owner: UserModel = {
+        firstName: "Julia",
+        lastName: "Kasenkova",
+        email:  "jkasenkova@gmail.com",
+        roleId: '1cce436d-942c-41a7-92fb-e4d05bbc97ee',
+        userId: 'c3948278-c667-4d8b-8704-73884c20cfe3',
+        teamId: '90fdbdb9-16e4-4efe-a57b-92442e16e62c',
+        companyId: 'c3948278-c667-4d8b-8704-73884c20cfe3',
+        currentRotationId: 'c3948278-c667-4d8b-8704-73884c20cfe3'
+    };
 
     constructor(
         private authFacade: AuthFacade,
         private router: Router,
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
-        private myTeamService: MyTeamService,
+        private userService: UserService,
         private templateService: TemplateService,
+        private roleService: RoleService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService,
-        private roleService: RoleService) 
-        {
-        }
+        private rotationReferenceService: RotationReferenceService) {}
 
     ngOnInit(): void {
-
-        this.authFacade.isAdmin$.subscribe(isAdmin => {
-            this.isAdmin = isAdmin;
-        });
-
-        this.isAdmin = true;
+        this.authFacade.isAdmin$.subscribe(isAdmin => this.isAdmin = isAdmin);
+        this.roleService.getRoleById(this.owner.roleId).subscribe(role =>  this.ownerRole = role);
 
         this.loadData();
     }
 
     loadData(): void {
-        if(this.owner){
-            this.roleService.getRoleById(this.owner.ownerRoleId).subscribe(role => {
-                this.ownerRole = role
-            });
-        }
-      
-      if(this.owner && this.owner.currentRotationId) {
-            this.handoverService.getHandoverById(this.owner.currentRotationId).subscribe(rotation =>
+      if(this.owner && this.owner.currentRotationId) 
+       {
+            this.handoverService.getShiftById(this.owner.currentRotationId).subscribe(rotation =>
             {
                 this.handover = rotation;
-                this.handoverOut = rotation
-
+                this.handoverOut = rotation;
                 this.handover = this.setShareCounter(this.handover);
-              
             });
-      }
+       }
 
       if(this.ownerRole){
         this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
@@ -132,7 +126,7 @@ export class MyHandoverComponent implements OnInit {
         });
       }
 
-        this.myTeamService.getTeamUsers().subscribe(teams => {
+        this.userService.getUsers().subscribe(teams => {
             this.teamMembers = teams;
         }); 
     }
@@ -160,8 +154,8 @@ export class MyHandoverComponent implements OnInit {
             this.handoverSectionService.createSection(convertedSection);
         });
 
-        handover.sections = handover.sections.sort((a, b) => Number(b.templateSection) - Number(a.templateSection));
-        
+        //section sort
+
         this.addOtherTopicForEachSectionTopics(this.handover);
 
         return handover;
@@ -280,65 +274,71 @@ export class MyHandoverComponent implements OnInit {
     }
 
     getLettersIcon(userId: string): string {
-        this.myTeamService.getTeamUser(userId).pipe(
+        this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.ownerName.split(" ").map((n)=>n[0]).join("");
+                    return user.firstName + user.lastName.split(" ").map((n)=>n[0]).join("");
                 }
             ));
         return "";
     }
 
     getNameByUserId(userId: string): string {
-        this.myTeamService.getTeamUser(userId).pipe(
+        this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.ownerName;
+                    return user.firstName;
                 }
             ));
         return "";
     }
 
-    handoverRecipient(): void{
-        const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, { 
-            data: this.handover
+    handoverRecipient(templateId?: string, endDateTime?: string): void {
+        const dialogRef = this.dialog.open(HandoverRecipientDialogComponent, 
+        {
+            data: { 
+                templateId: templateId,
+                endDateTime: endDateTime
+            },
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-               
-                if(this.owner.isActiveRotation && this.owner.currentRotationId){
-                    this.handover.recipientId = result.recipientId;
-                    this.handoverService.updateHandover(result);
-                }else{
-                    this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
+        dialogRef.afterClosed().subscribe(result => 
+        {
+            if (result) 
+            {
+                if(this.owner.currentRotationId && this.handover != null)
+                {
+                    this.handover.shiftRecipientId = result.recipientId;
+                    this.handoverService.updateShift(result);
+                    //update user current handover id
+                }
+                else
+                {
+                   /*  this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
                         this.template = template;
                         this.handover = this.initializeTemplateSection(this.template, this.handover);
                     }); 
-                    this.owner.isActiveRotation = true;
-                    this.owner.currentRotationId = this.handover.handoverId;
-                   
-                   // this.cdr.detectChanges();
-                }
+                    this.owner.curentRotationId = this.handover.handoverId; */
+
+                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.userId);
+                } 
             }
         });
     }
 
     handoverDates(): void {
-        const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
+        const dialogRef = this.dialog.open(DateShiftDialogComponent, { 
             data: { 
-                endDate: this.handover.endDate,
-                endTime: this.handover.endTime
+                endDate: this.handover.endDateTime,
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handover.endDate = result.endDate;
-                this.handover.endTime = result.endTime;
-               
-                if(this.owner.currentRotationId && this.owner.isActiveRotation){
-                    this.handoverService.updateHandover(this.handover);
+                this.handover.endDateTime = result.endDateTime;
+                
+                if(this.owner.currentRotationId){
+                    this.handoverService.updateShift(this.handover);
                 }
                 else{
                     this.handoverRecipient();
@@ -348,17 +348,13 @@ export class MyHandoverComponent implements OnInit {
     }
 
     shareReport(): void{
-        this.handover.shareUsers = []; //for test
-        this.handover.shareUsers.push(this.teamMembers[1]); //for test
-
         this.teamMembers = this.teamMembers.filter(u=> !this.handover.shareUsers.includes(u));
 
         let shareReportModel: ShareReportModel = {
             ownerId: this.handover.ownerId,
             handoverId: this.handover.handoverId,
             shareUsers: this.handover.shareUsers,
-            shareEmails: this.handover.shareEmails,
-            teamMembers: this.teamMembers
+            shareEmails: this.handover.shareEmails
         };
 
         
@@ -368,7 +364,7 @@ export class MyHandoverComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.handoverService.updateHandover(result);
+                this.handoverService.updateShift(result);
                 this.handover.shareUsers = result.sharedUsers;
                 this.handover = this.setShareCounter(this.handover);
             }
@@ -384,7 +380,7 @@ export class MyHandoverComponent implements OnInit {
         }
 
         if(this.handover.shareUsers){
-            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.ownerName));
+            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.firstName + u.lastName));
         }
 
         return title + arr.toString().split(",").join('\n');
@@ -399,56 +395,49 @@ export class MyHandoverComponent implements OnInit {
             if (result) {
               this.handover.reportComments = [];
               this.handover.reportComments.push(result);
-              this.handoverService.updateHandover(this.handover);
+              this.handoverService.updateShift(this.handover);
             }
         });
     }
 
-    startHandover(): void {
-        const dialogRef = this.dialog.open(DatesShiftDialogComponent, { 
-            data: { 
-                endDate: null,
-                endTime: null
-            }
-        });
+    startShift(): void {
+        const dialogRef = this.dialog.open(DateShiftDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                let newHandover: Handover = {
-                    templateId: this.template.id,
-                    handoverId: '',//Guid.create(),
-                    ownerId: this.owner.userId,
-                    sections: [],
-                    endTime: result.endTime,
-                    endDate:  result.endDate,
-                    createDate: new Date().toLocaleDateString(),
-                    liveRotation: true
-                };
-
-                 this.handoverService.addHandover(newHandover).subscribe(handover => {
-                    this.handover = handover
-                }); 
-
-                if(this.owner.alwaysShareRecipient){
-                    if(this.owner.alwaysShareRecipient.emails){
-                        newHandover.shareEmails = this.owner.alwaysShareRecipient.emails;
-                    }
-                    if(this.owner.alwaysShareRecipient.usersIds){
-                        newHandover.shareUsers = [];
-                        this.owner.alwaysShareRecipient.usersIds.forEach(userId =>{
-                            this.myTeamService.getTeamUser(userId).subscribe(user =>{
-                                newHandover.shareUsers.push(user);
-                            })
-                        }) 
-                    }
-                }
-
-                this.handover = newHandover; //  for test
-                this.loadData();
-                this.handover.liveRotation = true; // for test
-                this.handoverRecipient();
+            if (result) 
+            {
+                const dateTime = this.formatedDateTime(result.endDate, result.endTime);
+                this.handoverRecipient(this.ownerRole.templateId, dateTime);
             }
         });
+    }
+
+    formatedDateTime(date: string, time: string): string {
+        const [day, month, year] = date.split(".").map(Number);
+        const [timePart, meridian] = time.split(" ");
+        const [rawHours, minutes] = timePart.split(":").map(Number);
+        let hours = rawHours;
+    
+        if (meridian === "PM" && hours < 12) {
+          hours += 12;
+        } else if (meridian === "AM" && hours === 12) {
+          hours = 0;
+        }
+        const dateObject = new Date(year, month - 1, day, hours, minutes);
+        return formatDate(dateObject, 'yyyy-MM-dd HH:mm:ss', 'en-US');
+    }
+
+    createShift(templateId: string, endDateTime: string, recipientId: string, ownerId: any): Handover {
+        var shift: Handover = {
+            templateId: templateId,
+            ownerId: ownerId.value,
+            shiftRecipientId: recipientId,
+            endDateTime: endDateTime,
+            state: 1
+        };
+        debugger;
+        this.handoverService.addShift(shift);
+        return shift;
     }
 
     reportPreview(handover: Handover): void {
@@ -463,18 +452,15 @@ export class MyHandoverComponent implements OnInit {
         window.open(url, '_blank');
     } 
 
-    finishRotation(handover: Handover): void{
+    finishShift(handover: Handover): void{
         const dialogRef = this.dialog.open(FinishRotationDialogComponent);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                handover.liveRotation = false;
-
-                this.owner.isActiveRotation = false;
                 this.owner.currentRotationId = null;
 
-                this.handoverService.updateHandover(handover);
-                this.myTeamService.updateTeamUser(this.owner);
+                this.handoverService.updateShift(handover);
+                this.userService.updateUser(this.owner);
 
                 this.handover = null;
                //sent reports

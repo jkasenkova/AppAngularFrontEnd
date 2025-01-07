@@ -1,5 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { UserModel } from "@models/user";
 
 @Component({
     selector: 'view-user-panel',
@@ -14,7 +15,7 @@ import { FormsModule } from "@angular/forms";
 })
 
 export class ViewUserPanelComponent implements OnInit {
-    @Input() ownerHandoverName: string; 
+    @Input() handoverOwner: UserModel; 
     
     ngOnInit(): void {
     }

@@ -73,7 +73,7 @@
                                     <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
                                 </div>
                             }
-                        }
+                        }  
                     </div>
                 </div>
             </section>
@@ -98,13 +98,13 @@
                 <div class="panel-body">
                     <div class="text-center ng-binding"></div>
                     <div class="list-group">
-                        @for (role of roles; track role) {
-                            <div class="list-group-item">
-                                {{role.name}}
-                                <span class="pull-right btn-close" (click)="removeRole(role)"></span>
-                                <span class="pull-right pencil-block" (click)="editRole(role)"></span>
+                        <div *ngFor="let role of roles$ | async">
+                                <div class="list-group-item">
+                                    {{role.name}}
+                                    <span class="pull-right btn-close" (click)="removeRole(role)"></span>
+                                    <span class="pull-right pencil-block" (click)="editRole(role)"></span>
+                                </div>
                             </div>
-                        }
                     </div>
                 </div>
             </section>

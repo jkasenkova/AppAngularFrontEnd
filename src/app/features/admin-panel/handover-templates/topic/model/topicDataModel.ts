@@ -1,19 +1,15 @@
-import { Section } from "@models/section";
-import { Template } from "@models/template";
-import { TemplateTopic } from "@models/templateTopic";
+import { Reference } from "src/app/models/reference";
+import { Section } from "src/app/models/section";
+import { Template } from "src/app/models/template";
+import { TemplateTopic } from "src/app/models/templateTopic";
 
 export class TopicDataModel {
-    templateTopicId?: string;
-    templateTopicName: string;
-    sectionId?: string;
-    templateReferenceId?: string;
-    templateReferenceName: string;
-    templateDescription?: string;
+    templateTopic:TemplateTopic;
+    templateReference: Reference;
     attachToTemplate?: string[];
     templates?:Template[];
     sections?:Section[];
     associatedTemplates?: Template[];
-    topics?: TemplateTopic[];
+    templateTopics?: TemplateTopic[];
     templateList: string;
-    topic: TemplateTopic;
 }

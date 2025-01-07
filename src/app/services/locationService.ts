@@ -32,7 +32,7 @@ export class LocationService {
     }
 
     updateLocation(locationModel: Location) {
-        this.http.patch(this.url, locationModel, this.httpHeaders).subscribe();
+        this.http.patch<Location>(this.url, locationModel, this.httpHeaders).subscribe();
     }
 
     deleteLocation(id: string) {

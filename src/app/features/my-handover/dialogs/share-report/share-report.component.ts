@@ -8,13 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { MyTeamModel } from "src/app/models/myTeamModel";
-import { MyTeamService } from "src/app/services/myTeamService";
 import { CommonModule } from "@angular/common";
 import { MatSelectModule } from "@angular/material/select";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatChipsModule} from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ShareRecipient } from "src/app/models/shareRecipientModel";
+import { MyTeamService } from "src/app/services/myTeamService";
 import { ShareReportModel } from "../../models/shareReportModel";
 
 @Component({

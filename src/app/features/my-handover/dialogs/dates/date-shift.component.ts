@@ -12,9 +12,9 @@ import { DatesModel } from "../../models/datesModel";
 
 
 @Component({
-    selector: 'dates-shift',
-    templateUrl: './dates-shift.component.html',
-    styleUrl: './dates-shift.component.less',
+    selector: 'date-shift',
+    templateUrl: './date-shift.component.html',
+    styleUrl: './date-shift.component.less',
     standalone: true,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
@@ -34,7 +34,7 @@ import { DatesModel } from "../../models/datesModel";
         NgxMatTimepickerModule
     ]
 })
-export class DatesShiftDialogComponent {
+export class DateShiftDialogComponent {
     datestForm: FormGroup;
     today: boolean = true; 
 
@@ -46,20 +46,17 @@ export class DatesShiftDialogComponent {
 
     constructor(
         private fb: FormBuilder,
-        public dialogRef: MatDialogRef<DatesShiftDialogComponent>,
+        public dialogRef: MatDialogRef<DateShiftDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DatesModel
     ) { 
-       
-        const initialTime = data.endTime ? this.formatDateToTimeString(this.setTime(data.endTime)): null;
-
+        const initialTime = (data && data.endTime) ? this.formatDateToTimeString(this.setTime(data.endTime)): null;
         this.datestForm = this.fb.group({
-            endDate: [data.endDate ?? new Date().toLocaleDateString(), Validators.required],
+            endDate: [(data && data.endDate) ? data.endDate : new Date().toLocaleDateString(), Validators.required],
             endTime: [initialTime, Validators.required]
         });
     }
 
     setTime(timeStr: string): Date {
-
         const date = new Date();
         const [time, modifier] = timeStr.split(" ");
         let [hours, minutes] = time.split(":").map(Number);
@@ -72,7 +69,7 @@ export class DatesShiftDialogComponent {
         date.setHours(hours, minutes, 0, 0);
 
         return date;
-      }
+    }
 
     formatDateToTimeString(date: Date): string {
         const hours = date.getHours().toString().padStart(2, '0');
@@ -93,13 +90,13 @@ export class DatesShiftDialogComponent {
     setDate(day: string): void {
         if(day == 'Today'){
             this.today = true;
-            var endDate = new Date().toLocaleDateString(undefined, this.options);
+            var endDate = new Date().toLocaleDateString();
             this.datestForm.get('endDate').setValue(endDate);
         }
         else{
             this.today = false;
             const newDate = new Date();
-            var endDate = new Date(newDate.setDate(newDate.getDate() + 1)).toLocaleDateString(undefined, this.options);
+            var endDate = new Date(newDate.setDate(newDate.getDate() + 1)).toLocaleDateString();
             this.datestForm.get('endDate').setValue(endDate);
         }
         

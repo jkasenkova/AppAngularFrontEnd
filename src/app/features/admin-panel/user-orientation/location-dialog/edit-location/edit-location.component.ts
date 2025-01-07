@@ -52,14 +52,13 @@ export class EditLocationDialogComponent implements OnInit{
         private fb: FormBuilder,
         private locationService: LocationService,
         public dialogRef: MatDialogRef<EditLocationDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: LocationModel
+        @Inject(MAT_DIALOG_DATA) public data: Location
     ) {
         this.locationForm = this.fb.group({
             name: [data.name, Validators.required],
             address: [data.address],
             mapLink: [data.mapLink],
             id: [data.id],
-            timeZoneControl: new FormControl(''),
             timeZone: [data.timeZone, Validators.required],
             isAccountLocation: data.isAccountLocation
         });

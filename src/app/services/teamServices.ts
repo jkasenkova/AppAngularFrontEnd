@@ -17,11 +17,11 @@ export class TeamService {
     url = this.configService.getRouterUrl() + '/teams'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createTeam(team: Team){
-        this.http.post(this.url, team, this.httpHeaders).subscribe();
+    createTeam(team: Team): Observable<Team> {
+        return this.http.post<Team>(this.url, team, this.httpHeaders);
     }
 
-    updateTeam(team: Team) {
+    updateTeam(team: Team): void {
         this.http.patch(this.url, team, this.httpHeaders).subscribe();
     }
 

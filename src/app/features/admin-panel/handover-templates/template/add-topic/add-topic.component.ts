@@ -12,7 +12,7 @@ import { Section } from "src/app/models/section";
 import { TemplateTopic } from "src/app/models/templateTopic";
 import { TemplateReferenceService } from "src/app/services/templateReferenceService";
 import { TemplateTopicService } from "src/app/services/templateTopicService";
-import { UpdateTemplateTopicService } from "src/app/services/updateTemplateTopicService";
+import { TemplateTopicManagementService } from "src/app/features/admin-panel/handover-templates/topic/services/templateTopicManagementService";
 import { ClickOutsideDirective } from "src/app/shared/clickoutside.directive";
 
 @Component({
@@ -42,7 +42,7 @@ export class AddTopicComponent {
     @Output() dataEmitter = new EventEmitter<boolean>();
 
     constructor( 
-        private updateTemplateTopicService: UpdateTemplateTopicService,
+        private templateTopicManagementService: TemplateTopicManagementService,
         private templateTopicService: TemplateTopicService,
         private templateReferenceService: TemplateReferenceService,
         private fb: FormBuilder) 
@@ -97,7 +97,7 @@ export class AddTopicComponent {
 
                     this.templateTopicService.updateTopic(topic);
 
-                    this.updateTemplateTopicService.updateItem(topic);
+                    this.templateTopicManagementService.updateItem(topic);
                 }
                 if(this.addTopicForm.value.reference)
                 {
@@ -108,6 +108,7 @@ export class AddTopicComponent {
                     let index = topic.templateReferences.indexOf(updateReference);
                     topic.templateReferences[index] = reference;
             
+                    this.templateTopicManagementService.editReference(topic.id, newReference);
                     this.templateReferenceService.updateTemplateReference(reference);
                 }
                 else
@@ -117,7 +118,8 @@ export class AddTopicComponent {
                         this.addTopicForm.value.referenceName, 
                         this.addTopicForm.value.description);
     
-                    topic.templateReferences.push(reference);
+                   // topic.templateReferences.push(reference);
+                    this.templateTopicManagementService.addReference(topic.id, reference);
                     topic.templateReferences = topic.templateReferences.sort((a, b) => a.name.localeCompare(b.name));
                 }
             }
@@ -148,21 +150,17 @@ export class AddTopicComponent {
                     newReference.templateTopicId = newTopic.id;
                     newReference.enabled = true;
                     
-                    this.templateReferenceService.addTemplateReference(newReference)
-                    .subscribe(response => 
-                    {
-                        newTopic.templateReferences = [];
-                        newTopic.templateReferences.push(response);
-                        debugger;
-                        this.updateTemplateTopicService.addItem(newTopic);
+                    this.templateReferenceService.addTemplateReference(newReference);
+                    newTopic.templateReferences = [];
+                    newTopic.templateReferences.push(newReference);
+                    this.templateTopicManagementService.addItem(newTopic);
 
-                        newTopic.templateReferences = newTopic.templateReferences.sort((a, b) => a.name.localeCompare(b.name));
+                    newTopic.templateReferences = newTopic.templateReferences.sort((a, b) => a.name.localeCompare(b.name));
 
-                        if(this.sectionOut.sectionTopics == null){
-                            this.sectionOut.sectionTopics = [];
-                        }
-                        this.sectionOut.sectionTopics.push(newTopic);
-                    });
+                    if(this.sectionOut.sectionTopics == null){
+                        this.sectionOut.sectionTopics = [];
+                    }
+                    this.sectionOut.sectionTopics.push(newTopic);
                 });
             }
         }
@@ -181,7 +179,6 @@ export class AddTopicComponent {
             templateTopicId: topicId,
             expand: false
         };
-
         this.templateReferenceService.addTemplateReference(newReference);
         return newReference;
     }

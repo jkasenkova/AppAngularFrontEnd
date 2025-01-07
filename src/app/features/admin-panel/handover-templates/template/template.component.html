@@ -177,11 +177,11 @@
                                     </form> 
                                     
                                     <div #addRowElement class="addDataRow">
-                                        <add-topic (dataEmitter)="toggleDiv(section, i)" [sectionOut]="section"></add-topic>
+                                        <add-topic (dataEmitter)="toggleDiv(i)" [sectionOut]="section"></add-topic>
                                     </div>
 
                                     <div class="navbar navbar-white">
-                                        <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(section,i)">Add Topic</div>
+                                        <div type="button" class="btn-plus center-block" (click)="addHideRowTopicForm(i)">Add Topic</div>
                                     </div>
                                 </div>
                             </div>

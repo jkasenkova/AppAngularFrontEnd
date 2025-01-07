@@ -15,7 +15,7 @@ import { CreateTemplateDialogComponent } from "./dialogs/template/create-templat
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
-import { UpdateTemplateService } from "src/app/services/updateTemplateService";
+import { TemplateManagementService } from "./template/services/templateManagementService";
 
 @Component({
     selector: 'app-handover-templates',
@@ -48,7 +48,7 @@ export class HandoverTemplatesComponent implements OnInit, OnChanges {
     constructor(
         private cdRef : ChangeDetectorRef,
         private templateService: TemplateService,
-        private updateTemplateService: UpdateTemplateService,
+        private updateTemplateService: TemplateManagementService,
         private sessionStorageService: SessionStorageService) {
             this.variable$.subscribe((newValue) => {
                 this.isSelectedTemplate = newValue;

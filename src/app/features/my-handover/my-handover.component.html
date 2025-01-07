@@ -1,14 +1,8 @@
- @if(!isAdmin){
-    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="center" class="header-tabs">
-        <mat-tab label="Handover"></mat-tab>
-    </mat-tab-group>
- }
-
 <div class="container app-my-handover">
 
-@if(handover) {
-    @if(handoverAdmin){
-        <view-user-panel [ownerHandoverName]="owner.ownerName"></view-user-panel>
+@if(handover != null) {
+    @if(isAdmin){
+        <view-user-panel [handoverOwner]="owner"></view-user-panel>
     }
 
     <div Id="templatePanel" class="panel panel-primary">
@@ -17,7 +11,7 @@
                 <span class="title">Handover Report</span>
             </div>
             <div class="report-builder-controls">
-                @if(handover.liveRotation) {
+                @if(handover) {
                     <div 
                         type="button" 
                         [ngClass]="handover.shareEmails || handover.shareUsers ? 'share-report-icon-active' : 'share-report-icon-inactive'"
@@ -30,7 +24,7 @@
                     </div>
                     <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" 
                             matTooltip="Finish Report"
-                            (click)="finishRotation(handover)">
+                            (click)="finishShift(handover)">
                         <span class="glyphicon span"></span>
                     </button>
                     <button type="button" class="report-preview-pdf btn-circle btn btn-link tooltipster" matTooltip="PDF Report Preview"
@@ -43,27 +37,27 @@
                     </button>
                 }
                 @else{
-                    <div class="start-handover" (click)="startHandover()">
+                    <div class="start-handover" (click)="startShift()">
                        Start New Handover
                     </div>
                 }
                 
             </div>
         </div>
-        @if(handover.liveRotation){
+        @if(handover){
         <div class="panel-body main-panel">
             <div class="navbar navbar-brown navbar-white">
                 <div class="row-block col col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <div class="date-block">
-                        {{handover.endDate}}
+                        {{handover.endDateTime}}
                     </div>
                     <div class="from-to-block">
                         <div class="icon-container" [matTooltip]="getNameByUserId(handover.ownerId)">
                             <div class="name"> {{ getLettersIcon(handover.ownerId) }}</div>
                         </div>
                         <div class="arrow-left">&#10230;</div>
-                         <div class="icon-container" [matTooltip]="getNameByUserId(handover.recipientId)">
-                            <div class="name"> {{ getLettersIcon(handover.recipientId) }}</div>
+                         <div class="icon-container" [matTooltip]="getNameByUserId(handover.shiftRecipientId)">
+                            <div class="name"> {{ getLettersIcon(handover.shiftRecipientId) }}</div>
                         </div>
                     </div>
                     <div class="recipient-block" matTooltip="Edit Recipient" (click)="handoverRecipient()"></div>
@@ -112,7 +106,7 @@
                             </span>
                         </div>
                         <div class="col col-lg-4 col-sm-4 col-md-4 col-xs-4">
-                            <span class="start-new-handover" (click)="startHandover()">Start New Handover</span>
+                            <span class="start-new-handover" (click)="startShift()">Start New Handover</span>
                         </div>
                     </div>
                 </div>

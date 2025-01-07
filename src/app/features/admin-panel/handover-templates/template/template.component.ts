@@ -24,7 +24,7 @@ import { TemplateReferenceService } from 'src/app/services/templateReferenceServ
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClickOutsideDirective } from 'src/app/shared/clickoutside.directive';
-import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopicService';
+import { TemplateTopicManagementService } from 'src/app/features/admin-panel/handover-templates/topic/services/templateTopicManagementService';
 
 @Component({
     selector: 'app-template',
@@ -62,7 +62,7 @@ export class TemplateComponent implements OnInit, OnChanges {
     @Output() sectionOut: Section;
 
     constructor(
-      private updateTemplateTopicService: UpdateTemplateTopicService,
+      private templateTopicManagementService: TemplateTopicManagementService,
       private sectionService: SectionService, 
       private templatTopicService: TemplateTopicService,
       private templatReferenceService: TemplateReferenceService,
@@ -85,9 +85,8 @@ export class TemplateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
 
-      this.updateTemplateTopicService.arrayChanged.subscribe((newArray) => 
+      this.templateTopicManagementService.arrayChanged.subscribe((newArray) => 
       {
-        debugger;
         this.globalTemplateTopic = newArray;
       });
 
@@ -124,7 +123,7 @@ export class TemplateComponent implements OnInit, OnChanges {
       
         this.sections.forEach(section => 
         {
-          this.globalTemplateTopic = this.updateTemplateTopicService.getData() as TemplateTopic[];
+          this.globalTemplateTopic = this.templateTopicManagementService.getData() as TemplateTopic[];
 
           section.sectionTopics = this.filterTopics(this.globalTemplateTopic, section.id, template);
 
@@ -149,8 +148,8 @@ export class TemplateComponent implements OnInit, OnChanges {
       });
   }
 
-  toggleDiv(section: Section, index: number): void {
-    this.addHideRowTopicForm(section, index);
+  toggleDiv(index: number): void {
+    this.addHideRowTopicForm(index);
   }
 
     //---------Section Dialogs------------
@@ -165,12 +164,14 @@ export class TemplateComponent implements OnInit, OnChanges {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result) 
+            {
               var newSection: Section = {
                 name: result.name,
                 templateId: result.templateId,
                 type: SectionType.Other
               };
+
               this.sectionService.createSection(newSection).subscribe(newSection =>
               {
                 if(this.sections != null){
@@ -209,7 +210,7 @@ export class TemplateComponent implements OnInit, OnChanges {
               
               this.sectionService.updateSection(updtSection);
 
-              let updateSection = this.sections.find(l=> l.id == result.id);
+              let updateSection = this.sections.find(l => l.id == result.id);
               let index = this.sections.indexOf(updateSection);
               this.sections[index].name = result.name;
             }
@@ -226,16 +227,17 @@ export class TemplateComponent implements OnInit, OnChanges {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result) 
+            {
               this.sectionService.deleteSection(section.id);
               this.sections = this.sections.filter(t=> t.id != section.id);
             }
         });
     }
 
-    ///-----------Topics------------------
+  //-----------------------Topics--------------------------------
 
-  addHideRowTopicForm(section: Section, index: number){
+  addHideRowTopicForm(index: number){
         let nativeElement = this.addRowElement.toArray()[index].nativeElement;
         
         nativeElement.style.display =
@@ -253,7 +255,6 @@ export class TemplateComponent implements OnInit, OnChanges {
 
   editTopic(topic: TemplateTopic): void{
       topic.editing = !topic.editing;
-
       this.topicForm.get('topicName').setValue(topic.name);
   }
 
@@ -263,7 +264,7 @@ export class TemplateComponent implements OnInit, OnChanges {
     topic.name = this.topicForm.get('topicName').value;
     this.updateTopicInArray(topic, section);
 
-    this.updateTemplateTopicService.updateItem(topic);
+    this.templateTopicManagementService.updateItem(topic);
   }
 
   updateTopicInArray(topic: TemplateTopic, section: Section){

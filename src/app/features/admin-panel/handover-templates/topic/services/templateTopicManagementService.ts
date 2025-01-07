@@ -1,13 +1,14 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { TemplateTopic } from '../models/templateTopic';
+import { TemplateTopic } from '../../../../../models/templateTopic';
+import { Reference } from 'src/app/models/reference';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UpdateTemplateTopicService {
+export class TemplateTopicManagementService {
   private dataSubject = new BehaviorSubject<TemplateTopic[]>([]);
-  data$ = this.dataSubject.asObservable();
+  templateTopics$ = this.dataSubject.asObservable();
   arrayChanged: EventEmitter<TemplateTopic[]> = new EventEmitter<TemplateTopic[]>();
 
   addItem(newItem: any): void {
@@ -44,5 +45,35 @@ export class UpdateTemplateTopicService {
 
   getData(): any {
     return this.dataSubject.getValue();
+  }
+
+  addReference(topicId: string, reference: Reference): void {
+    const currentData = this.dataSubject.value;
+
+    const updatedData = [...currentData];
+
+    var updatedItem = currentData.find(t => t.id === topicId);
+    let index = currentData.indexOf(updatedItem);
+    updatedData[index].templateReferences.push(reference);
+
+    debugger;
+    this.dataSubject.next(updatedData);
+    this.setData(updatedData);
+  }
+
+  editReference(topicId: string, referenceEdit: Reference): void {
+    const currentData = this.dataSubject.value;
+    const updatedData = currentData.map(item =>
+      item.id === topicId
+        ? {
+            ...item,
+            subItems: item.templateReferences.map(reference =>
+              reference.id === reference.id ? { ...reference, name: referenceEdit.name } : reference
+            ),
+          }
+        : item
+    );
+    this.dataSubject.next(updatedData);
+    this.setData(updatedData);
   }
 }
