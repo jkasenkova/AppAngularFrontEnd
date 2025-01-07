@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
-import { Guid } from "guid-typescript";
 import { Team } from "../models/team";
 import { RoleModel } from "../models/role";
 
@@ -15,7 +14,7 @@ export class TeamService {
         private readonly configService: ConfigService) {
     }
 
-    url = this.configService.getRouterUrl() + '/team'; 
+    url = this.configService.getRouterUrl() + '/teams'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createTeam(team: Team){
@@ -26,7 +25,7 @@ export class TeamService {
         this.http.patch(this.url, team, this.httpHeaders).subscribe();
     }
 
-    deleteTeam(id: Guid) {
+    deleteTeam(id: string) {
       return this.http.delete(this.url  + '/' + id).subscribe();
     }
 
@@ -34,15 +33,15 @@ export class TeamService {
         return this.http.get<Team[]>(this.url);
     }
 
-    getTeamsByLocationId(locationId: Guid): Observable<Team[]> {
+    getTeamsByLocationId(locationId: string): Observable<Team[]> {
         return this.http.get<Team[]>(this.url + locationId);
     }
 
-    getTeamById(teamId: Guid): Observable<Team> {
+    getTeamById(teamId: string): Observable<Team> {
         return this.http.get<Team>(this.url + '/' + teamId);
     }
 
-    getRolesByTeamId(id: Guid): Observable<RoleModel[]> {
+    getRolesByTeamId(id: string): Observable<RoleModel[]> {
         return this.http.get<RoleModel[]>(this.url + '/'+ id + '/roles');
     }
 }

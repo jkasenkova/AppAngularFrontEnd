@@ -1,16 +1,15 @@
 import { Observable } from "rxjs";
 import { TemplateTopic } from "./templateTopic";
 import { Reference } from "./reference";
-import { Guid } from "guid-typescript";
 
 export interface TopicData {
-    sectionId?: Guid;
-    topicId: Guid;
+    sectionId?: string;
+    topicId: string;
     topic?: TemplateTopic;
     topicName: string;
     referenceName: string;
     reference: Reference;
-    referenceId?: Guid;
+    referenceId?: string;
     template: Observable<string>;
     section?: string;
     description?: string;

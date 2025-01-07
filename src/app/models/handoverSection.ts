@@ -1,4 +1,3 @@
-import { Guid } from "guid-typescript";
 import { Handover } from "./handover";
 import { SectionType } from "./sectionType";
 import { SortType } from "./sortType";
@@ -6,8 +5,8 @@ import { RotationTopic } from "./rotationTopic";
 
 export class HandoverSection {
     public sectionName: string;
-    public sectionId?: Guid;
-    public handoverId: Guid;
+    public sectionId?: string;
+    public handoverId: string;
     public handover?: Handover;
     public iHandoverSection: boolean = false;
     public sectionType: SectionType;

@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
-import { Guid } from "guid-typescript";
 import { RoleModel } from "../models/role";
 
 @Injectable({
@@ -14,7 +13,7 @@ export class RoleService {
         private readonly configService: ConfigService) {
     }
 
-    url = this.configService.getRouterUrl() + '/role';
+    url = this.configService.getRouterUrl() + '/roles';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createRole(roleModel: RoleModel): Observable<RoleModel>{
@@ -25,15 +24,15 @@ export class RoleService {
         this.http.patch(this.url, roleModel, this.httpHeaders).subscribe();
     }
 
-    deleteRole(roleId: Guid) {
+    deleteRole(roleId: string) {
         this.http.delete<string>(this.url + '/' + roleId).subscribe();
     }
 
-    getRoleById(id: Guid): Observable<RoleModel> {
+    getRoleById(id: string): Observable<RoleModel> {
         return this.http.get<RoleModel>(this.url + '/' + id);
     }
 
-    getRolesByTeamId(teamId: Guid): Observable<RoleModel[]> {
+    getRolesByTeamId(teamId: string): Observable<RoleModel[]> {
         return this.http.get<RoleModel[]>(this.url + '/' + teamId);
     }
 

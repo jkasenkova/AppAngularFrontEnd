@@ -1,19 +1,17 @@
-import { Guid } from "guid-typescript";
 import { RoleModel } from "src/app/models/role";
 import { RotationType } from "src/app/models/rotationType";
 import { Team } from "src/app/models/team";
 import { UserType } from "src/app/models/userType";
 
 export interface UserModel {
-    userId?: Guid;
+    userId?: string;
     firstName: string;
     lastName?: string;
     email: string;
-    password: string;
-    roleId: Guid;
-    teamId: Guid;
-    locationId?: Guid;
-    lineManagerId?: Guid;
+    roleId: string;
+    teamId: string;
+    locationId?: string;
+    lineManagerId?: string;
     contributors?: UserModel[];
     lineManagers?: UserModel[];
     roles?: RoleModel[];

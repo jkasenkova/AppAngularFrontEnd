@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RotationReference } from '../models/rotationReference';
-import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class RotationReferenceService {
   url = this.configService.getRouterUrl() + '/reference';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-  getRotationReferences(topicId: Guid): Observable<RotationReference[]> {
+  getRotationReferences(topicId: string): Observable<RotationReference[]> {
     return this.http.get<RotationReference[]>(this.url + '/' + topicId);
   }
 
@@ -28,7 +27,7 @@ export class RotationReferenceService {
     return this.http.post<RotationReference>(this.url + '/updateReference', reference, this.httpHeaders);
   }
 
-  deleteRotationReferenceById(referenceId: Guid): Observable<string> {
+  deleteRotationReferenceById(referenceId: string): Observable<string> {
     return this.http.delete<string>(this.url + '/' + referenceId);
   }
 }

@@ -1,6 +1,5 @@
-import { Guid } from 'guid-typescript';
 export interface SectionDialogModel {
-    sectionId?: Guid;
-    handoverId?: Guid;
+    sectionId?: string;
+    handoverId?: string;
     sectionName?: string;
 }

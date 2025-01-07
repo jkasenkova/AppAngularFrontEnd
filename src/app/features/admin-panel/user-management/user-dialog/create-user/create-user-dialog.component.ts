@@ -17,7 +17,7 @@ import { RotationType } from "../../../../../models/rotationType";
 @Component({
     selector: 'create-user-dialog',
     templateUrl: './create-user-dialog.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

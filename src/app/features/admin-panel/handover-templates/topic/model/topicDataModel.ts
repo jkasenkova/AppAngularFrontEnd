@@ -1,17 +1,15 @@
-import { Guid } from "guid-typescript";
-import { Observable } from "rxjs";
-import { Section } from "src/app/models/section";
-import { Template } from "src/app/models/template";
-import { TemplateTopic } from "src/app/models/templateTopic";
+import { Section } from "@models/section";
+import { Template } from "@models/template";
+import { TemplateTopic } from "@models/templateTopic";
 
 export class TopicDataModel {
-    templateTopicId?: Guid;
+    templateTopicId?: string;
     templateTopicName: string;
-    sectionId?: Guid;
-    templateReferenceId?:Guid;
+    sectionId?: string;
+    templateReferenceId?: string;
     templateReferenceName: string;
     templateDescription?: string;
-    attachToTemplate?: Guid[];
+    attachToTemplate?: string[];
     templates?:Template[];
     sections?:Section[];
     associatedTemplates?: Template[];

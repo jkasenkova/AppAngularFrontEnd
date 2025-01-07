@@ -1,25 +1,24 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { UserModel } from "../../model/userModel";
-import { Team } from "src/app/models/team";
-import { RoleModel } from "src/app/models/role";
-import { Guid } from "guid-typescript";
-import { UserType } from "src/app/models/userType";
-import { RotationType } from "../../../../../models/rotationType";
+import { UserModel } from '../../model/userModel';
+import { Team } from '@models/team';
+import { RoleModel } from '@models/role';
+import { UserType } from '@models/userType';
+import { RotationType } from '@models/rotationType';
 
 @Component({
     selector: 'edit-user-dialog',
     templateUrl: './edit-user-dialog.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -46,19 +45,19 @@ export class EditUserDialogComponent implements OnInit {
 
     team :  Team =
     {
-        id: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862"),
+        id: 'db04e6a3-eb50-4f14-925c-d5732fb82862',
         name: "Team 1",
-        locationId: Guid.parse("d0b2ca1a-d8b9-4a61-bf61-a17e100fbe74")
+        locationId: 'd0b2ca1a-d8b9-4a61-bf61-a17e100fbe74'
     };
 
     role: RoleModel = 
         {
-            id: Guid.parse("25e11aea-21c2-4257-99b2-bf6178d03526"),
+            id: '25e11aea-21c2-4257-99b2-bf6178d03526',
             name: "Team Lead",
-            templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            templateId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
             userType: UserType.Administrator,
             rotationType: RotationType.NoRotation,
-            teamId: Guid.parse("db04e6a3-eb50-4f14-925c-d5732fb82862")
+            teamId: 'db04e6a3-eb50-4f14-925c-d5732fb82862'
         };
 
     constructor(
@@ -80,16 +79,16 @@ export class EditUserDialogComponent implements OnInit {
             template: "Template 1",
             companyId: ['', Validators.required],
             contributors: [data.contributors],
-            password: [data.password, Validators.compose([
+            /* password: [data.password, Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(10)
-            ])],
-            confirmPassword: [data.password, Validators.compose([
+            ])], */
+            /* confirmPassword: [data.password, Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(10)
-            ])],
+            ])], */
             recipients:[]
         });
 /* 

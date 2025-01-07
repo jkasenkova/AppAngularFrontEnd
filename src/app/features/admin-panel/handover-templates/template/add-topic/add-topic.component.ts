@@ -6,7 +6,6 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { Guid } from "guid-typescript";
 import { map } from "rxjs";
 import { Reference } from "src/app/models/reference";
 import { Section } from "src/app/models/section";

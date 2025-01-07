@@ -48,7 +48,7 @@ export class SecurityTabComponent implements OnInit {
         this.securityForm = this.fb.group({
             email: [data.email, [Validators.required, Validators.email]],
             secondaryEmail: ['', Validators.email],
-            curentPassword: [data.password],
+            //curentPassword: [data.password],
             newPassword: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
@@ -76,7 +76,7 @@ export class SecurityTabComponent implements OnInit {
     }
 
     onChangePassword(){
-        this.data.password = this.securityForm.get('newPassword').value;
+        //this.data.password = this.securityForm.get('newPassword').value;
         this.userService.updateUser(this.data);
     }
 }

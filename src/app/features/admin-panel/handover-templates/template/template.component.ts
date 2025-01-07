@@ -5,7 +5,6 @@ import { SectionService } from '../../../../services/sectionService';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Guid } from 'guid-typescript';
 import { SortType } from 'src/app/models/sortType';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateTopic } from 'src/app/models/templateTopic';
@@ -98,7 +97,7 @@ export class TemplateComponent implements OnInit, OnChanges {
       }
     }
 
-    filterTopics(templateTopics: TemplateTopic[], sectionId: Guid, template: Template): TemplateTopic[]
+    filterTopics(templateTopics: TemplateTopic[], sectionId: string, template: Template): TemplateTopic[]
     {
       let suggestTopics: TemplateTopic[] = [];
       if(templateTopics.length > 0)
@@ -156,7 +155,7 @@ export class TemplateComponent implements OnInit, OnChanges {
 
     //---------Section Dialogs------------
 
-    createSectionDialog(templateId: Guid): void {
+    createSectionDialog(templateId: string): void {
         const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
             data: 
             { 

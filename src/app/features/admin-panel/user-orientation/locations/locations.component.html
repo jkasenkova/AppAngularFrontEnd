@@ -1,0 +1,40 @@
+<div class="app-locations">
+    <section class="panel panel-default">
+        <div class="panel-heading text-center panel-heading-icon-right">
+            <span class="icon-left help-btn btn-circle btn btn-link tooltipstered" title="About Locations">
+                <span class="glyphicon span"></span>
+            </span>
+            <strong class="ng-binding">
+                Locations
+            </strong>
+            <span class="icon-right plus-btn btn-circle btn btn-link" (click)="addLocation()">
+                <span class="glyphicon span"></span>
+            </span>
+        </div>
+        <div class="panel-body">
+            <div class="list-group">
+                @for (location of (locations$ | async); track location) {
+                    @if(selectedLocation == location) {
+                        <div class="list-group-item selected" (click)="selectLocation(location)">
+                            {{location.name}}
+                            @if(!location.isAccountLocation){
+                                <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                            }
+                        </div>
+                    }
+                    @else
+                    {
+                        <div class="list-group-item list-group-item-action" (click)="selectLocation(location)">
+                            {{location.name}}
+                            @if(!location.isAccountLocation) {
+                                <span class="pull-right btn-close" (click)="removeLocation(location)"></span>
+                                <span class="pull-right pencil-block" (click)="editLocation(location)"></span>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</div>

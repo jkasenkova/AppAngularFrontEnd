@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
 
 import { APP_ROUTES } from './app.routes';
 import { provideAuthStore } from './services/auth';
+import { hydrationMetaReducer } from './services/auth/store/hydrationMeta.reducer';
 
 export function getBaseUrl() {
     return document.getElementsByTagName('base')[0].href;

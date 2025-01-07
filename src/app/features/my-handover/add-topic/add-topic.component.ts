@@ -6,7 +6,6 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { Guid } from "guid-typescript";
 import { HandoverSection } from "src/app/models/handoverSection";
 import { RotationReference } from "src/app/models/rotationReference";
 import { RotationTopic } from "src/app/models/rotationTopic";
@@ -105,7 +104,7 @@ export class AddTopicComponent {
             else{
 
                 var newReference: RotationReference = {
-                    id: this.addTopicForm.value.referenceId ?? Guid.create(),
+                    id: this.addTopicForm.value.referenceId ?? '',//Guid.create(),
                     name: this.addTopicForm.value.referenceName,
                     enabled: true,
                     rotationTopicId: topic.id,

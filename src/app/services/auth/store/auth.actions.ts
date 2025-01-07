@@ -16,21 +16,19 @@ export const SignInActions = createActionGroup({
   source: '[Auth] Sign In',
   events: {
     request: props<{ email: string; password: string }>(),
-    success: emptyProps(),
+    success: props<{ user: AuthUser }>(),
+    finalize: emptyProps(),
     failure: props<{ error: Error }>(),
   },
 });
 
 // Sign Out
-export const signOut = createAction('[Auth] Sign Out');
-
-// Auth User: me
-export const GetAuthUserActions = createActionGroup({
-  source: '[Auth] Auth User',
+export const SignOutActions = createActionGroup({
+  source: '[Auth] Sign Out',
   events: {
-    request: props<{ user: AuthUser }>(),
+    request: emptyProps(),
     success: emptyProps(),
-    failure: emptyProps(),
+    failure: props<{ error: Error }>(),
   }
 });
 
@@ -41,13 +39,5 @@ export const RefreshTokenActions = createActionGroup({
     request: emptyProps(),
     success: emptyProps(),
     failure: emptyProps(),
-  }
-});
-
-// Token
-export const TokenActions = createActionGroup({
-  source: '[App] Token',
-  events: {
-    request: props<{ user: AuthUser }>(),
   }
 });

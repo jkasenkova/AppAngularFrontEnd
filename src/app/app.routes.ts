@@ -1,4 +1,6 @@
 import { authGuard } from './services/auth/guards/auth.guard';
+import { adminGuard } from './services/auth/guards/admin.guard';
+import { rootGuard } from './services/auth/guards/root.guard';
 import { noAuthGuard } from './services/auth/guards/no-auth.guard';
 import { SignInComponent } from './features/auth/sign-in/sign-in.component';
 import { SignUpComponent } from './features/auth/sign-up/sign-up.component';
@@ -11,16 +13,13 @@ import { SubscriptionManagementComponent } from './subscriptions-management/subs
 import { Routes } from '@angular/router';
 import { ReportPDFPreviewComponent } from './features/my-handover/report-preview/report-pdf-component';
 import { HandoverTemplatesComponent } from './features/admin-panel/handover-templates/handover-templates.component';
+import { ADMIN_PANEL_ROUTES } from './features/admin-panel/admin-panel.routes';
 
-export const APP_ROUTES: Routes =
+const appRoutes: Routes =
 [
     {
         path: '',
         canActivate: [noAuthGuard],
-        component: AppComponent
-    },
-    {
-        path: 'app',
         component: AppComponent
     },
     {
@@ -40,7 +39,7 @@ export const APP_ROUTES: Routes =
     },
     {
         path: 'subscriptions-management',
-        canActivate: [authGuard],
+        canActivate: [rootGuard],
         component: SubscriptionManagementComponent
     },
     {
@@ -55,18 +54,17 @@ export const APP_ROUTES: Routes =
         path: 'sign-in',
         component: SignInComponent,
         canActivate: [noAuthGuard]
-      },
-      {
+    },
+    {
         path: 'sign-up',
         canActivate: [noAuthGuard],
         component: SignUpComponent,
-      },
-      {
+    },
+    {
         path: 'app-handover-templates',
         canActivate: [noAuthGuard],
         component: HandoverTemplatesComponent,
-      },
-    /*   {
-        path: 'admin-panel', loadChildren: () => import('./app/features/admin-panel/admin-panel.routes').then(mod => mod.ADMIN_PANEL_ROUTES)
-    },  */
+    },
 ];
+
+export const APP_ROUTES = appRoutes;

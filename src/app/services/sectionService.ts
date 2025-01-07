@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Section } from '../models/section';
 import { Observable } from "rxjs";
-import { Guid } from "guid-typescript";
 
 @Injectable({
     providedIn: 'root'
@@ -25,15 +24,15 @@ export class SectionService {
         this.http.patch<Section>(this.url, section, this.httpHeaders).subscribe();
     }
 
-    deleteSection(id: Guid) {
+    deleteSection(id: string) {
         this.http.delete(this.url + '/' + id).subscribe();
     }
 
-    getSections(templateId: Guid): Observable<Section[]> {
+    getSections(templateId: string): Observable<Section[]> {
         return this.http.get<Section[]>(this.url + '/' + templateId + '/sections');
     }
 
-    getSectionById(id: Guid): Observable<Section> {
+    getSectionById(id: string): Observable<Section> {
         debugger;
         return this.http.get<Section>(this.url + '/' + id);
     }

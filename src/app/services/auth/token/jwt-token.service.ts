@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Guid } from 'guid-typescript';
-import * as jwt_decode from "jwt-decode";
+import * as jwt_decode from 'jwt-decode';
+import { AuthRole } from '../store/auth.models';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +38,9 @@ export class JWTTokenService {
       return this.decodedToken ? this.decodedToken['exp'] : null;
     }
 
-    getRole(): string {
+    getRole(): AuthRole {
         this.decodeToken();
-        return this.decodedToken ? this.decodedToken['role'] : null;
+        return this.decodedToken ? JSON.parse(this.decodedToken['role']) : null;
     }
 
     getEmail(): string {

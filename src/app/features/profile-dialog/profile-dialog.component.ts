@@ -6,7 +6,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { UserModel } from "src/app/models/user";
+import { UserModel } from "@models/user";
 import { MatTabsModule } from '@angular/material/tabs';
 import { AccountTabComponent } from "./account-tab/account.component";
 import { ProfileTabComponent } from "./profile-tab/profile.component";
@@ -19,21 +19,19 @@ import { RoleService } from "src/app/services/roleService";
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        MatButtonModule,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatDialogModule,
-        MatTabsModule,
-        AccountTabComponent,
-        ProfileTabComponent
-    ],
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogActions,
+    MatDialogClose,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatTabsModule,
+    AccountTabComponent,
+    ProfileTabComponent
+],
 })
 export class ProfileDialogComponent implements OnInit {
     profileForm: FormGroup;

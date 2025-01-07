@@ -1,7 +1,6 @@
-import { Guid } from "guid-typescript";
-
 export interface Location {
-    id?: Guid;
+    companyId?: string;
+    id?: string;
     name: string;
     address?: string;
     mapLink?: string;

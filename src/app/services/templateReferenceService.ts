@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Guid } from 'guid-typescript';
 import { Reference } from '../models/reference';
 import { ConfigService } from './config.service';
 
@@ -17,7 +16,7 @@ export class TemplateReferenceService {
   url = this.configService.getRouterUrl()  + '/templateReference';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-  geTemplateReferences(topicId: Guid): Observable<Reference[]> {
+  geTemplateReferences(topicId: string): Observable<Reference[]> {
     return this.http.get<Reference[]>(this.url + '/' + topicId);
   }
 
@@ -29,7 +28,7 @@ export class TemplateReferenceService {
      this.http.patch(this.url, reference, this.httpHeaders).subscribe();
   }
 
-  deleteTemplateReferenceById(referenceId: Guid): Observable<string> {
+  deleteTemplateReferenceById(referenceId: string): Observable<string> {
     return this.http.delete<string>(this.url + '/' + referenceId);
   }
 }

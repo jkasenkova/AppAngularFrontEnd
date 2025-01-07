@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MyTeamModel } from "src/app/models/myTeamModel";
-import { Guid } from "guid-typescript";
 import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
 import { CommentsService } from "src/app/services/commentsService";
 import { UserModel } from "src/app/models/user";
@@ -23,19 +22,16 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        MatButtonModule,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatDialogModule,
-        MatTooltipModule
-    ]
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogClose,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatTooltipModule
+]
 })
 
 export class ReportCommentsDialogComponent implements OnInit {
@@ -49,26 +45,26 @@ export class ReportCommentsDialogComponent implements OnInit {
     teamUserTmp: MyTeamModel = {
         ownerName: "Julia Kasenkova",
         ownerEmail: "jkasenkova@gmail.com",
-        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        userId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
         ownerRole: "Developer",
-        ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        isActiveRotation: true, //get state from back by curentRotationId
-        recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        ownerRoleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+        isActiveRotation: true, //get state from back by currentRotationId
+        recipientId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+        locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+        lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+        currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
         selected: false
     };
 
     authorizedUserTmp: UserModel = {
-        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+        userId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb",
         firstName: "John",
         lastName: "Smith",
         email: "john@gmail.com",
-        password: "johnDoe123!",
-        roleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        teamId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        companyId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb")
+        //password: "johnDoe123!",
+        roleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+        teamId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb",
+        companyId: "314d09a4-cb44-4c08-99d7-15d3441bc3cb"
     };
 
     constructor(
@@ -131,7 +127,7 @@ export class ReportCommentsDialogComponent implements OnInit {
                 comment: this.commentsForm.get('comment').value,
                 handoverId: this.data.handoverId,
                 createDate: this.currentTime,
-                commentId: Guid.create()
+                commentId: ''//Guid.create()
             });
 
             this.commentsForm.controls['commentId'].setValue(comment.commentId);

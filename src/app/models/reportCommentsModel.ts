@@ -1,9 +1,7 @@
-import { Guid } from "guid-typescript";
-
 export class ReportCommentsModel {
-    public ownerId: Guid;
+    public ownerId: string;
     public comment: string;
-    public handoverId: Guid;
+    public handoverId: string;
     public createDate: string;
-    public commentId?: Guid;
+    public commentId?: string;
 }

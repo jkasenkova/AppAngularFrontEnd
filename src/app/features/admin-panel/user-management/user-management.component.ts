@@ -1,29 +1,30 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { MatButtonModule } from '@angular/material/button';
-import { ColDef } from "ag-grid-community";
-import { EditButtonComponent } from "./editButtonComponent";
-import { DeleteButtonComponent } from "./deleteButtonComponent";
+import { ColDef } from 'ag-grid-community';
+import { EditButtonComponent } from './editButtonComponent';
+import { DeleteButtonComponent } from './deleteButtonComponent';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateUserDialogComponent } from "./user-dialog/create-user/create-user-dialog.component";
-import { Team } from "src/app/models/team";
-import { Guid } from "guid-typescript";
-import { RoleModel } from "src/app/models/role";
-import { UserType } from "src/app/models/userType";
-import { UserModel } from "./model/userModel";
-import { ShiftPatternType } from "src/app/models/shiftPatternType";
-import { RotationType } from "../../../models/rotationType";
-import { IconComponent } from "./iconComponent";
-import { TeamService } from "src/app/services/teamServices";
-import { RoleService } from "src/app/services/roleService";
-import { UserService } from "src/app/services/userService";
-import { LocationService } from "src/app/services/locationService";
-import { LocationModel } from "src/app/models/locationModel";
+import { CreateUserDialogComponent } from './user-dialog/create-user/create-user-dialog.component';
+import { Team } from '@models/team';
+import { RoleModel } from '@models/role';
+import { UserType } from '@models/userType';
+import { UserModel } from './model/userModel';
+import { ShiftPatternType } from '@models/shiftPatternType';
+import { RotationType } from '@models/rotationType';
+import { IconComponent } from './iconComponent';
+import { TeamService } from '@services/teamServices';
+import { RoleService } from '@services/roleService';
+import { UserService } from '@services/userService';
+import { LocationService } from '@services/locationService';
+import { LocationModel } from '@models/locationModel';
+import { map, Observable, of } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-user-management',
     standalone: true,
-    imports: [AgGridAngular, MatButtonModule],
+    imports: [AgGridAngular, MatButtonModule, AsyncPipe],
     templateUrl: './user-management.component.html',
     styleUrls: ['./user-management.component.less']
 })
@@ -33,12 +34,11 @@ export class UserManagementComponent implements OnInit {
     readonly dialog = inject(MatDialog);
     teamList: Team[] = [];
     roleList: RoleModel[] = [];
-    lineManagersList: UserModel[] = [];
-    rowData: UserModel[] = [];
+    users$: Observable<UserModel[]>;
     locations: LocationModel[] = [];
     noRowsDisplay: string = "No users to show";
 
-    colDefs: ColDef[] = [
+    colDefs: Observable<ColDef[]> = of([
         {
             field: "icon",
             headerName: "",
@@ -104,7 +104,7 @@ export class UserManagementComponent implements OnInit {
             resizable: false,
             cellRenderer: DeleteButtonComponent 
         }
-    ];
+    ]);
 
     constructor(
         private locationService: LocationService,
@@ -117,9 +117,17 @@ export class UserManagementComponent implements OnInit {
             this.teamList = teams
         });
 
-        this.userService.getUsers().subscribe(users => {
-            this.lineManagersList = users
-        });
+        this.users$ = this.userService.getUsers().pipe(map(users => users.map(user => ({
+            firstName: user.firstName, 
+            lastName: user.lastName,  
+            email: user.email,
+            //locationId: user.locationId, 
+            teamId: user.teamId, 
+            roleId: user.roleId, 
+            userType: UserType.User, 
+            rotation: RotationType.Shift,  
+            lastLogin: new Date().getFullYear()
+        }))));
 
         this.roleService.getRoles().subscribe(roles => {
             this.roleList = roles
@@ -128,34 +136,16 @@ export class UserManagementComponent implements OnInit {
         this.locationService.getLocations().subscribe(locations => {
             this.locations = locations
         });
-        
-        if( this.lineManagersList.length > 0){
-            this.lineManagersList.map(user => {
-                this.rowData.push(
-                {
-                    firstName: user.firstName, 
-                    lastName: user.lastName,  
-                    email: user.email,
-                    password: user.password,
-                    locationId: user.locationId, 
-                    teamId: user.teamId, 
-                    roleId: user.roleId, 
-                    userType: UserType.User, 
-                    rotation: RotationType.Shift,  
-                    lastLogin: new Date().getFullYear()
-                });
-            });
-        }
     }
 
     addUser(){
         const dialogRef = this.dialog.open(CreateUserDialogComponent, { 
             data: { 
-                lineManagers: this.lineManagersList,
+                //lineManagers: this.lineManagersList,
                 roles: this.roleList,
                 teams: this.teamList,
-                contributors: this.lineManagersList,
-                recipients: this.lineManagersList
+                //contributors: this.lineManagersList,
+                //recipients: this.lineManagersList
             },
             panelClass: 'user-dialog',
             height: '600px'

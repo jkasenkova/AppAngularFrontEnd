@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
-import { Guid } from "guid-typescript";
 import { MyTeamModel } from "../models/myTeamModel";
 
 @Injectable({
@@ -17,7 +16,7 @@ export class MyTeamService {
     url = this.configService.getRouterUrl() + '/users'; 
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    getTeamUser(teamUserId: Guid): Observable<MyTeamModel> {
+    getTeamUser(teamUserId: string): Observable<MyTeamModel> {
         return this.http.get<MyTeamModel>(this.url + '/' + teamUserId);
     }
 

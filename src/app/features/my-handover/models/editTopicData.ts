@@ -1,9 +1,7 @@
-import { Guid } from 'guid-typescript';
-
 export class EditTopicDataModel {
-    topicId?: Guid;
+    topicId?: string;
     topicName?: string;
-    referenceId?: Guid;
+    referenceId?: string;
     referenceName?: string;
     referenceNotes?: string;
 }

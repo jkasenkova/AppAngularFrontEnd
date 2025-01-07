@@ -22,7 +22,7 @@ import { CommonModule } from "@angular/common";
 @Component({
     selector: 'role-dialog',
     templateUrl: './create-role.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -76,9 +76,9 @@ export class CreateRoleDialogComponent {
     }
 
     ngOnInit() {
-        this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
+        /* this.teamService.getRolesByTeamId(this.data.teamId).subscribe(roles =>{
             this.roles = roles;
-        });
+        }); */
 
         this.templateService.getTemplates().subscribe(templates =>{
             this.templates = templates;
@@ -113,9 +113,9 @@ export class CreateRoleDialogComponent {
     onSave(): void {
         var roleName = this.roleForm.get('name').value;
 
-        if(this.roles.find(l=>l.name == roleName) != null){
+        /* if(this.roles.find(l=>l.name == roleName) != null){
             this.roleForm.get('name').setErrors({'existRoleName': true})
-        }
+        } */
 
         if (this.roleForm.valid) {
             this.dialogRef.close(this.roleForm.value);

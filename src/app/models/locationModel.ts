@@ -1,8 +1,7 @@
-import { Guid } from "guid-typescript";
 import { Timezone } from "./timezoneModel";
 
 export class LocationModel {
-    id?: Guid;
+    id?: string;
     name: string = '';
     address?: string;
     mapLink?: string;

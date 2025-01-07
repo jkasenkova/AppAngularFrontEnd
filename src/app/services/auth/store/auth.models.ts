@@ -1,11 +1,3 @@
-import { Guid } from "guid-typescript";
-
-export const AUTH_FEATURE_KEY = 'auth';
-
-export interface AuthPartialState {
-  readonly [AUTH_FEATURE_KEY]: AuthState;
-}
-
 export enum TokenStatus {
     PENDING = 'PENDING',
     VALIDATING = 'VALIDATING',
@@ -28,5 +20,10 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
+  role: AuthRole;
+}
+
+export interface AuthRole {
+  RoleId: string;
+  RoleName: string; 
 }

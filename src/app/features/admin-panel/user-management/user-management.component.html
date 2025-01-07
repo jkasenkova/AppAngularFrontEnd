@@ -3,13 +3,13 @@
         <button mat-stroked-button class="btn-add-user" (click)="addUser()">Add User</button>
     </div>
     <ag-grid-angular class="ag-theme-quartz" #agGrid
-                     [rowData]="rowData"
-                     [columnDefs]="colDefs"
-                     [pagination]="true"
-                     [detailRowAutoHeight]="true"
-                     [paginationPageSizeSelector]="paginationPageSizeSelector"
-                     [paginationPageSize]="paginationPageSize"
-                     [alwaysShowHorizontalScroll]="false"
-                     [overlayNoRowsTemplate]="noRowsDisplay">
+                    [rowData]="users$ | async"
+                    [columnDefs]="colDefs | async"
+                    [pagination]="true"
+                    [detailRowAutoHeight]="true"
+                    [paginationPageSizeSelector]="paginationPageSizeSelector"
+                    [paginationPageSize]="paginationPageSize"
+                    [alwaysShowHorizontalScroll]="false"
+                    [overlayNoRowsTemplate]="noRowsDisplay">
     </ag-grid-angular> 
 </div>

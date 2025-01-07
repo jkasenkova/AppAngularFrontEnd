@@ -1,6 +1,4 @@
-import { Guid } from "guid-typescript";
-
 export interface TemplateDialogModel {
-    templateId: Guid;
+    templateId: string;
     templateName: string;
 }

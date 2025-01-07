@@ -10,31 +10,27 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { Handover } from "src/app/models/handover";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
-import { Guid } from "guid-typescript";
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: 'handover-recepient',
-    templateUrl: './handover-recepient.component.html',
-    styleUrl: './handover-recepient.component.less',
+    selector: 'handover-recipient',
+    templateUrl: './handover-recipient.component.html',
+    styleUrl: './handover-recipient.component.less',
     standalone: true,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        MatButtonModule,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatDialogModule,
-        MatGridListModule,
-        CommonModule      
-    ],
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogClose,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatGridListModule,
+    CommonModule
+],
 })
 
 export class HandoverRecipientDialogComponent implements OnInit {
@@ -47,40 +43,40 @@ export class HandoverRecipientDialogComponent implements OnInit {
         {
             ownerName: "Julia Kasenkova",
             ownerEmail: "jkasenkova@gmail.com",
-            userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            userId: 'e50c8635-4b51-4cdd-85ca-4ae35acb8bbd',
+            ownerRoleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             ownerRole: "Developer",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            isActiveRotation: true, //get state from back by currentRotationId
+            recipientId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+            locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             selected: false
         },
         {
             ownerName: "Peter Hlazunov",
             ownerEmail: "peter_hlazunov@gmail.com",
-            userId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            userId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+            ownerRoleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             ownerRole: "Team Lead",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            isActiveRotation: true, //get state from back by currentRotationId
+            recipientId: 'e50c8635-4b51-4cdd-85ca-4ae35acb8bbd',
+            locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             selected: false
         },
         {
             ownerName: "Vlad Gurov",
             ownerEmail: "vlad_gurov@gmail.com",
-            userId: Guid.parse("f06e7c51-43e7-4c8d-b7dd-42c668384bc3"),
+            userId: 'f06e7c51-43e7-4c8d-b7dd-42c668384bc3',
             ownerRole: "Product Manager",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            isActiveRotation: true, //get state from back by currentRotationId
+            recipientId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            ownerRoleId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+            currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             selected: false
         }
     ]

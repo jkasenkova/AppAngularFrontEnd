@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
-import { Guid } from "guid-typescript";
 import { HandoverSection } from "../models/handoverSection";
 
 @Injectable({
@@ -25,11 +24,11 @@ export class HandoverSectionService {
         this.http.put(this.url, section, this.httpHeaders).subscribe();
     }
 
-    deleteSection(sectionId: Guid): Observable<string> {
+    deleteSection(sectionId: string): Observable<string> {
         return this.http.delete<string>(this.url + '/' + sectionId);
     }
 
-    getSections(templateId: Guid): Observable<HandoverSection[]> {
+    getSections(templateId: string): Observable<HandoverSection[]> {
         return this.http.get<HandoverSection[]>(this.url + '/' + templateId);
     }
 }

@@ -1,8 +1,8 @@
-import { Guid } from 'guid-typescript';
-
 export interface SignUpResponse {
-    error: string;
-    companyId: Guid;
-    companyName: string;
+    error?: string;
+    companyId?: string;
+    userId?: string;
+    roleId?: string;
+    companyName?: string;
     succeeded: boolean;
 }

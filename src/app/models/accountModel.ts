@@ -1,7 +1,5 @@
-import { Guid } from 'guid-typescript';
-
 export interface AccountModel {
-    id: Guid;
+    id: string;
     name: string;
     timezone: string;
 }

@@ -1,7 +1,5 @@
-import { Guid } from 'guid-typescript';
-
 export class pdfReportModel {
-    handoverId: Guid;
+    handoverId: string;
     handoverDates: string;
     handoverType: string;
     handoverTimeZone: string;

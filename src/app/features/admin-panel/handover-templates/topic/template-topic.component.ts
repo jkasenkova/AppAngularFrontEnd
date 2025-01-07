@@ -19,7 +19,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SectionService } from 'src/app/services/sectionService';
 import { catchError, map, Observable, of } from 'rxjs';
-import { Guid } from 'guid-typescript';
 import { UpdateTemplateService } from 'src/app/services/updateTemplateService';
 import { DeleteTemplateTopicDialogComponent } from './template-topic-dialog/delete-template-topic/delete-template-topic-dialog.component';
 import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopicService';
@@ -95,7 +94,7 @@ export class TemplateTopicComponent implements OnInit{
     });
  }
 
- getSectionName(sectionId: Guid): Observable<string> {
+ getSectionName(sectionId: string): Observable<string> {
     return this.sectionService.getSectionById(sectionId).pipe(
         map((response) => response.name),
         catchError((error) => {

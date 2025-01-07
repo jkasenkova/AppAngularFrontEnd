@@ -1,12 +1,14 @@
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MyTeamModel } from 'src/app/models/myTeamModel';
-import { MyTeamService } from 'src/app/services/myTeamService';
+import { MyTeamModel } from '@models/myTeamModel';
+import { UserService } from '@services/userService';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { HandoverInfoComponent } from './hondover-info/handover-info.component';
+import { HandoverInfoComponent } from './handover-info/handover-info.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MyHandoverComponent } from '../my-handover/my-handover.component';
+import { Observable, map } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-my-team',
@@ -15,28 +17,26 @@ import { MyHandoverComponent } from '../my-handover/my-handover.component';
         MatTabsModule,
         CommonModule,
         MatTooltipModule,
-        MyHandoverComponent
+        MyHandoverComponent,
+        AsyncPipe
     ], 
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-team.component.html',
     styleUrls: ['./my-team.component.less'],
     encapsulation: ViewEncapsulation.None
 })
-
 export class MyTeamComponent implements OnInit {
     totalUsersCount: number;
-    teamRotations: MyTeamModel[] = [];
+    users$: Observable<MyTeamModel[]>;
     readonly dialog = inject(MatDialog);
     urlMyTeam: string = "my-team";
     
     constructor(
         private cdr: ChangeDetectorRef,
-        private myTeamService: MyTeamService){}
+        private userService: UserService){}
 
     ngOnInit(): void {
-        this.myTeamService.getTeamUsers().subscribe(teams =>{
-            this.teamRotations = teams
-        });
+        this.users$ = this.userService.getMyTeamUsers();
     }
 
     ngAfterViewChecked(){
@@ -57,7 +57,7 @@ export class MyTeamComponent implements OnInit {
        }
     }
 
-    hadoverInfo(teamRotation: MyTeamModel){
+    handoverInfo(teamRotation: MyTeamModel){
         const dialogRef = this.dialog.open(HandoverInfoComponent,
             {
                 data: teamRotation
@@ -72,10 +72,7 @@ export class MyTeamComponent implements OnInit {
     }
 
     contributorsInfo(teamRotation: MyTeamModel): string {
-
-       var contribitors = this.teamRotations.filter(c => 
-        teamRotation.contributors.includes(c.userId));
-
-        return contribitors.flatMap(c => c.ownerName).join('\n');
+        //const contributors = this.teamRotations.filter(c => teamRotation.contributors.includes(c.userId));
+        return ''; //contributors.flatMap(c => c.ownerName).join('\n');
     }
 }

@@ -15,7 +15,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatChipsModule} from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ShareRecipient } from "src/app/models/shareRecipientModel";
-import { ShareReportModel } from "../../models/sahareReportModel";
+import { ShareReportModel } from "../../models/shareReportModel";
 
 @Component({
     selector: 'share-report',

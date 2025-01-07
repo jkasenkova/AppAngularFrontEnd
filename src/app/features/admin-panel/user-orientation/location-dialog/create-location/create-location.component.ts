@@ -45,7 +45,7 @@ export class CreateLocationDialogComponent implements OnInit {
     locationForm: FormGroup;
     filteredTimeZone: string[];
     timeZones: Timezone[] = [];
-    locations: Location[];
+    //@Input() locations: Location[];
 
     constructor(
         private timezoneProvider: TimezoneProvider,
@@ -59,16 +59,12 @@ export class CreateLocationDialogComponent implements OnInit {
             name: [null, Validators.required],
             address: null,
             mapLink: null,
-            timeZoneId: [null, Validators.required],
+            timeZone: [null, Validators.required],
             isAccountLocation: false
         });
     }
 
     ngOnInit(){
-        this.locationService.getLocations().subscribe(locations =>{
-            this.locations = locations;
-        });
-
         this.timeZones = this.timezoneProvider.getTimezones();
     }
 
@@ -79,9 +75,9 @@ export class CreateLocationDialogComponent implements OnInit {
     onSave(): void {
         var locationName = this.locationForm.get('name').value;
 
-        if(this.locations.find(l=>l.name == locationName) != null){
+        /* if(this.locations.find(l=>l.name == locationName) != null){
             this.locationForm.get('name').setErrors({'existLocationName': true})
-        }
+        } */
 
         if (this.locationForm.valid) {
             this.dialogRef.close(this.locationForm.value);

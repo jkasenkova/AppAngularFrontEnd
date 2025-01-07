@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import moment from 'moment-timezone';
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { Timezone } from "../../../models/timezoneModel";
-import { AuthService } from "../../../services/auth/auth.service";
-import { LocationService } from "../../../services/locationService";
-import { AccountService } from '../../../services/accountService';
-import { Location } from "src/app/models/location";
-import { TimezoneProvider } from '../../../shared/timezone.provider';
-import { SignUpResponse } from '../../../models/signUpResponse';
-import { SignUpData } from '../../../models/signUpData';
-import { AccountModel } from '../../../models/accountModel';
-import {AsyncPipe} from '@angular/common';
+import { Timezone } from '@models/timezoneModel';
+import { AuthService } from '@services/auth/auth.service';
+import { LocationService } from '@services/locationService';
+import { AccountService } from '@services/accountService';
+import { UserService } from '@services/userService';
+import { Location } from '@models/location';
+import { UserModel } from '@models/user';
+import { TimezoneProvider } from '@shared/timezone.provider';
+import { SignUpResponse } from '@models/signUpResponse';
+import { SignUpData } from '@models/signUpData';
+import { AccountModel } from '@models/accountModel';
+import { AsyncPipe } from '@angular/common';
 import {Observable} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
 
@@ -47,6 +49,7 @@ export class SignUpComponent implements OnInit{
         private router: Router,
         private authService: AuthService,
         private locationService: LocationService,
+        private userService: UserService,
         private fb: FormBuilder,
         private tz: TimezoneProvider) {
         this.signUpForm = this.fb.group({
@@ -98,15 +101,29 @@ export class SignUpComponent implements OnInit{
                     name: response.companyName,
                     timezone: timezone.abbr
                 };
-                this.accountService.createAccount(accountModel).subscribe(x => console.log(x));
+                this.accountService.createAccount(accountModel).subscribe();
 
-                const location: Location = {
-                    name: this.signUpForm.value.officeLocation,
-                    timeZone: timezone.abbr,
-                    isAccountLocation: true
+                const user : UserModel = {
+                    userId: response.userId,
+                    firstName: this.signUpForm.value.firstName,
+                    lastName: this.signUpForm.value.lastName,
+                    email: this.signUpForm.value.email,
+                    roleId: response.roleId,
+                    companyId: response.companyId,
+                    title: this.signUpForm.value.position,
                 };
 
-                this.locationService.createLocation(location);
+                this.userService.createUser(user).subscribe();
+                
+                const location: Location = {
+                    companyId: response.companyId,
+                    name: this.signUpForm.value.officeLocation,
+                    timeZone: timezone.abbr,
+                    isAccountLocation: true,
+                    address: this.signUpForm.value.officeLocation,
+                };
+
+                this.locationService.createLocation(location).subscribe();
 
                 this.signUpForm.reset();
                 this.router.navigate(['/sign-in']);

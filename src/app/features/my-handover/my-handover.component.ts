@@ -1,4 +1,3 @@
-
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output} from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
@@ -7,7 +6,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
-import { Guid } from "guid-typescript";
 import { Handover } from "src/app/models/handover";
 import { RotationTopic } from "src/app/models/rotationTopic";
 import { SectionType } from "src/app/models/sectionType";
@@ -24,7 +22,7 @@ import { CommonModule } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
 import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
-import { ShareReportModel } from "./models/sahareReportModel";
+import { ShareReportModel } from "./models/shareReportModel";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
 import { TemplateTopic } from "src/app/models/templateTopic";
@@ -48,23 +46,21 @@ import { AuthFacade } from "src/app/services/auth/store/auth.facade";
     selector: 'app-my-handover',
     standalone: true,
     imports: [
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        MatTooltipModule,
-        CommonModule,
-        MatExpansionModule,
-        ViewUserPanelComponent,
-        TopicComponent,
-        RouterModule,
-        ReportPDFPreviewComponent,
-        MatTabsModule,
-        FinishRotationDialogComponent
-    ],
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatTooltipModule,
+    CommonModule,
+    MatExpansionModule,
+    ViewUserPanelComponent,
+    TopicComponent,
+    RouterModule,
+    MatTabsModule
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
     styleUrls: ['./my-handover.component.less'],
@@ -83,7 +79,7 @@ export class MyHandoverComponent implements OnInit {
     isAdmin: boolean;
     
     readonly dialog = inject(MatDialog);
-    @Output() ownerHandoveName: string;
+    @Output() ownerHandoverName: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
 
@@ -102,7 +98,7 @@ export class MyHandoverComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.authFacade.getIsAdmin().subscribe(isAdmin => {
+        this.authFacade.isAdmin$.subscribe(isAdmin => {
             this.isAdmin = isAdmin;
         });
 
@@ -118,8 +114,8 @@ export class MyHandoverComponent implements OnInit {
             });
         }
       
-      if(this.owner && this.owner.curentRotationId) {
-            this.handoverService.getHandoverById(this.owner.curentRotationId).subscribe(rotation =>
+      if(this.owner && this.owner.currentRotationId) {
+            this.handoverService.getHandoverById(this.owner.currentRotationId).subscribe(rotation =>
             {
                 this.handover = rotation;
                 this.handoverOut = rotation
@@ -132,7 +128,7 @@ export class MyHandoverComponent implements OnInit {
       if(this.ownerRole){
         this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
             this.template = template;
-            this.handover = this.initilizeTemplateSection(this.template, this.handover);
+            this.handover = this.initializeTemplateSection(this.template, this.handover);
         });
       }
 
@@ -141,7 +137,7 @@ export class MyHandoverComponent implements OnInit {
         }); 
     }
 
-    initilizeTemplateSection(template: Template, handover: Handover):Handover {
+    initializeTemplateSection(template: Template, handover: Handover):Handover {
 
         template.sections.forEach(section => {
 
@@ -156,7 +152,7 @@ export class MyHandoverComponent implements OnInit {
                 sortReferenceType: section.sortReferenceType,
                 templateSection: true,
                 appendAddItemLine: false,
-                sectionTopics: this.initilizeRotationTopics(section)
+                sectionTopics: this.initializeRotationTopics(section)
             };
 
             handover.sections.push(convertedSection);
@@ -171,13 +167,13 @@ export class MyHandoverComponent implements OnInit {
         return handover;
     }
 
-    initilizeRotationTopics(sectionTemplate: Section): RotationTopic[] {
+    initializeRotationTopics(sectionTemplate: Section): RotationTopic[] {
 
         let rotationTopics: RotationTopic[] = [];
         sectionTemplate.sectionTopics.filter(t => t.enabled).forEach(templateTopic => {
 
             var convertedTopic = { 
-                sectionnId: sectionTemplate.id,
+                sectionId: sectionTemplate.id,
                 isPinned: false,
                 id: templateTopic.id,
                 name: templateTopic.name,
@@ -187,7 +183,7 @@ export class MyHandoverComponent implements OnInit {
                 isExpand: templateTopic.isExpand,
                 templateTopic: true,
                 checked: false,
-                references: this.initilizeRotationReferences(templateTopic)
+                references: this.initializeRotationReferences(templateTopic)
             };
 
             rotationTopics.push(convertedTopic);
@@ -211,7 +207,7 @@ export class MyHandoverComponent implements OnInit {
         var references: RotationReference[] = [];
         
         var otherTopic = { 
-            id: Guid.create(),
+            id: '',//Guid.create(),
             isPinned: false,
             name: "Other",
             enabled: false,
@@ -227,13 +223,13 @@ export class MyHandoverComponent implements OnInit {
         return  otherTopic;
     }
 
-    initilizeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
+    initializeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
 
         let rotationReferences: RotationReference[] = [];
         templateTopic.templateReferences.filter(t => t.enabled).forEach(reference => {
 
             var convertedReference = { 
-                id: Guid.create(),
+                id: '',//Guid.create(),
                 rotationTopicId: templateTopic.id,
                 name: reference.name,
                 enabled: reference.enabled,
@@ -283,7 +279,7 @@ export class MyHandoverComponent implements OnInit {
         });
     }
 
-    getLettersIcon(userId: Guid): string {
+    getLettersIcon(userId: string): string {
         this.myTeamService.getTeamUser(userId).pipe(
             expand(user => 
                 {
@@ -293,7 +289,7 @@ export class MyHandoverComponent implements OnInit {
         return "";
     }
 
-    getNameByUserId(userId: Guid): string {
+    getNameByUserId(userId: string): string {
         this.myTeamService.getTeamUser(userId).pipe(
             expand(user => 
                 {
@@ -311,16 +307,16 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                
-                if(this.owner.isActiveRotation && this.owner.curentRotationId){
+                if(this.owner.isActiveRotation && this.owner.currentRotationId){
                     this.handover.recipientId = result.recipientId;
                     this.handoverService.updateHandover(result);
                 }else{
                     this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
                         this.template = template;
-                        this.handover = this.initilizeTemplateSection(this.template, this.handover);
+                        this.handover = this.initializeTemplateSection(this.template, this.handover);
                     }); 
                     this.owner.isActiveRotation = true;
-                    this.owner.curentRotationId = this.handover.handoverId;
+                    this.owner.currentRotationId = this.handover.handoverId;
                    
                    // this.cdr.detectChanges();
                 }
@@ -341,7 +337,7 @@ export class MyHandoverComponent implements OnInit {
                 this.handover.endDate = result.endDate;
                 this.handover.endTime = result.endTime;
                
-                if(this.owner.curentRotationId && this.owner.isActiveRotation){
+                if(this.owner.currentRotationId && this.owner.isActiveRotation){
                     this.handoverService.updateHandover(this.handover);
                 }
                 else{
@@ -357,7 +353,7 @@ export class MyHandoverComponent implements OnInit {
 
         this.teamMembers = this.teamMembers.filter(u=> !this.handover.shareUsers.includes(u));
 
-        let sharReportModel: ShareReportModel = {
+        let shareReportModel: ShareReportModel = {
             ownerId: this.handover.ownerId,
             handoverId: this.handover.handoverId,
             shareUsers: this.handover.shareUsers,
@@ -367,7 +363,7 @@ export class MyHandoverComponent implements OnInit {
 
         
         const dialogRef = this.dialog.open(ShareReportDialogComponent, { 
-            data: sharReportModel
+            data: shareReportModel
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -420,7 +416,7 @@ export class MyHandoverComponent implements OnInit {
             if (result) {
                 let newHandover: Handover = {
                     templateId: this.template.id,
-                    handoverId: Guid.create(),
+                    handoverId: '',//Guid.create(),
                     ownerId: this.owner.userId,
                     sections: [],
                     endTime: result.endTime,
@@ -475,7 +471,7 @@ export class MyHandoverComponent implements OnInit {
                 handover.liveRotation = false;
 
                 this.owner.isActiveRotation = false;
-                this.owner.curentRotationId = null;
+                this.owner.currentRotationId = null;
 
                 this.handoverService.updateHandover(handover);
                 this.myTeamService.updateTeamUser(this.owner);

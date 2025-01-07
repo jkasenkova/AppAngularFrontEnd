@@ -1,5 +1,3 @@
-import { Guid } from "guid-typescript";
-
 export class SubscriptionDetail {
     public version: string;
     public purchaseDate: string;

@@ -7,7 +7,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MyTeamModel } from "src/app/models/myTeamModel";
-import { Guid } from "guid-typescript";
 import { RotationType } from "src/app/models/rotationType";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { LocationService } from "src/app/services/locationService";
@@ -34,7 +33,7 @@ import { LocationService } from "src/app/services/locationService";
     ],
 })
 
-export class HandoverInfoComponent  implements OnInit {
+export class HandoverInfoComponent implements OnInit {
     handoverInfoForm: FormGroup;
     users: MyTeamModel[];
     locationName: string;
@@ -43,7 +42,7 @@ export class HandoverInfoComponent  implements OnInit {
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<HandoverInfoComponent>,
         private myTeamService: MyTeamService,
-        private loctionService: LocationService,
+        private locationService: LocationService,
         @Inject(MAT_DIALOG_DATA) public data: MyTeamModel
     ) {
        
@@ -51,9 +50,9 @@ export class HandoverInfoComponent  implements OnInit {
             handoverOwner: data.ownerName,
             role: data.ownerRole,
             location: this.locationName,
-            lineMananer: data.lineManagerId,
+            lineManager: data.lineManagerId,
             recipient: data.recipientId,
-            rotationType:  data.curentRotationId != null ? RotationType.Shift : RotationType.NoRotation,
+            rotationType:  data.currentRotationId != null ? RotationType.Shift : RotationType.NoRotation,
             contributors: data.contributors
         });
 
@@ -61,7 +60,7 @@ export class HandoverInfoComponent  implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loctionService.getLocationById(this.data.locationId)
+        this.locationService.getLocationById(this.data.locationId)
         .subscribe(location => this.locationName = location.name);
 
         this.myTeamService.getTeamUsers().subscribe(teams => this.users = teams);
@@ -79,19 +78,19 @@ export class HandoverInfoComponent  implements OnInit {
     }
 
     onSelectLineManager(event: any){
-        var userId = event.value as Guid; // check it
+        var userId = event.value as string; // check it
         this.data.lineManagerId = userId;
         this.myTeamService.updateTeamUser(this.data);
     }
 
     onSelectHandoverRecipient(event: any){
-        var userId = event.value as Guid;
+        var userId = event.value as string;
         this.data.recipientId = userId;
         this.myTeamService.updateTeamUser(this.data);
     }
 
     onSelectContributors(event: any){
-        var userIds = event.value as Guid[];
+        var userIds = event.value as string[];
         this.data.contributors = userIds;
         this.myTeamService.updateTeamUser(this.data);
     }

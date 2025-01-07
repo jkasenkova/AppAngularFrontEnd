@@ -14,7 +14,6 @@ import { ProfileDialogComponent } from './features/profile-dialog/profile-dialog
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { UserModel } from './models/user';
-import { Guid } from 'guid-typescript';
 import { FooterComponent } from './features/footer/footer.component';
 import { AuthFacade } from './services/auth/store/auth.facade';
 import { AuthUser } from './services/auth/store/auth.models';
@@ -50,7 +49,7 @@ export class AppComponent implements OnInit {
         private readonly dialog: MatDialog) {}
 
     ngOnInit(): void {
-         this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
+        this.authFacade.isLoggedIn$.subscribe(isLoggedIn => {
             this.isAuth = isLoggedIn;   
         });
         this.authFacade.isAdmin$.subscribe(isAdmin => {
@@ -67,10 +66,6 @@ export class AppComponent implements OnInit {
     }
 
     getProfileName(): string {
-        this.authFacade.state.subscribe(data => {
-           // console.log(data);
-        });
-
         if(Boolean(this.user.firstName) && Boolean(this.user.lastName)){
             var getLetters = [this.user.firstName[0] + this.user.lastName[0]].join("");
             return getLetters;
@@ -79,7 +74,7 @@ export class AppComponent implements OnInit {
     }
 
     getProfileDialog(){
-        /*const dialogRef = this.dialog.open(ProfileDialogComponent, { 
+        const dialogRef = this.dialog.open(ProfileDialogComponent, { 
             data: this.user
         });
 
@@ -87,12 +82,11 @@ export class AppComponent implements OnInit {
             if (result) {
         
             }
-        });*/
+        });
     }
 
     logOut(){
-        this.isAuth = false;
-        this.router.navigate(['/sign-in']);
+        this.authFacade.signOut();
     }
 }
 

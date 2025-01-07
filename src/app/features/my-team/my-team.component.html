@@ -2,12 +2,11 @@
     <mat-tab label="My Team"></mat-tab>
     <mat-tab label="Handover"><app-my-handover></app-my-handover></mat-tab>
 </mat-tab-group>
-
 <div class="container app-my-team">
-    @if(teamRotations.length > 0){
+    @if(users$){
         <div class="row panels-block">
-        @for (teamRotation of teamRotations; track teamRotation) {
-            <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        @for (teamRotation of (users$ | async); track teamRotation) {
+            <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12" userId="">
                 <div class="row panels">
                     <div class="col col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding padding-row">
                         <div class="user-photo">
@@ -58,9 +57,8 @@
                                         <div id="icon-container">
                                             <div id="name">{{ getLetters(teamRotation) }}</div>
                                         </div>
-                                        <div class="edit-user" (click)="hadoverInfo(teamRotation)"></div>
+                                        <div class="edit-user" (click)="handoverInfo(teamRotation)"></div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -70,10 +68,9 @@
         }
         </div>
     }
-    @else{
+    @else {
         <div class="text-center message-block">
             You have no users in your team.
         </div>
-        
     }
 </div>

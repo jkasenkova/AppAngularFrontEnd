@@ -1,9 +1,8 @@
-import { Guid } from "guid-typescript";
 import { RotationTopic } from "./rotationTopic";
 
 export class RotationReference {
-    public id?: Guid;
-    public rotationTopicId?: Guid;
+    public id?: string;
+    public rotationTopicId?: string;
     public rotationTopic?: RotationTopic;
     public name: string;
     public description?: string;

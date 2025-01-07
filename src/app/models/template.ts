@@ -1,9 +1,8 @@
-import { Guid } from "guid-typescript";
 import { Section } from "./section";
 
 export class Template {
     public name: string;
-    public id?: Guid;
+    public id?: string;
     public sections?: Section[] = [];
     public isHandover!: boolean;
 }

@@ -1,8 +1,8 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import * as AuthActions from './auth.actions';
-import { SignInActions, RefreshTokenActions, GetAuthUserActions, LoginActions, TokenActions } from './auth.actions';
-import { AuthState, TokenStatus, AuthUser, AUTH_FEATURE_KEY } from './auth.models';
+import { SignInActions, RefreshTokenActions, SignOutActions  } from './auth.actions';
+import { AuthState, TokenStatus, AuthUser } from './auth.models';
+import { AUTH_FEATURE_KEY } from './auth.selectors';
 
 export const initialState: AuthState = {
   isSignedIn: false,
@@ -12,7 +12,10 @@ export const initialState: AuthState = {
     firstName: '',
     lastName: '',
     email: '',
-    role: '',
+    role: {
+      RoleId: '',
+      RoleName: ''
+    },
   },
   accessTokenStatus: TokenStatus.PENDING,
   refreshTokenStatus: TokenStatus.PENDING,
@@ -22,17 +25,6 @@ export const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-
-  // Login
-  on(
-    LoginActions.success,
-    (state): AuthState => ({
-      ...state,
-      accessTokenStatus: TokenStatus.VALIDATING,
-      isLoadingLogin: true,
-      hasLoginError: false,
-    })
-  ),
 
   // Sign In
   on(
@@ -45,7 +37,18 @@ export const authReducer = createReducer(
       hasLoginError: false,
     })
   ),
-
+  on(
+    SignInActions.success,
+    (state, action): AuthState => ({
+      ...state,
+      isSignedIn: true,
+      isLoadingLogin: false,
+      accessTokenStatus: TokenStatus.VALID,
+      refreshTokenStatus: TokenStatus.VALID,
+      authUser: action.user,
+    })
+  ),
+  
   // Refresh token
   on(
     RefreshTokenActions.request,
@@ -57,7 +60,6 @@ export const authReducer = createReducer(
 
   // Sign In & Refresh token
   on(
-    SignInActions.success,
     RefreshTokenActions.success,
     (state): AuthState => ({
       ...state,
@@ -81,30 +83,9 @@ export const authReducer = createReducer(
 
   // Sign Out
   on(
-    AuthActions.signOut,
+    SignOutActions.request,
     (): AuthState => ({
       ...initialState,
-    })
-  ),
-
-  // Auth user
-  on(
-    GetAuthUserActions.request,
-    (state, action): AuthState => ({
-      ...state,
-      authUser: action.user,
-    })
-  ),
-
-  on(
-    TokenActions.request,
-    (state, action): AuthState => ({
-      ...state,
-      isSignedIn: true,
-      isLoadingLogin: false,
-      accessTokenStatus: TokenStatus.VALID,
-      refreshTokenStatus: TokenStatus.VALID,
-      authUser: action.user,
     })
   ),
 );

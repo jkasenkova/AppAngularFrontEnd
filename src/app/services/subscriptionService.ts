@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { Subscription } from "../models/subscription";
-import { Guid } from "guid-typescript";
 import { ConfigService } from "./config.service";
 
 @Injectable({
@@ -22,7 +21,7 @@ import { ConfigService } from "./config.service";
         return this.http.get<Subscription[]>(this.url);
     }
 
-    getSubscriptionById(id: Guid): Observable<Subscription> {
+    getSubscriptionById(id: string): Observable<Subscription> {
         return this.http.get<Subscription>(this.url + '/' + id);
     }
 

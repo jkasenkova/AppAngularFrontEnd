@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ReportCommentsModel } from '../models/reportCommentsModel';
-import { Guid } from 'guid-typescript';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class CommentsService {
     url = this.configService.getRouterUrl() + '/handover/comments';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    getCommentsByHandoverId(handoverId: Guid): Observable<ReportCommentsModel[]> {
+    getCommentsByHandoverId(handoverId: string): Observable<ReportCommentsModel[]> {
         return this.http.get<ReportCommentsModel[]>(this.url+ '/' + handoverId);
     }
 
@@ -30,11 +29,11 @@ export class CommentsService {
         return this.http.put<ReportCommentsModel>(this.url, comment, this.httpHeaders);
     }
 
-    deleteCommentById(id: Guid): Observable<string> {
+    deleteCommentById(id: string): Observable<string> {
         return this.http.delete<string>(this.url + '/' + id);
     }
 
-    getCommentById(id: Guid): Observable<ReportCommentsModel> {
+    getCommentById(id: string): Observable<ReportCommentsModel> {
         return this.http.get<ReportCommentsModel>(this.url + '/' + id);
     }
 }

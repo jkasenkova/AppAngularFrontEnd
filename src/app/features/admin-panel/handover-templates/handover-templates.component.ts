@@ -12,7 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { SessionStorageService } from "../../../services/sessionStorageService";
 import { BehaviorSubject, map } from "rxjs";
 import { CreateTemplateDialogComponent } from "./dialogs/template/create-template/create-template-dialog.component";
-import { Guid } from 'guid-typescript';
 import { EditTemplateDialogComponent } from "./dialogs/template/edit-template/edit-template-dialog.component";
 import { DeleteTemplateDialogComponent } from "./dialogs/template/delete-template/delete-template-dialog.component";
 import { CopyTemplateDialogComponent } from "./dialogs/template/copy-template/copy-template.component";
@@ -90,7 +89,7 @@ export class HandoverTemplatesComponent implements OnInit, OnChanges {
     }
 
 
-    getTemplateById(id: Guid): void {
+    getTemplateById(id: string): void {
         this.templateService.getTemplates().pipe(
             map(templates => templates.find(template => template.id === id))
         ).subscribe(template => {

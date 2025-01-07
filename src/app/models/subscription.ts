@@ -1,13 +1,12 @@
-import { Guid } from "guid-typescript";
 import { SubscriptionStatus } from "./subscriptionStatus";
 
 export class Subscription {
-    public id: Guid;
+    public id: string;
     public timeZoneId: string;
     public status: SubscriptionStatus;
     public createdDate: string;
     public limitUsers: string;
     public activeHandovers: string;
     public email: string;
-    public adminId: Guid;
+    public adminId: string;
 }

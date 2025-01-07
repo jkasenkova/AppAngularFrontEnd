@@ -1,18 +1,17 @@
 import { Section } from "./section";
-import { Guid } from "guid-typescript";
 import { RotationReference } from "./rotationReference";
 
 export class RotationTopic {
     public section?: Section;
-    public sectionId?: Guid;
+    public sectionId?: string;
     public isPinned: boolean = false;
-    public id?: Guid;
+    public id?: string;
     public name: string;
     public enabled: boolean;
     public index: number;
     public isExpand: boolean = false;
     public templateTopic: boolean = false;
-    public parentTopicId?: Guid;
+    public parentTopicId?: string;
     public parentTopic?: RotationTopic;
     public childTopics?: RotationTopic[] = [];
     public references?: RotationReference[] = [];

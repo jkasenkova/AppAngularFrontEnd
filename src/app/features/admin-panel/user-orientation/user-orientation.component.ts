@@ -3,7 +3,6 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateLocationDialogComponent } from "./location-dialog/create-location/create-location.component";
-import { Guid } from "guid-typescript";
 import { EditLocationDialogComponent } from "./location-dialog/edit-location/edit-location.component";
 import { DeleteLocationDialogComponent } from "./location-dialog/delete-location/delete-location.component";
 import { Team } from "src/app/models/team";
@@ -25,19 +24,20 @@ import { TemplateService } from "src/app/services/templateService";
 import { Observable, of, pipe} from 'rxjs';
 import { map, filter, tap } from 'rxjs/operators'
 import { UpdateTemplateService } from "src/app/services/updateTemplateService";
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-user-orientation',
     standalone: true,
-    imports: [NgbTooltipModule, MatButtonModule],
+    imports: [NgbTooltipModule, MatButtonModule, AsyncPipe],
     templateUrl: './user-orientation.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./user-orientation.component.less']
 })
 export class UserOrientationComponent implements OnInit {
     readonly dialog = inject(MatDialog);
-    locations: LocationModel[];
-    teams: Team[] = [];
+    locations$: Observable<LocationModel[]>;
+    teams$: Observable<Team[]>;
     selectedLocation: LocationModel;
     selectedTeam: Team;
     roles: RoleModel[];
@@ -51,7 +51,7 @@ export class UserOrientationComponent implements OnInit {
         private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locationService.getLocations().pipe(map((x: LocationModel[]) => x)).subscribe(x => this.locations = x);
+        this.locations$ = this.locationService.getLocations();
     }
 
     ngAfterViewChecked(){
@@ -60,11 +60,7 @@ export class UserOrientationComponent implements OnInit {
 
     selectLocation(location: LocationModel): void{
         this.selectedLocation = location;
-        this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
-        {
-            this.teams = teams.filter(t => t.locationId == location.id)
-                                    .sort((a, b) => a.name.localeCompare(b.name));
-        });
+        this.teams$ = this.locationService.getTeamsByLocationId(location.id);
         this.roles = [];
     }
 
@@ -85,17 +81,17 @@ export class UserOrientationComponent implements OnInit {
                 var location: Location = {
                     name: result.name,
                     timeZone: result.timeZone,
-                    mapLink: result.result,
+                    mapLink: result.mapLink,
                     address: result.address,
                     isAccountLocation: false
                 };
 
                 this.locationService.createLocation(location).subscribe(location =>{
-                    this.locations.push(location);
-                    this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
+                    this.locations$.pipe(map(x => {
+                        x.push(location);
+                        x.sort((a, b) => a.name.localeCompare(b.name));
+                    }));
                 });
-
-                
             }
         });
     }
@@ -111,7 +107,7 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.locationService.deleteLocation(location.id);
-                this.locations = this.locations.filter(l=>l.id != location.id);
+                this.locations$ = this.locations$.pipe(map(x => x.filter(l=>l.id != location.id)));
             }
         });
     }
@@ -130,7 +126,7 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                var locationUpdate: Location = {
+                const updatedLocation: Location = {
                     id: result.id,
                     name: result.name,
                     timeZone: result.timeZoneId,
@@ -139,19 +135,20 @@ export class UserOrientationComponent implements OnInit {
                     isAccountLocation: result.isAccountLocation
                 };
 
-                this.locationService.updateLocation(locationUpdate);
+                this.locationService.updateLocation(updatedLocation);
 
-                let updateLocation = this.locations.find(l=> l.id == result.id);
-                let index = this.locations.indexOf(updateLocation);
-                this.locations[index] = locationUpdate;
-
-                this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
+                this.locations$.pipe(map(x => {
+                    const existedLocation = x.find(l=> l.id == result.id);
+                    const index = x.indexOf(existedLocation);
+                    x.splice(index, 1, updatedLocation);
+                    x.sort((a, b) => a.name.localeCompare(b.name));
+                }));
             }
         });
     }
 
     //-----------------------Team----------------------------
-    addTeam(locationId: Guid){
+    addTeam(locationId: string){
         const dialogRef = this.dialog.open(CreateTeamDialogComponent, { 
             data: { 
                 locationId: locationId
@@ -161,14 +158,13 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var team: Team = {
-                    id: Guid.create(),
+                    id: '',
                     name: result.teamName,
                     locationId: locationId
                 };
                 this.teamService.createTeam(team);
-                this.teams.push(team);
-
-                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
+                this.teams$.pipe(map(x => x.push(team)));
+                this.teams$ = this.teams$.pipe(map(x => x.sort((a, b) => a.name.localeCompare(b.name))));
             }
         });
     }
@@ -184,7 +180,7 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.teamService.deleteTeam(result.teamId);
-                this.teams = this.teams.filter(l=>l.id != team.id);
+                this.teams$ = this.teams$.pipe(map(x => x.filter(l=>l.id != team.id)));
             }
         });
     }
@@ -198,14 +194,16 @@ export class UserOrientationComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.teamService.updateTeam(result);
-                let updateTeam = this.teams.find(l=> l.id == team.id);
-                let index = this.teams.indexOf(updateTeam);
-                this.teams[index].name = result.name;
+        dialogRef.afterClosed().subscribe(updatedTeam => {
+            if (updatedTeam) {
+                this.teamService.updateTeam(updatedTeam);
 
-                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
+                this.teams$.pipe(map(x => {
+                    const existed = x.find(l => l.id == team.id);
+                    const index = x.indexOf(existed);
+                    x.splice(index, 1, updatedTeam);
+                    x.sort((a, b) => a.name.localeCompare(b.name))
+                }));
             }
         });
     }
@@ -214,7 +212,7 @@ export class UserOrientationComponent implements OnInit {
 
     //add to template if create new (call ngChange() on template page)
 
-    addRole(teamId: Guid){
+    addRole(teamId: string){
         const dialogRef = this.dialog.open(CreateRoleDialogComponent, { 
             data: { 
                 teamId: teamId,
@@ -225,7 +223,6 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) 
             {
-                debugger;
                 if(result.template)
                 {
                     if(result.template.id != null)

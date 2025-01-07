@@ -6,14 +6,15 @@ import { filter, take } from 'rxjs/operators';
 
 import { TokenStorageService } from './token/token-storage.service';
 import { ConfigService } from '../config.service';
-import { RefreshTokenActions } from '../auth/store/auth.actions';
-import { AuthState, AuthUser, TokenStatus, AuthPartialState } from '../auth/store/auth.models';
+import { SignInActions } from '../auth/store/auth.actions';
+import { AuthState, AuthUser, TokenStatus } from '../auth/store/auth.models';
 import * as AuthSelectors from '../auth/store/auth.selectors';
-import { Subscription } from 'src/app/models/subscription';
+import { AppState } from '../auth/store/auth.selectors';
+import { Subscription } from '@models/subscription';
 import { AuthFacade } from './store/auth.facade';
 import { JWTTokenService } from './token/jwt-token.service';
-import { SignUpResponse } from '../../models/signUpResponse';
-import { SignUpData } from '../../models/signUpData';
+import { SignUpResponse } from '@models/signUpResponse';
+import { SignUpData } from '@models/signUpData';
 
 export interface AccessData {
   token_type: 'Bearer';
@@ -28,7 +29,7 @@ export interface AccessData {
 export class AuthService {
   
   constructor(
-    private readonly store: Store<AuthPartialState>,
+    private readonly store: Store<AppState>,
     private readonly http: HttpClient,
     private readonly configService: ConfigService,
     private readonly authFacade: AuthFacade,
@@ -40,25 +41,34 @@ export class AuthService {
   private readonly clientId = this.configService.getAuthSettings().clientId;
   private readonly scope = this.configService.getAuthSettings().scope;
   private readonly clientSecret = this.configService.getAuthSettings().secretId;
-  private isLoggedIn: boolean;
   
   init(): Promise<AuthState> {
     const token = this.tokenStorageService.getAccessToken();
-    this.authFacade.isLoggedIn$.subscribe(value => this.isLoggedIn = value);
 
-    if(this.isLoggedIn && token) {
-      this.store.dispatch(RefreshTokenActions.request());
+    if(token) {
+      this.jwtTokenService.setToken(token);
 
-      const authState$ = this.store.select(AuthSelectors.selectAuth).pipe(
-        filter(
-          auth =>
-            auth.refreshTokenStatus === TokenStatus.INVALID ||
-            (auth.refreshTokenStatus === TokenStatus.VALID && !!auth.authUser)
-        ),
-        take(1)
-      );
+      const authUser: AuthUser = {
+        id: this.jwtTokenService.getUserId(),
+        accountId: this.jwtTokenService.getAccountId(),
+        role: this.jwtTokenService.getRole(),
+        firstName: this.jwtTokenService.getFirstName(),
+        lastName: this.jwtTokenService.getLastName(),
+        email: this.jwtTokenService.getEmail(),
+      };
 
-      return lastValueFrom(authState$);
+      this.store.dispatch(SignInActions.success({ user: authUser }));
+      
+      const authState: AuthState = {
+        isSignedIn: true,
+        isLoadingLogin: false,
+        hasLoginError: false,
+        refreshTokenStatus: TokenStatus.VALID,
+        accessTokenStatus: TokenStatus.VALID,
+        authUser: authUser,
+      };
+
+      return lastValueFrom(of(authState)); 
     } else {
       const defaultAuthState: AuthState = {
         isSignedIn: false,
@@ -70,7 +80,6 @@ export class AuthService {
       };
       return lastValueFrom(of(defaultAuthState)); 
     }
-    
   }
 
   signIn(userEmail: string, password: string): Observable<AccessData> {

@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit, ViewEncapsulation } from "@angular/core";
-import { Guid } from "guid-typescript";
 import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
 import { UserService } from "src/app/services/userService";
 
@@ -27,7 +26,7 @@ export class ReportCommentsComponent implements OnInit {
 
       }
 
-    getOwnerComment(userId: Guid): string {
+    getOwnerComment(userId: string): string {
         return "Julia Kasenkova"; // for test
     }
 }

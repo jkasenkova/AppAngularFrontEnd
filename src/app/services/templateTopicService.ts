@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { TemplateTopic } from '../models/templateTopic';
 import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class TemplateTopicService {
   url = this.configService.getRouterUrl() + '/templateTopic';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-  getTemplateTopicsBySectionId(sectionId?: Guid): Observable<TemplateTopic[]> {
+  getTemplateTopicsBySectionId(sectionId?: string): Observable<TemplateTopic[]> {
     return this.http.get<TemplateTopic[]>(this.url + '/' + sectionId + '/topics');
   }
 
@@ -41,7 +40,7 @@ export class TemplateTopicService {
     this.http.post(this.url + '/updateOrder', topics, this.httpHeaders).subscribe();
   }
 
-  getTemplateTopicById(id: Guid): Observable<TemplateTopic> {
+  getTemplateTopicById(id: string): Observable<TemplateTopic> {
     return this.http.get<TemplateTopic>(this.url + '/' + id);
   }
 }

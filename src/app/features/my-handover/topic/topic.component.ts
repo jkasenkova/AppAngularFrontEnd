@@ -1,6 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { Guid } from "guid-typescript";
 import { HandoverSection } from "src/app/models/handoverSection";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
@@ -85,7 +84,7 @@ export class TopicComponent implements OnInit {
             if (result) {
                var newSection: HandoverSection = {
                     handoverId: this.handoverOut.handoverId,
-                    sectionId: Guid.create(),
+                    sectionId: '',//Guid.create(),
                     sectionName: result.sectionName,
                     iHandoverSection: false,
                     sectionType: SectionType.Other,

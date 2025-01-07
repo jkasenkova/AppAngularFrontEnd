@@ -1,14 +1,13 @@
-import { Guid } from "guid-typescript";
 import { UserType } from "./userType";
 import { ShiftPatternType } from "./shiftPatternType";
 import { RotationType } from "./rotationType";
 
 export class RoleModel {
-    id?: Guid;
+    id?: string;
     name: string;
-    templateId?: Guid;
+    templateId?: string;
     userType: UserType;
-    teamId: Guid;
+    teamId: string;
     rotationType: RotationType;
     shiftPatternType?: ShiftPatternType;
 }

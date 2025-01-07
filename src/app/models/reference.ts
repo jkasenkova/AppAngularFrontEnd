@@ -1,8 +1,6 @@
-import { Guid } from "guid-typescript";
-
 export class Reference {
-    public id?: Guid;
-    public templateTopicId: Guid;
+    public id?: string;
+    public templateTopicId: string;
     public name: string;
     public description?: string;
     public enabled: boolean = false;

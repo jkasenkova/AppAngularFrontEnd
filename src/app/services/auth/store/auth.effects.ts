@@ -7,9 +7,9 @@ import { catchError, exhaustMap, finalize, map, tap } from 'rxjs/operators';
 import { TokenStorageService } from '../token/token-storage.service';
 import { AuthService } from '../auth.service';
 import { Store } from '@ngrx/store';
-import * as AuthActions from './auth.actions';
-import { SignInActions, RefreshTokenActions, GetAuthUserActions, LoginActions} from './auth.actions';
-import { AuthState, AuthUser, TokenStatus, AuthPartialState } from './auth.models';
+import { SignInActions, RefreshTokenActions, SignOutActions } from './auth.actions';
+import { AuthState, AuthUser, TokenStatus } from './auth.models';
+import { AppState } from './auth.selectors';
 import { JWTTokenService } from '../token/jwt-token.service';
 
 @Injectable({
@@ -23,30 +23,8 @@ export class AuthEffects {
     private actions$: Actions, 
     private tokenStorageService: TokenStorageService,
     private jwtTokenService: JWTTokenService,
-    private store: Store<AuthPartialState>
+    private store: Store<AppState>
   ){}
-
-  readonly login$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LoginActions.request),
-      exhaustMap(credentials => 
-        this.authService.login(credentials.email, credentials.password).pipe(
-          map(data => {
-            return LoginActions.success({ email: credentials.email, password: credentials.password });
-          }),
-          catchError(error => of(LoginActions.failure({ error })))
-        ))
-    );
-  });
-
-  readonly loginSuccess$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(LoginActions.success),
-      exhaustMap(data => {
-        return of(SignInActions.request({ email: data.email, password: data.password }));
-      })
-    );
-  });
 
   readonly signIn$ = createEffect(() => {
     return this.actions$.pipe(
@@ -58,8 +36,18 @@ export class AuthEffects {
             this.tokenStorageService.saveTokens(data.access_token, data.access_token);
             this.jwtTokenService.setToken(data.access_token);
             this.jwtTokenService.decodeToken();
+
+            const authUser: AuthUser = {
+              id: this.jwtTokenService.getUserId(),
+              accountId: this.jwtTokenService.getAccountId(),
+              role: this.jwtTokenService.getRole(),
+              firstName: this.jwtTokenService.getFirstName(),
+              lastName: this.jwtTokenService.getLastName(),
+              email: this.jwtTokenService.getEmail(),
+            };
+
             // trigger login success action
-            return SignInActions.success();
+            return SignInActions.success({ user: authUser });
           }),
           catchError(error => of(SignInActions.failure({ error })))
         )
@@ -70,47 +58,14 @@ export class AuthEffects {
   readonly onSignInSuccess$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(SignInActions.success),
-      exhaustMap(() => {
-        const authUser: AuthUser = {
-          id: this.jwtTokenService.getUserId(),
-          accountId: this.jwtTokenService.getAccountId(),
-          role: this.jwtTokenService.getRole(),
-          firstName: this.jwtTokenService.getFirstName(),
-          lastName: this.jwtTokenService.getLastName(),
-          email: this.jwtTokenService.getEmail(),
-        };
-
-        return of(GetAuthUserActions.request({ user: authUser }));
-      })
-    );
-  }, { dispatch: true });
-
-  readonly signOut$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(AuthActions.signOut),
-        exhaustMap(() => {
-          this.router.navigateByUrl('/');
-          return this.authService
-            .logout()
-            .pipe(finalize(() => {}//this.tokenStorageService.removeTokens()
-            ));
-        })
-      );
-    },
-    { dispatch: false }
-  );
-
-  readonly getUser$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(GetAuthUserActions.request),
-      exhaustMap(() => {
-        this.jwtTokenService.decodeToken();
-        let role = this.jwtTokenService.getRole();
-        switch (role) {
+      exhaustMap((data) => {
+        switch (data.user.role.RoleName) {
           case 'Administrator':
             this.router.navigateByUrl('/my-team');
             break;
+          case 'RootAdmin':
+              this.router.navigateByUrl('/my-team');
+              break;
           case 'LineManager':
             this.router.navigateByUrl('/my-team');
             break;
@@ -120,10 +75,25 @@ export class AuthEffects {
           default:
             this.router.navigateByUrl('/my-handover');
         }
-        return of(GetAuthUserActions.success());
+
+        return of(SignInActions.finalize());
       })
     );
-  });
+  }, { dispatch: true });
+
+  readonly SignOut$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(SignOutActions.request),
+        exhaustMap(() => {
+          this.tokenStorageService.removeTokens();
+          this.router.navigate(['/sign-in']);
+          return of(SignOutActions.success());
+        })
+      );
+    },
+    { dispatch: false }
+  );
 
   readonly refreshToken$ = createEffect(() => {
     return this.actions$.pipe(
@@ -148,6 +118,7 @@ export class AuthEffects {
         ofType(SignInActions.failure, RefreshTokenActions.failure),
         tap(() => {
           this.tokenStorageService.removeTokens();
+          this.router.navigate(['/sign-in']);
         })
       );
     },

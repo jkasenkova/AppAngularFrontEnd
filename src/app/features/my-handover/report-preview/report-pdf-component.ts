@@ -1,5 +1,4 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, OnInit, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Guid } from "guid-typescript";
 import { jsPDF } from 'jspdf';
 import { Handover } from "src/app/models/handover";
 import { pdfReportModel } from "../models/pdfReportModel";
@@ -58,45 +57,45 @@ export class ReportPDFPreviewComponent implements OnInit {
 handoverOwnerTmp: MyTeamModel = {
     ownerName: "Julia Kasenkova",
     ownerEmail: "jkasenkova@gmail.com",
-    userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+    userId: 'e50c8635-4b51-4cdd-85ca-4ae35acb8bbd',
     ownerRole: "Developer",
-    ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-    isActiveRotation: true, //get state from back by curentRotationId
-    recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-    locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-    lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-    curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+    ownerRoleId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+    isActiveRotation: true, //get state from back by currentRotationId
+    recipientId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+    locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+    lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+    currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
     selected: false
 };
 
 handoverRecipientTmp: MyTeamModel = {
     ownerName: "Peter Hlazunov",
     ownerEmail: "phlazunov@gmail.com",
-    userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
+    userId: 'e50c8635-4b51-4cdd-85ca-4ae35acb8bbd',
     ownerRole: "Team Lead",
-    ownerRoleId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-    isActiveRotation: true, //get state from back by curentRotationId
-    recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-    locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-    lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-    curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+    ownerRoleId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+    isActiveRotation: true, //get state from back by currentRotationId
+    recipientId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
+    locationId:  '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+    lineManagerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
+    currentRotationId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
     selected: false
 };
 
 handoverTmp: Handover =
 {
-    templateId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-    handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-    ownerId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-    recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
+    templateId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+    handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+    ownerId: 'e50c8635-4b51-4cdd-85ca-4ae35acb8bbd',
+    recipientId: 'db3fd6a0-e14f-43a1-9393-c5332dee29cd',
     createDate: new Date().toLocaleDateString(undefined, this.options),
     endDate: new Date().toLocaleDateString(undefined, this.options),
     endTime: new Date().toLocaleTimeString(),
     liveRotation: true,
     sections:  [
         {
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            sectionId: '556e27c8-8bdc-4a46-ad48-6256953c08d9',
             sectionName: "Section 1",
             iHandoverSection: false,
             sectionType: SectionType.Other,
@@ -107,8 +106,8 @@ handoverTmp: Handover =
             appendAddItemLine: false,
             sectionTopics: [
                 {
-                sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
-                id:  Guid.parse("0f6b0e0c-daa8-4930-be62-8b8ab5a4694f"),
+                sectionId: '556e27c8-8bdc-4a46-ad48-6256953c08d9',
+                id:  '0f6b0e0c-daa8-4930-be62-8b8ab5a4694f',
                 name: "topic 1",
                 enabled: true,
                 index: 0,
@@ -119,8 +118,8 @@ handoverTmp: Handover =
                 editing: false,
                 references:[
                     {
-                        id:Guid.parse("44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0"),
-                        rotationTopicId:Guid.parse("0f6b0e0c-daa8-4930-be62-8b8ab5a4694f"),
+                        id:'44c2144d-5e1a-4ac5-8e78-6bbac15ea7b0',
+                        rotationTopicId:'0f6b0e0c-daa8-4930-be62-8b8ab5a4694f',
                         name:"reference 1",
                         description: "description 1",
                         enabled: true,
@@ -132,8 +131,8 @@ handoverTmp: Handover =
                         expand:false
                     },
                     {
-                        id:Guid.parse("c79bf801-20ea-483a-adb5-de24c91397e7"),
-                        rotationTopicId:Guid.parse("0f6b0e0c-daa8-4930-be62-8b8ab5a4694f"),
+                        id:'c79bf801-20ea-483a-adb5-de24c91397e7',
+                        rotationTopicId:'0f6b0e0c-daa8-4930-be62-8b8ab5a4694f',
                         name:"reference 2",
                         description: "description 2",
                         enabled: true,
@@ -147,8 +146,8 @@ handoverTmp: Handover =
                 ]
               },
               {
-                sectionId: Guid.parse("556e27c8-8bdc-4a46-ad48-6256953c08d9"),
-                id:  Guid.parse("4df7c851-d6be-4a51-8b08-eddea4a1f03c"),
+                sectionId: '556e27c8-8bdc-4a46-ad48-6256953c08d9',
+                id:  '4df7c851-d6be-4a51-8b08-eddea4a1f03c',
                 name: "topic 2",
                 enabled: true,
                 isPinned: true,
@@ -159,8 +158,8 @@ handoverTmp: Handover =
                 checked: false,
                 references:[ 
                 {
-                    id:Guid.parse("20905156-1c40-49c5-a52e-46c6ea4a9094"),
-                    rotationTopicId:Guid.parse("4df7c851-d6be-4a51-8b08-eddea4a1f03c"),
+                    id:'20905156-1c40-49c5-a52e-46c6ea4a9094',
+                    rotationTopicId:'4df7c851-d6be-4a51-8b08-eddea4a1f03c',
                     name:"reference 1",
                     description: "description 1",
                     editing: false,
@@ -172,8 +171,8 @@ handoverTmp: Handover =
                     isPinned: false
                 },
                 {
-                    id:Guid.parse("8cec9d77-7d57-4182-bfe8-c54fcd89d696"),
-                    rotationTopicId:Guid.parse("4df7c851-d6be-4a51-8b08-eddea4a1f03c"),
+                    id:'8cec9d77-7d57-4182-bfe8-c54fcd89d696',
+                    rotationTopicId:'4df7c851-d6be-4a51-8b08-eddea4a1f03c',
                     name:"reference 2",
                     description: "description 2",
                     enabled: true,
@@ -187,8 +186,8 @@ handoverTmp: Handover =
               }]
         },
         {
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-            sectionId: Guid.parse("dcb40955-4752-40a1-9291-ea3ddf707da1"),
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            sectionId: 'dcb40955-4752-40a1-9291-ea3ddf707da1',
             sectionName: "Section 2",
             iHandoverSection: false,
             sectionType: SectionType.Other,
@@ -199,8 +198,8 @@ handoverTmp: Handover =
             templateSection: false,
             sectionTopics: [
                 {
-                sectionId: Guid.parse("dcb40955-4752-40a1-9291-ea3ddf707da1"),
-                id:  Guid.parse("6074e0af-b2d2-4d66-b3fd-b9e09377ba12"),
+                sectionId: 'dcb40955-4752-40a1-9291-ea3ddf707da1',
+                id:  '6074e0af-b2d2-4d66-b3fd-b9e09377ba12',
                 name: "topic 1",
                 enabled: true,
                 editing: false,
@@ -211,8 +210,8 @@ handoverTmp: Handover =
                 isExpand:false,
                 references:[ 
                     {
-                        id:Guid.parse("20905156-1c40-49c5-a52e-46c6ea4a9094"),
-                        rotationTopicId:Guid.parse("6074e0af-b2d2-4d66-b3fd-b9e09377ba12"),
+                        id:'20905156-1c40-49c5-a52e-46c6ea4a9094',
+                        rotationTopicId:'6074e0af-b2d2-4d66-b3fd-b9e09377ba12',
                         name:"reference 1",
                         description: "description 1",
                         enabled: true,
@@ -224,8 +223,8 @@ handoverTmp: Handover =
                         isPinned: false
                     },
                     {
-                        id:Guid.parse("c76780e5-0f12-48c1-9d5b-54249b1688c6"),
-                        rotationTopicId:Guid.parse("6074e0af-b2d2-4d66-b3fd-b9e09377ba12"),
+                        id:'c76780e5-0f12-48c1-9d5b-54249b1688c6',
+                        rotationTopicId:'6074e0af-b2d2-4d66-b3fd-b9e09377ba12',
                         name:"reference 2",
                         description: "description 2",
                         enabled: true,
@@ -238,8 +237,8 @@ handoverTmp: Handover =
                     }]
               },
               {
-                sectionId: Guid.parse("dcb40955-4752-40a1-9291-ea3ddf707da1"),
-                id:  Guid.parse("082be4c4-0939-486f-a6f0-47f39a523ef0"),
+                sectionId: 'dcb40955-4752-40a1-9291-ea3ddf707da1',
+                id:  '082be4c4-0939-486f-a6f0-47f39a523ef0',
                 name: "topic 2",
                 enabled: true,
                 index: 0,
@@ -250,8 +249,8 @@ handoverTmp: Handover =
                 isExpand:false,
                 references:[ 
                     {
-                        id:Guid.parse("8687a1d0-3476-4995-ac8b-f83f968f47c9"),
-                        rotationTopicId:Guid.parse("082be4c4-0939-486f-a6f0-47f39a523ef0"),
+                        id:'8687a1d0-3476-4995-ac8b-f83f968f47c9',
+                        rotationTopicId:'082be4c4-0939-486f-a6f0-47f39a523ef0',
                         name:"reference 1",
                         description: "description 1",
                         enabled: true,
@@ -263,8 +262,8 @@ handoverTmp: Handover =
                         isPinned: false
                     },
                     {
-                        id:Guid.parse("8687a1d0-3476-4995-ac8b-f83f968f47c9"),
-                        rotationTopicId:Guid.parse("082be4c4-0939-486f-a6f0-47f39a523ef0"),
+                        id:'8687a1d0-3476-4995-ac8b-f83f968f47c9',
+                        rotationTopicId:'082be4c4-0939-486f-a6f0-47f39a523ef0',
                         name:"reference 2",
                         description: "description 2",
                         enabled: true,
@@ -281,46 +280,46 @@ handoverTmp: Handover =
     shareEmails: ['user1@gmail.com', 'user2@gmail.com', 'user3@gmail.com'],
     reportComments: [
         {
-            commentId: Guid.parse("df668eef-9275-4194-bb45-4c5e282a4d34"),
-            ownerId:Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: 'df668eef-9275-4194-bb45-4c5e282a4d34',
+            ownerId:'314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 1",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
             createDate: " 29.10.2024 22:10"
         },
         {
-            commentId: Guid.parse("bda98ec1-1e0f-45f9-be50-e01563232685"),
-            ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: 'bda98ec1-1e0f-45f9-be50-e01563232685',
+            ownerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 2",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-             createDate: " 29.10.2024 22:10"
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            createDate: " 29.10.2024 22:10"
         },
         {
-            commentId: Guid.parse("68c1c31c-0a1a-4bbf-922a-9f5096b8ae98"),
-            ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: '68c1c31c-0a1a-4bbf-922a-9f5096b8ae98',
+            ownerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 3",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-             createDate: " 29.10.2024 22:10"
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            createDate: " 29.10.2024 22:10"
         },
         {
-            commentId: Guid.parse("951afc76-e33b-481e-a2d9-923c70ac388c"),
-            ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: '951afc76-e33b-481e-a2d9-923c70ac388c',
+            ownerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 4",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-             createDate: " 29.10.2024 22:10"
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            createDate: " 29.10.2024 22:10"
         },
         {
-            commentId: Guid.parse("83fdf091-031e-40ed-866b-18aebcbdb733"),
-            ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: '83fdf091-031e-40ed-866b-18aebcbdb733',
+            ownerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 5",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-             createDate: " 29.10.2024 22:10"
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            createDate: " 29.10.2024 22:10"
         },
         {
-            commentId: Guid.parse("e8465f20-0866-4753-b3bd-12219a185726"),
-            ownerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
+            commentId: 'e8465f20-0866-4753-b3bd-12219a185726',
+            ownerId: '314d09a4-cb44-4c08-99d7-15d3441bc3cb',
             comment: "Comment 6",
-            handoverId: Guid.parse("a2377f33-9e5d-46a7-a969-173fcd30ebb0"),
-             createDate: " 29.10.2024 22:10"
+            handoverId: 'a2377f33-9e5d-46a7-a969-173fcd30ebb0',
+            createDate: " 29.10.2024 22:10"
         }
     ]
 };
@@ -343,7 +342,7 @@ handoverTmp: Handover =
 
         const id = this.route.snapshot.queryParamMap.get('id');
 
-        this.handoverService.getHandoverById(Guid.parse(id)).subscribe(handover =>{
+        this.handoverService.getHandoverById(id).subscribe(handover =>{
             this.handover = handover;
         });
 
