@@ -48,7 +48,7 @@ export class CreateTemplateTopicDialogComponent {
         private fb: FormBuilder,
         private sectionService: SectionService, 
         public dialogRef: MatDialogRef<CreateTemplateTopicDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: TopicDataModel
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.templateTopicForm = this.fb.group({
             templateTopicName: ['', Validators.required],

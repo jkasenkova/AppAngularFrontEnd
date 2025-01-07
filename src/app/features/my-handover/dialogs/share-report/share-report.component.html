@@ -27,7 +27,7 @@
                                             (selectionChange)="selectionChange()">
                                             @for (teamMember of data.teamMembers; track teamMember) {
                                                 <mat-option [value]="teamMember">
-                                                    {{ teamMember.ownerName}}
+                                                    {{teamMember.name}} {{teamMember.surname}}
                                                 </mat-option>
                                             }
                                         </mat-select>

@@ -21,8 +21,8 @@ export class TemplateReferenceService {
     return this.http.get<Reference[]>(this.url + '/' + topicId);
   }
 
-  addTemplateReference(reference: Reference): Observable<Reference> {
-    return this.http.post<Reference>(this.url, reference, this.httpHeaders);
+  addTemplateReference(reference: Reference): void {
+    this.http.post<Reference>(this.url, reference, this.httpHeaders).subscribe();
   }
 
   updateTemplateReference(reference: Reference) {

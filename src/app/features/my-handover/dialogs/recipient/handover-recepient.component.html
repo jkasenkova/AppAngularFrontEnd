@@ -17,44 +17,36 @@
                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                         <div class="handover-recipients-title">Select another user to handover to today</div>
                         <div class="handover-recipients-container">
-                            @if (teamMembers.length > 0)
-                            {
+                            <div *ngIf="hasUsers$ | async; else noItems">
                                 <div class="swiper-container recipients-container swiper-container-vertical">
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide">
-                                            @for (teamMember of teamMembers; track teamMember)
-                                            {
-                                                <div class="col col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                                    <div class="recipient-block"
-                                                        [ngClass]="teamMember.selected ? 'active': 'inactive'" 
-                                                        (click)="selectMember(teamMember)">
-                                                        <div class="icon-container">
-                                                            <div class="name">{{ getLettersIcon(teamMember.ownerName) }}</div>
-                                                        </div> 
-                                                        <div class="user-name">{{teamMember.ownerName}}</div>
-                                                        @if(teamMember.selected){
-                                                            <div class="check-icon"></div>
-                                                        }
-                                                    </div>
+                                            <div *ngFor="let user of users$ | async; let i = index">
+                                                <div class="recipient-block"
+                                                    [ngClass]="{ 'active': activeIndex === i, 'inactive': activeIndex !== i }"
+                                                    (click)="selectMember(user, i)">
+                                                    <div class="icon-container">
+                                                        <div class="name">{{ getLettersIcon(user) }}</div>
+                                                    </div> 
+                                                    <div class="user-name">{{user.name}} {{user.surname}}</div>
+                                                    <div class="check-icon" *ngIf="activeIndex === i"></div>
                                                 </div>
-                                            }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="handover-recipients-swiper-prev"></div>
                                 <div class="handover-recipients-swiper-next"></div>
-                            }
-                            @else
-                            {
+                            </div>
+                            <ng-template #noItems>
                                 <div class="no-handover-recipient">
                                     No any recipients
                                 </div>
-                            }
+                            </ng-template>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -7,11 +7,9 @@ import { DeleteButtonComponent } from "./deleteButtonComponent";
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUserDialogComponent } from "./user-dialog/create-user/create-user-dialog.component";
 import { Team } from "src/app/models/team";
-import { Guid } from "guid-typescript";
 import { RoleModel } from "src/app/models/role";
 import { UserType } from "src/app/models/userType";
 import { UserModel } from "./model/userModel";
-import { ShiftPatternType } from "src/app/models/shiftPatternType";
 import { RotationType } from "../../../models/rotationType";
 import { IconComponent } from "./iconComponent";
 import { TeamService } from "src/app/services/teamServices";
@@ -118,7 +116,7 @@ export class UserManagementComponent implements OnInit {
         });
 
         this.userService.getUsers().subscribe(users => {
-            this.lineManagersList = users
+           // this.lineManagersList = users
         });
 
         this.roleService.getRoles().subscribe(roles => {

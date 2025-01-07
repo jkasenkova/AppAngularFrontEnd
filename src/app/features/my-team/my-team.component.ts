@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MyTeamModel } from 'src/app/models/myTeamModel';
-import { MyTeamService } from 'src/app/services/myTeamService';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { HandoverInfoComponent } from './hondover-info/handover-info.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MyHandoverComponent } from '../my-handover/my-handover.component';
+import { HandoverComponent } from './handovers/handover.component';
+import { SessionStorageService } from '../../services/sessionStorageService';
 
 @Component({
     selector: 'app-my-team',
@@ -15,7 +13,8 @@ import { MyHandoverComponent } from '../my-handover/my-handover.component';
         MatTabsModule,
         CommonModule,
         MatTooltipModule,
-        MyHandoverComponent
+        MyHandoverComponent,
+        HandoverComponent
     ], 
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-team.component.html',
@@ -24,58 +23,15 @@ import { MyHandoverComponent } from '../my-handover/my-handover.component';
 })
 
 export class MyTeamComponent implements OnInit {
-    totalUsersCount: number;
-    teamRotations: MyTeamModel[] = [];
-    readonly dialog = inject(MatDialog);
-    urlMyTeam: string = "my-team";
-    
-    constructor(
-        private cdr: ChangeDetectorRef,
-        private myTeamService: MyTeamService){}
+    selectedIndex = 1;
+
+    constructor(private sessionStorageService: SessionStorageService) {}
 
     ngOnInit(): void {
-        this.myTeamService.getTeamUsers().subscribe(teams =>{
-            this.teamRotations = teams
-        });
+        this.selectedIndex = this.sessionStorageService.getItem<number>('active-tab');
     }
 
-    ngAfterViewChecked(){
-        this.cdr.detectChanges();
-     }
-
-    getLetters(teamRotation: MyTeamModel): string {
-        if(teamRotation.ownerName){
-            var getLetters = teamRotation.ownerName
-            .split(" ")
-            .map(n => n[0])
-            .join("");
-    
-            return getLetters;
-        }
-       else{
-        return "";
-       }
-    }
-
-    hadoverInfo(teamRotation: MyTeamModel){
-        const dialogRef = this.dialog.open(HandoverInfoComponent,
-            {
-                data: teamRotation
-            }
-        );
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                
-            }
-        });
-    }
-
-    contributorsInfo(teamRotation: MyTeamModel): string {
-
-       var contribitors = this.teamRotations.filter(c => 
-        teamRotation.contributors.includes(c.userId));
-
-        return contribitors.flatMap(c => c.ownerName).join('\n');
+    onTabChanged(event: MatTabChangeEvent): void {
+        this.sessionStorageService.setItem('active-tab', event.index.toString());
     }
 }

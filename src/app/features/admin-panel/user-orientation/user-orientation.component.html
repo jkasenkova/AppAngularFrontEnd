@@ -17,7 +17,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="list-group">
-                        @for (location of locations; track location) {
+                        <div *ngFor="let location of locations$ | async">
                             @if(selectedLocation == location){
                                 <div class="list-group-item selected" (click)="selectLocation(location)">
                                     {{location.name}}
@@ -36,7 +36,7 @@
                                     }
                                 </div>
                             }
-                        }
+                        </div>
                     </div>
                 </div>
             </section>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="list-group">
-                        @for (team of teams; track team) {
+                        <div *ngFor="let team of teams$ | async">
                             @if(selectedTeam == team){
                                 <div class="list-group-item selected" (click)="selectTeam(team)">
                                     {{team.name}}
@@ -78,7 +78,7 @@
                                     <span class="pull-right pencil-block" (click)="editTeam(team)"></span>
                                 </div>
                             }
-                        }
+                        </div>   
                     </div>
                 </div>
             </section>
@@ -104,13 +104,13 @@
                 <div class="panel-body">
                     <div class="text-center ng-binding"></div>
                     <div class="list-group">
-                        @for (role of roles; track role) {
-                            <div class="list-group-item">
-                                {{role.name}}
-                                <span class="pull-right btn-close" (click)="removeRole(role)"></span>
-                                <span class="pull-right pencil-block" (click)="editRole(role)"></span>
+                        <div *ngFor="let role of roles$ | async">
+                                <div class="list-group-item">
+                                    {{role.name}}
+                                    <span class="pull-right btn-close" (click)="removeRole(role)"></span>
+                                    <span class="pull-right pencil-block" (click)="editRole(role)"></span>
+                                </div>
                             </div>
-                        }
                     </div>
                 </div>
             </section>

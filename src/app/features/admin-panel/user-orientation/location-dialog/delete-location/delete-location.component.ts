@@ -8,8 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { LocationModel } from "src/app/models/locationModel";
 import { LocationService } from "src/app/services/locationService";
+import { Location } from "src/app/models/location";
 
 @Component({
     selector: 'location-dialog',
@@ -41,7 +41,7 @@ export class DeleteLocationDialogComponent implements OnInit{
         private fb: FormBuilder,
         private locationService: LocationService,
         public dialogRef: MatDialogRef<DeleteLocationDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: LocationModel
+        @Inject(MAT_DIALOG_DATA) public data: Location
     ) {
         this.locationForm = this.fb.group({
             name: [data.name, Validators.required],

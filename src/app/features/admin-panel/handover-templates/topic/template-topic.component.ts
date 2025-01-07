@@ -17,12 +17,9 @@ import { EditTemplateTopicDialogComponent } from './template-topic-dialog/edit-t
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { SectionService } from 'src/app/services/sectionService';
-import { catchError, map, Observable, of } from 'rxjs';
-import { Guid } from 'guid-typescript';
-import { UpdateTemplateService } from 'src/app/services/updateTemplateService';
 import { DeleteTemplateTopicDialogComponent } from './template-topic-dialog/delete-template-topic/delete-template-topic-dialog.component';
-import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopicService';
+import { TemplateManagementService } from 'src/app/features/admin-panel/handover-templates/template/services/templateManagementService';
+import { TemplateTopicManagementService } from './services/templateTopicManagementService';
 
 @Component({
     selector: 'app-template-topic',
@@ -40,117 +37,118 @@ import { UpdateTemplateTopicService } from 'src/app/services/updateTemplateTopic
     templateUrl: './template-topic.component.html',
     styleUrls: ['./template-topic.component.less']
 })
-export class TemplateTopicComponent implements OnInit{
+export class TemplateTopicComponent implements OnInit {
     public paginationPageSize = 10;
     templatesList: Template[];
     public paginationPageSizeSelector: number[] | boolean = [10, 20, 50, 100];
     templateTopicList: TemplateTopic[];
     readonly dialog = inject(MatDialog);
-    @Input() displayDataRow: TopicDataModel[] = [];
+    @Input() displayDataTemplateTopic: TopicDataModel[] = [];
 
-    searchTopicTerm: string = '';
-    searchRefTerm: string = '';
-    searchSectionTerm: string = '';
-    searchTemplateTerm: string = '';
     page = 1;
     pageSize = 5;
     collectionSize: number;
     currentRate = 8;
+
+    templateTopics$ = this.updateTemplateTopicService.templateTopics$;
     
   constructor(
-    private updateTemplateTopicService: UpdateTemplateTopicService,
-    private templatTopicService: TemplateTopicService,
-    private topicService: TemplateTopicService, 
-    private sectionService: SectionService,
-    private templateReferenceService: TemplateReferenceService,
-    private updateTemplateService: UpdateTemplateService) {}
+    private updateTemplateTopicService: TemplateTopicManagementService,
+    private templateService: TemplateManagementService,
+    private templatTopicService: TemplateTopicService, 
+    private templateReferenceService: TemplateReferenceService) 
+    {
+        this.updateTemplateTopicService.arrayChanged.subscribe((newTopicArray) => 
+        {
+            if(this.templateTopicList.length != newTopicArray.length ||
+                this.templateTopicList.map(subArray => subArray.templateReferences.length) != 
+                newTopicArray.map(subArray => subArray.templateReferences.length)
+            )
+            {
+                this.displayDataTemplateTopic = this.initTemplateTopicData(newTopicArray);
+        
+                this.templateTopicList = newTopicArray;
+                this.sortData(this.displayDataTemplateTopic);
+                this.collectionSize = this.displayDataTemplateTopic.length;
+            }
+        });
 
-  ngOnInit(): void {
-    this.topicService.getTemplateTopics().subscribe(topics =>
+        this.templateService.arrayChanged.subscribe(templateArr => this.templatesList = templateArr); 
+    }
+
+ ngOnInit(): void {
+    this.templatTopicService.getTemplateTopics().subscribe(topics =>
     {
         this.templateTopicList = topics;
         this.updateTemplateTopicService.setData(topics);
-        this.collectionSize = this.templateTopicList.length;
+        this.displayDataTemplateTopic = this.initTemplateTopicData(topics);
+    });
+  }
 
-        topics.map(topic => {
-            topic.templateReferences.map(reference => {
-                this.displayDataRow.push(
-                {
-                    templateTopicName: topic.name,
-                    templateReferenceName: reference.name,
-                    templateDescription: reference.description,
-                    templateList: this.displayTemplatesName(topic),
-                    sectionId: topic.sectionId,
-                    topic: topic
-                });
+   initTemplateTopicData(templateTopics: TemplateTopic[]): TopicDataModel[] {
+    var resultTopicDisplayData:TopicDataModel[] = [];
+    templateTopics.map(topic => 
+    {
+        topic.templateReferences.map(reference => 
+        {
+            resultTopicDisplayData.push(
+            {
+                templateTopic: topic,
+                templateReference: reference,
+                templateList: this.displayTemplatesName(topic)
             });
         });
-
-        this.sortData(this.displayDataRow);
-        this.collectionSize = this.displayDataRow.length;
     });
 
-     this.updateTemplateService.arrayChanged.subscribe((newArray) => {
-        this.templatesList = newArray;
-    });
- }
+    this.sortData(resultTopicDisplayData);
+    this.collectionSize = resultTopicDisplayData.length;
 
- getSectionName(sectionId: Guid): Observable<string> {
-    return this.sectionService.getSectionById(sectionId).pipe(
-        map((response) => response.name),
-        catchError((error) => {
-          return of('-');
-        })
-      );
- }
-
+    return resultTopicDisplayData;
+  }
 
   displayTemplatesName(topic: TemplateTopic): string {
     var templateArr: string[] = [];
+
     if(topic.parentTopicId)
     {
-        this.topicService.getTemplateTopicById(topic.parentTopicId).pipe(
-            map((responce) =>
-            {
-                if(this.templatesList != null)
+        this.templatTopicService.getTemplateTopicById(topic.parentTopicId).subscribe(
+        {
+            next: (templateTopic) => {
+                if(templateTopic.sectionId)
                 {
-                    this.templatesList.forEach(template =>
-                    {
-                        if(template.sections != null && template.sections.length > 0){
-                            if(template.sections.find(s => s.id == responce.sectionId) != null){
-                                templateArr.push(template.name);
-                            }
-                        }
-                    });
+                    var template = this.templatesList.find(t => t.sections.some(section => section.id === templateTopic.sectionId));
+
+                    return template != null ? template.name : "-";
                 }
-               
-            })
-        )
+                 else 
+                 return  "-";      
+            },
+            error: (error) => {
+                console.error('Error fetching data:', error);
+            }
+        });
     }
     if(topic.sectionId != null)
     {
-        if(this.templatesList != null)
+        if(topic.sectionId)
         {
-            this.templatesList.forEach(template =>
-            {
-                if(template.sections != null && template.sections.length > 0){
-                    if(template.sections.find(s => s.id == topic.sectionId) != null){
-                        templateArr.push(template.name);
-                    }
-                }
-            });
-        }
-        
+            var template = this.templatesList.find(t => t.sections.some(section => section.id === topic.sectionId));
+
+            return template != null ? template.name : "-";
+        } 
     }
     return templateArr != null ? templateArr.join(",") : "-";
   }
 
   getTemplatesByTopic(topic: TemplateTopic): Template[] {
     var templateArr: Template[] = [];
+
     this.templatesList.forEach(template =>
     {
-        if(template.sections != null && template.sections.length > 0){
-            if(template.sections.find(s=>s.id == topic.sectionId) != null){
+        if(template.sections != null && template.sections.length > 0)
+        {
+            if(template.sections.some(item => item.id === topic.sectionId))
+            {
                 templateArr.push(template);
             }
         }
@@ -158,24 +156,24 @@ export class TemplateTopicComponent implements OnInit{
 
     return templateArr;
   }
-
-  getTemplateTopics(): void{
-    this.topicService.getTemplateTopicsBySectionId()
-    .subscribe(value => this.templateTopicList = value);
+  
+  sortData(data: TopicDataModel[]){
+    data = data.sort((a,b) => a.templateTopic.name.localeCompare(b.templateTopic.name));
   }
-
+  ///------------Topic Dialog-------------------------------
     addTemplateTopic(): void {
-        const dialogRef = this.dialog.open(CreateTemplateTopicDialogComponent, { 
-            data: { 
+        const dialogRef = this.dialog.open(CreateTemplateTopicDialogComponent, 
+        { 
+            data: 
+            { 
                 templates: this.templatesList,
                 topics: this.templateTopicList
-            },
-            panelClass: 'template-dialog',
-            height: '600px'
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result) 
+            {
                 if(result.templateTopicId == null)
                 {
                     var topic: TemplateTopic = {
@@ -187,7 +185,7 @@ export class TemplateTopicComponent implements OnInit{
                         sectionId: result.sectionId,
                         templateReferences: []
                     }
-                    this.topicService.addTemplateTopic(topic).subscribe(newTopic =>
+                    this.templatTopicService.addTemplateTopic(topic).subscribe(newTopic =>
                     {
                         var newReference: Reference = {
                             name: result.templateReferenceName,
@@ -199,26 +197,20 @@ export class TemplateTopicComponent implements OnInit{
                             expand: false
                         };
 
-                        this.templateReferenceService.addTemplateReference(newReference)
-                        .subscribe(response => 
+                        this.templateReferenceService.addTemplateReference(newReference);
+                        newTopic.templateReferences = [];
+                        newTopic.templateReferences.push(newReference);
+
+                        this.updateTemplateTopicService.addItem(newTopic);
+                        
+                        this.displayDataTemplateTopic.push(
                         {
-                            newTopic.templateReferences = [];
-                            newTopic.templateReferences.push(response);
-
-                            this.updateTemplateTopicService.addItem(newTopic);
-                            
-                            this.displayDataRow.push(
-                            {
-                                templateTopicName: topic.name,
-                                templateReferenceName: newReference.name,
-                                templateDescription: newReference.description,
-                                templateList: this.displayTemplatesName(topic),
-                                sectionId: topic.sectionId,
-                                topic: newTopic
-                            });
-
-                            this.collectionSize = this.displayDataRow.length;
+                            templateTopic: topic,
+                            templateReference: newReference,
+                            templateList: this.displayTemplatesName(topic)
                         });
+
+                        this.collectionSize = this.displayDataTemplateTopic.length;
                     });
                 }
                 else
@@ -234,25 +226,18 @@ export class TemplateTopicComponent implements OnInit{
                     };
 
                     this.templateReferenceService.addTemplateReference(newReference);
-
-                    this.displayDataRow.push(
+                    
+                    this.displayDataTemplateTopic.push(
                     {
-                        templateTopicName: topic.name,
-                        templateReferenceName: newReference.name,
-                        templateDescription: newReference.description,
-                        templateList: this.displayTemplatesName(topic),
-                        sectionId: topic.sectionId,
-                        topic: topic
+                        templateTopic: topic,
+                        templateReference: newReference,
+                        templateList: this.displayTemplatesName(topic)
                     });
                 }
-                this.collectionSize = this.displayDataRow.length;
-               this.sortData(this.displayDataRow);
+                this.collectionSize = this.displayDataTemplateTopic.length;
+               this.sortData(this.displayDataTemplateTopic);
             }
         });
-    }
-
-    sortData(data: TopicDataModel[]){
-        data = data.sort((a,b) => a.templateTopicName.localeCompare(b.templateTopicName));
     }
 
     deleteTopic(data: TopicDataModel){
@@ -264,11 +249,11 @@ export class TemplateTopicComponent implements OnInit{
             if (result) {
                 this.templatTopicService.deleteTemplateTopicById(result.templateTopicId);
 
-                let index = this.displayDataRow.findIndex(d => d.templateTopicId === result.templateTopicId);
-                this.displayDataRow.splice(index, 1);
+                let index = this.displayDataTemplateTopic.findIndex(d => d.templateTopic.id === result.templateTopicId);
+                this.displayDataTemplateTopic.splice(index, 1);
                 this.updateTemplateTopicService.deleteItem(data);
 
-                this.collectionSize = this.displayDataRow.length;
+                this.collectionSize = this.displayDataTemplateTopic.length;
             }
         });
     }
@@ -278,7 +263,7 @@ export class TemplateTopicComponent implements OnInit{
         const dialogRef = this.dialog.open(EditTemplateTopicDialogComponent, { 
             data: {
                 topicData: data,
-                associatedTemplates: this.getTemplatesByTopic(data.topic)
+                associatedTemplates: this.getTemplatesByTopic(data.templateTopic)
             },
             panelClass: 'template-dialog',
             height: '600px'
@@ -286,8 +271,8 @@ export class TemplateTopicComponent implements OnInit{
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                debugger;
                 var updTopic = result.topic as TemplateTopic;
+
                 if(result.selectedSection != null)
                 {
                     updTopic.sectionId = result.selectedSection.id;
@@ -296,24 +281,55 @@ export class TemplateTopicComponent implements OnInit{
                     this.templatTopicService.updateTopic(updTopic);
                 }
 
-                if(updTopic.templateReferences){
-                    updTopic.templateReferences.forEach(reference =>{
-                        reference.enabled = true;
-                        reference.description = result.templateDescription;
-                        this.templateReferenceService.updateTemplateReference(reference);
-                    });
+                if(result.templateTopicName != updTopic.name){
+                    updTopic.name = result.templateTopicName;
+
+                    this.displayDataTemplateTopic = this.updateTopic(updTopic);
+                    this.templatTopicService.updateTopic(updTopic);
                 }
 
+                if(updTopic.templateReferences){
+                    updTopic.templateReferences.forEach(reference =>{
+                        if(result.templateReferenceName != reference.name ||
+                            result.templateDescription != reference.description
+                        )
+                        {
+                            reference.enabled = updTopic.sectionId != null ? true : false;
+                            reference.description = result.templateDescription;
+                            reference.name = result.templateReferenceName;
+                            this.templateReferenceService.updateTemplateReference(reference);
+    
+                            this.displayDataTemplateTopic = this.updateReference(reference);
+                        }
+                        
+                    });
+                }
                 this.updateTemplateTopicService.updateItem(updTopic);
             }
         });
     }
 
-    searchTopic(){
-        if(this.searchTopicTerm && this.searchTopicTerm.length > 0){
-            
-        }
+    updateReference(reference: Reference): TopicDataModel[] {
+        let updateReference =   this.displayDataTemplateTopic.find(t => t.templateReference.id == reference.id);
+        let index =  this.displayDataTemplateTopic.indexOf(updateReference);
+        this.displayDataTemplateTopic[index].templateReference.description = reference.description;
+        this.displayDataTemplateTopic[index].templateReference.name = reference.name;
+
+        this.updateTemplateTopicService.editReference(reference.templateTopicId, reference);
+
+        return this.displayDataTemplateTopic;
     }
+
+    updateTopic(topic: TemplateTopic): TopicDataModel[] {
+        let updateTopic =   this.displayDataTemplateTopic.find(t=> t.templateTopic.id == topic.id);
+        let index =  this.displayDataTemplateTopic.indexOf(updateTopic);
+        this.displayDataTemplateTopic[index].templateTopic.name = topic.name;
+        return this.displayDataTemplateTopic;
+    }
+
+    searchTopic(){
+    }
+
     searchReference(){
 
     }
@@ -324,3 +340,4 @@ export class TemplateTopicComponent implements OnInit{
 
     }
 }
+

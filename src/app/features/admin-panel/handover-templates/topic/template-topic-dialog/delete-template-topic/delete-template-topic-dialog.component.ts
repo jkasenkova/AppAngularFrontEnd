@@ -41,8 +41,8 @@ export class DeleteTemplateTopicDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: TopicDataModel
     ) {
         this.templateTopicForm = this.fb.group({
-            templateTopicName: data.templateTopicName,
-            templateTopicId: data.topic.id
+            templateTopicName: data.templateTopic.name,
+            templateTopicId: data.templateTopic.id
         });
     }
 

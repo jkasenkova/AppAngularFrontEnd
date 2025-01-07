@@ -17,12 +17,12 @@ export class RoleService {
     url = this.configService.getRouterUrl() + '/role';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
-    createRole(roleModel: RoleModel): Observable<RoleModel>{
+    createRole(roleModel: RoleModel): Observable<RoleModel> {
         return this.http.post<RoleModel>(this.url, roleModel, this.httpHeaders);
     }
 
     updateRole(roleModel: RoleModel): void {
-        this.http.patch(this.url, roleModel, this.httpHeaders).subscribe();
+        this.http.patch<RoleModel>(this.url, roleModel, this.httpHeaders).subscribe();
     }
 
     deleteRole(roleId: Guid) {

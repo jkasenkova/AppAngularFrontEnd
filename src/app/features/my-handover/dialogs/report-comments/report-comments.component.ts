@@ -46,31 +46,6 @@ export class ReportCommentsDialogComponent implements OnInit {
     timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     currentTime = moment().tz(this.timezone).format('YYYY-MM-DD HH:mm');
 
-    teamUserTmp: MyTeamModel = {
-        ownerName: "Julia Kasenkova",
-        ownerEmail: "jkasenkova@gmail.com",
-        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        ownerRole: "Developer",
-        ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        isActiveRotation: true, //get state from back by curentRotationId
-        recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        selected: false
-    };
-
-    authorizedUserTmp: UserModel = {
-        userId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        firstName: "John",
-        lastName: "Smith",
-        email: "john@gmail.com",
-        password: "johnDoe123!",
-        roleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        teamId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-        companyId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb")
-    };
-
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<ReportCommentsDialogComponent>,
@@ -90,8 +65,6 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     ngOnInit(): void {
         //get from system authorized User
-        //for test
-        this.authorizedUser = this.authorizedUserTmp;
     }
 
     expandCommentLines(){
@@ -127,7 +100,7 @@ export class ReportCommentsDialogComponent implements OnInit {
         }
         else{
             const comment = Object.assign( new ReportCommentsModel(), {
-                owner: this.teamUserTmp,
+                owner: [],
                 comment: this.commentsForm.get('comment').value,
                 handoverId: this.data.handoverId,
                 createDate: this.currentTime,
@@ -148,7 +121,7 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     getNameUser(): string {
         if(this.authorizedUser){
-            return this.authorizedUser.firstName + this.authorizedUser.lastName;
+            return this.authorizedUser.name + this.authorizedUser.surname;
         }
         return "";
     }
@@ -156,7 +129,7 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     getLettersIcon(): string {
         if(this.authorizedUser){
-            var getLetters = (this.authorizedUser.firstName[0] + this.authorizedUser.lastName[0])
+            var getLetters = (this.authorizedUser.name[0] + this.authorizedUser.surname[0])
             .split(" ")
             .join("");
 
@@ -175,7 +148,7 @@ export class ReportCommentsDialogComponent implements OnInit {
             comment: reportComment.comment,
             handoverId: reportComment.handoverId,
             commentId: reportComment.commentId,
-            ownerId: this.authorizedUser.userId,
+            ownerId: this.authorizedUser.id,
             createDate: reportComment.createDate,
             reportComments: this.data.reportComments,
          });

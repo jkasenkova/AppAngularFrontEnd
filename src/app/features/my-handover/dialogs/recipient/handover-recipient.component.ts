@@ -7,11 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
-import { Handover } from "src/app/models/handover";
-import { MyTeamModel } from "src/app/models/myTeamModel";
-import { MyTeamService } from "src/app/services/myTeamService";
-import { Guid } from "guid-typescript";
 import { CommonModule } from "@angular/common";
+import { RecipientModel } from "../../models/recipientModel";
+import { MyTeamModel } from "src/app/models/myTeamModel";
+import { map, Observable } from "rxjs";
+import { UserModel } from "src/app/models/user";
+import { UserService } from "src/app/services/userService";
 
 @Component({
     selector: 'handover-recepient',
@@ -39,84 +40,33 @@ import { CommonModule } from "@angular/common";
 
 export class HandoverRecipientDialogComponent implements OnInit {
     recipientForm: FormGroup;
-    teamMembers: MyTeamModel[] = [];
-    selected: boolean = false;
-
-
-    teamRotationsTmp: MyTeamModel[] = [
-        {
-            ownerName: "Julia Kasenkova",
-            ownerEmail: "jkasenkova@gmail.com",
-            userId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            ownerRole: "Developer",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            selected: false
-        },
-        {
-            ownerName: "Peter Hlazunov",
-            ownerEmail: "peter_hlazunov@gmail.com",
-            userId: Guid.parse("db3fd6a0-e14f-43a1-9393-c5332dee29cd"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            ownerRole: "Team Lead",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("e50c8635-4b51-4cdd-85ca-4ae35acb8bbd"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            selected: false
-        },
-        {
-            ownerName: "Vlad Gurov",
-            ownerEmail: "vlad_gurov@gmail.com",
-            userId: Guid.parse("f06e7c51-43e7-4c8d-b7dd-42c668384bc3"),
-            ownerRole: "Product Manager",
-            isActiveRotation: true, //get state from back by curentRotationId
-            recipientId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            ownerRoleId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            locationId:  Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            lineManagerId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            curentRotationId: Guid.parse("314d09a4-cb44-4c08-99d7-15d3441bc3cb"),
-            selected: false
-        }
-    ]
+    users$: Observable<UserModel[]>;
+    hasUsers$!: Observable<boolean>;
+    activeIndex: number | null = null; 
 
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<HandoverRecipientDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Handover,
-        private myTeamService: MyTeamService
-    ) {
-        this.teamMembers = this.teamRotationsTmp;  //for test
-
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private userService: UserService
+    ) 
+    {
         this.recipientForm = this.fb.group({
             handoverId: data ? data.handoverId : null,
-            recipientId: [data ? data.recipientId : null, Validators.required]
+            recipientId: [data ? data.recipientId : null, Validators.required],
+            templateId: data.templateId,
+            endDateTime: data.endDateTime
         });
-
-        if(data && data.recipientId){
-            this.teamMembers.map((member, i) => {
-                if (member.userId.toString() == data.recipientId.toString()){
-                   this.teamMembers[i].selected = true;
-                 }
-               });
-        }
     }
 
     ngOnInit(): void {
+        this.users$ = this.userService.getUsers();
+        this.hasUsers$ = this.users$.pipe(map((users) => users.length > 0));
     }
 
 
     onNoClick(): void {
         this.dialogRef.close();
-
-        this.myTeamService.getTeamUsers().subscribe(teams =>{
-            this.teamMembers = teams
-        });
     }
 
     onSave(): void {
@@ -125,24 +75,12 @@ export class HandoverRecipientDialogComponent implements OnInit {
         }
     }
 
-    getLettersIcon(ownerName: string): string {
-        var getLetters = ownerName
-        .split(" ")
-        .map(n => n[0])
-        .join("");
-
-        return getLetters;
+    getLettersIcon(user: UserModel): string {
+        return user.name.charAt(0).toUpperCase() + user.surname.charAt(0).toUpperCase();
     }
 
-    selectMember(teamMember: MyTeamModel) {
-        teamMember.selected = true;
-
-        this.recipientForm.get('recipientId').setValue(teamMember.userId);
-
-        this.teamMembers.forEach(member =>{
-            if(teamMember.userId != member.userId){
-            member.selected = false;
-            }
-        });
+    selectMember(teamMember: UserModel, index: number) {
+        this.activeIndex = index;
+        this.recipientForm.get('recipientId').setValue(teamMember.id);
     }
 }

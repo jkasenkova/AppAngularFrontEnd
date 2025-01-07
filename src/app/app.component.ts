@@ -71,8 +71,8 @@ export class AppComponent implements OnInit {
            // console.log(data);
         });
 
-        if(Boolean(this.user.firstName) && Boolean(this.user.lastName)){
-            var getLetters = [this.user.firstName[0] + this.user.lastName[0]].join("");
+        if(Boolean(this.admin.name) && Boolean(this.admin.surname)){
+            var getLetters = [this.admin.name[0] + this.admin.surname[0]].join("");
             return getLetters;
         }
         return "";

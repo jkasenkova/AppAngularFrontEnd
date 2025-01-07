@@ -48,8 +48,8 @@ export class ProfileTabComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: UserModel
     ) {
         this.profileForm = this.fb.group({
-            firstName: [data.firstName, Validators.required],
-            lastName: [data.lastName, Validators.required],
+            firstName: [data.name, Validators.required],
+            lastName: [data.surname, Validators.required],
             title: data.title
         });
     }

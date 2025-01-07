@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ConfigService } from './config.service';
 import { Observable } from "rxjs";
@@ -23,7 +23,7 @@ export class LocationService {
     }
 
     updateLocation(locationModel: Location) {
-        this.http.patch(this.url, locationModel, this.httpHeaders).subscribe();
+        this.http.patch<Location>(this.url, locationModel, this.httpHeaders).subscribe();
     }
 
     deleteLocation(id: Guid) {

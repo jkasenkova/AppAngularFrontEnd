@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule, FormControl } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -8,14 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import moment from 'moment-timezone';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Timezone } from "../../../../../models/timezoneModel";
-import { LocationModel } from "../../../../../models/locationModel";
 import { TimezoneProvider } from '../../../../../shared/timezone.provider';
-import { LocationService } from "src/app/services/locationService";
-import { Location } from "../../../../../models/location";
+import { LocationManagementService } from "../../services/locationManagementServices";
+import { Location } from "src/app/models/location";
 
 @Component({
     selector: 'location-dialog',
@@ -47,28 +45,28 @@ export class CreateLocationDialogComponent implements OnInit {
     timeZones: Timezone[] = [];
     locations: Location[];
 
+    locations$ = this.locationManagementService.locations$;
+
     constructor(
         private timezoneProvider: TimezoneProvider,
         private fb: FormBuilder,
-        private locationService: LocationService,
+        private locationManagementService: LocationManagementService,
         public dialogRef: MatDialogRef<CreateLocationDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: LocationModel
+        @Inject(MAT_DIALOG_DATA) public data: Location
     ) {
 
         this.locationForm = this.fb.group({
             name: [null, Validators.required],
             address: null,
             mapLink: null,
-            timeZoneId: [null, Validators.required],
+            timeZone: [null, Validators.required],
             isAccountLocation: false
         });
+
+        this.locations$.subscribe(locations => this.locations = locations);
     }
 
-    ngOnInit(){
-        this.locationService.getLocations().subscribe(locations =>{
-            this.locations = locations;
-        });
-
+    ngOnInit(): void {
         this.timeZones = this.timezoneProvider.getTimezones();
     }
 
@@ -79,12 +77,16 @@ export class CreateLocationDialogComponent implements OnInit {
     onSave(): void {
         var locationName = this.locationForm.get('name').value;
 
-        if(this.locations.find(l=>l.name == locationName) != null){
-            this.locationForm.get('name').setErrors({'existLocationName': true})
-        }
+        if (this.doesRoleNameExist(locationName)) {
+            this.locationForm.get('name').setErrors({'existRoleName': true})
+        } 
 
         if (this.locationForm.valid) {
             this.dialogRef.close(this.locationForm.value);
         }
+    }
+
+    doesRoleNameExist(nameToCheck: string): boolean {
+        return this.locations.some((location) => location.name === nameToCheck);
     }
 }

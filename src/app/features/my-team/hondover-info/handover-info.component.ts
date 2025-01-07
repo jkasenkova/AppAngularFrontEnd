@@ -49,7 +49,7 @@ export class HandoverInfoComponent  implements OnInit {
        
         this.handoverInfoForm = this.fb.group({
             handoverOwner: data.ownerName,
-            role: data.ownerRole,
+            role: [], //data.ownerRole,
             location: this.locationName,
             lineMananer: data.lineManagerId,
             recipient: data.recipientId,

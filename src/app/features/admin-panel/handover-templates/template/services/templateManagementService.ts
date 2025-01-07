@@ -1,13 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Template } from '../models/template';
+import { Template } from '../../../../../models/template';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UpdateTemplateService {
+export class TemplateManagementService {
   private dataSubject = new BehaviorSubject<Template[]>([]);
-  data$ = this.dataSubject.asObservable();
+  templates$ = this.dataSubject.asObservable();
   arrayChanged: EventEmitter<Template[]> = new EventEmitter<Template[]>();
 
   addItem(newItem: any): void {
@@ -41,12 +41,13 @@ export class UpdateTemplateService {
     this.setData(updatedData);
   }
 
-  setData(data: any): void {
+  setData(data: any): Template[] {
     this.dataSubject.next(data);
     this.arrayChanged.emit(data);
+    return this.dataSubject.getValue();
   }
 
-  getData(): any {
+  getData(): Template[] {
     return this.dataSubject.getValue();
   }
 }

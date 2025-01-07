@@ -1,10 +1,10 @@
 import { Guid } from 'guid-typescript';
-import { MyTeamModel } from 'src/app/models/myTeamModel';
+import { UserModel } from 'src/app/models/user';
 
 export class ShareReportModel {
     ownerId: Guid;
     handoverId: Guid;
-    shareUsers: MyTeamModel[] = [];
+    shareUsers: UserModel[] = [];
     shareEmails: string[] = []
-    teamMembers: MyTeamModel[];
+    teamMembers?: UserModel[];
 }

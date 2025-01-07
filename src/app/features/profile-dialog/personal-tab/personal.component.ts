@@ -45,8 +45,8 @@ export class PersonalTabComponent {
         private roleService: RoleService
     ) {
         this.personalForm = this.fb.group({
-            firstName: [data.firstName, Validators.required],
-            lastName: [data.lastName, Validators.required],
+            firstName: [data.name, Validators.required],
+            lastName: [data.surname, Validators.required],
             title: data.title,
             roleName: ''
         });

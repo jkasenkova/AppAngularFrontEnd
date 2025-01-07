@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnChanges, OnInit } from "@angular/core";
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,67 +15,80 @@ import { UserType } from "src/app/models/userType";
 import { RoleModel } from "src/app/models/role";
 import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
 import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
-import { LocationModel } from "../../../models/locationModel";
 import { LocationService } from "src/app/services/locationService";
 import { RoleService } from "src/app/services/roleService";
 import { TeamService } from "src/app/services/teamServices";
-import { Location } from "src/app/models/location";
 import { Template } from "src/app/models/template";
 import { TemplateService } from "src/app/services/templateService";
-import { Observable, of, pipe} from 'rxjs';
-import { map, filter, tap } from 'rxjs/operators'
-import { UpdateTemplateService } from "src/app/services/updateTemplateService";
+import { TemplateManagementService } from "src/app/features/admin-panel/handover-templates/template/services/templateManagementService";
+import { map } from "rxjs";
+import { Location } from "src/app/models/location";
+import {CommonModule} from '@angular/common';
+import { LocationManagementService } from "./services/locationManagementServices";
+import { TeamManagementService } from "./services/teamManagementService";
+import { RoleManagementService } from "./services/roleManagementService";
 
 @Component({
     selector: 'app-user-orientation',
     standalone: true,
-    imports: [NgbTooltipModule, MatButtonModule],
+    imports: [
+        NgbTooltipModule, 
+        MatButtonModule,
+        CommonModule
+    ],
     templateUrl: './user-orientation.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     styleUrls: ['./user-orientation.component.less']
 })
-export class UserOrientationComponent implements OnInit {
+
+export class UserOrientationComponent implements OnInit, OnChanges {
     readonly dialog = inject(MatDialog);
-    locations: LocationModel[];
-    teams: Team[] = [];
-    selectedLocation: LocationModel;
+    selectedLocation: Location;
     selectedTeam: Team;
-    roles: RoleModel[];
+    
+    locations$ = this.locationManagementService.locations$;
+    roles$ = this.roleManagementService.roles$; 
+    teams$ = this.teamManagementService.teams$; 
 
     constructor(
-        private cdr: ChangeDetectorRef,
-        private updateTemplateService: UpdateTemplateService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private templateManagementService: TemplateManagementService,
         private locationService: LocationService,
+        private locationManagementService: LocationManagementService,
+        private teamManagementService: TeamManagementService,
+        private roleManagementService: RoleManagementService,
         private teamService: TeamService,
         private templateService: TemplateService,
         private roleService: RoleService) {}
 
     ngOnInit(): void {
-        this.locationService.getLocations().pipe(map((x: LocationModel[]) => x)).subscribe(x => this.locations = x);
+        this.locations$ = this.locationService.getLocations().pipe(
+            map((locations: Location[]) =>
+                this.locationManagementService.setData(locations.sort((a, b) => a.name.localeCompare(b.name)))
+        ));
     }
 
-    ngAfterViewChecked(){
-        this.cdr.detectChanges();
-     }
+    ngOnChanges(): void {
+        this.changeDetectorRef.detectChanges();
+    }
 
-    selectLocation(location: LocationModel): void{
+    selectLocation(location: Location): void {
         this.selectedLocation = location;
-        this.locationService.getTeamsByLocationId(location.id).subscribe(teams => 
-        {
-            this.teams = teams.filter(t => t.locationId == location.id)
-                                    .sort((a, b) => a.name.localeCompare(b.name));
-        });
-        this.roles = [];
+        this.teams$ = this.locationService.getTeamsByLocationId(location.id).pipe(
+            map((teams: Team[]) =>
+                this.teamManagementService.setData(teams.sort((a, b) => a.name.localeCompare(b.name))))
+        );
     }
 
-    selectTeam(team: Team): void{
+    selectTeam(team: Team): void {
         this.selectedTeam = team;
-        this.teamService.getRolesByTeamId(team.id).subscribe(roles => 
-        {
-            this.roles = roles.sort((a, b) => a.name.localeCompare(b.name));
-        });
+        this.roles$ = this.teamService.getRolesByTeamId(team.id).pipe(
+            map((roles: RoleModel[]) =>
+                this.roleManagementService.setData(roles.sort((a, b) => a.name.localeCompare(b.name))))
+        );
     }
-    ///---------------Location------------------------------
+
+    //---------------------Location------------------------------
 
     addLocation() {
         const dialogRef = this.dialog.open(CreateLocationDialogComponent);
@@ -90,17 +103,14 @@ export class UserOrientationComponent implements OnInit {
                     isAccountLocation: false
                 };
 
-                this.locationService.createLocation(location).subscribe(location =>{
-                    this.locations.push(location);
-                    this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
+                this.locationService.createLocation(location).subscribe(location => {
+                   this.locationManagementService.addLocation(location);
                 });
-
-                
             }
         });
     }
 
-    removeLocation(location: LocationModel){
+    removeLocation(location: Location){
         const dialogRef = this.dialog.open(DeleteLocationDialogComponent, { 
             data: { 
                 name: location.name,
@@ -111,12 +121,12 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.locationService.deleteLocation(location.id);
-                this.locations = this.locations.filter(l=>l.id != location.id);
+                this.locationManagementService.deleteLocation(location.id);
             }
         });
     }
 
-    editLocation(location: LocationModel){
+    editLocation(location: Location){
         const dialogRef = this.dialog.open(EditLocationDialogComponent, { 
             data: { 
                 name: location.name,
@@ -133,24 +143,21 @@ export class UserOrientationComponent implements OnInit {
                 var locationUpdate: Location = {
                     id: result.id,
                     name: result.name,
-                    timeZone: result.timeZoneId,
+                    timeZone: result.timeZone,
                     mapLink: result.result,
                     address: result.address,
                     isAccountLocation: result.isAccountLocation
                 };
 
                 this.locationService.updateLocation(locationUpdate);
-
-                let updateLocation = this.locations.find(l=> l.id == result.id);
-                let index = this.locations.indexOf(updateLocation);
-                this.locations[index] = locationUpdate;
-
-                this.locations = this.locations.sort((a, b) => a.name.localeCompare(b.name));
+                this.locationManagementService.updateLocation(locationUpdate);
+                this.locations$ = this.locationService.getLocations();
             }
         });
     }
 
-    //-----------------------Team----------------------------
+    //-----------------------Team---------------------------------
+
     addTeam(locationId: Guid){
         const dialogRef = this.dialog.open(CreateTeamDialogComponent, { 
             data: { 
@@ -161,14 +168,12 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var team: Team = {
-                    id: Guid.create(),
                     name: result.teamName,
                     locationId: locationId
                 };
-                this.teamService.createTeam(team);
-                this.teams.push(team);
-
-                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
+                this.teamService.createTeam(team).subscribe(team => {
+                    this.teamManagementService.addTeam(team);
+                });
             }
         });
     }
@@ -184,7 +189,7 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.teamService.deleteTeam(result.teamId);
-                this.teams = this.teams.filter(l=>l.id != team.id);
+                this.teamManagementService.deleteTeam(result.teamId);
             }
         });
     }
@@ -200,32 +205,27 @@ export class UserOrientationComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.teamService.updateTeam(result);
-                let updateTeam = this.teams.find(l=> l.id == team.id);
-                let index = this.teams.indexOf(updateTeam);
-                this.teams[index].name = result.name;
-
-                this.teams = this.teams.sort((a, b) => a.name.localeCompare(b.name));
+                team.name = result.name;
+                this.teamService.updateTeam(team);
+                this.teamManagementService.updateTeam(team);
             }
         });
     }
 
-    ///----------------Role---------------------------------------
-
-    //add to template if create new (call ngChange() on template page)
+    //------------------------Role--------------------------------
 
     addRole(teamId: Guid){
         const dialogRef = this.dialog.open(CreateRoleDialogComponent, { 
             data: { 
                 teamId: teamId,
-                userType: UserType
+                userType: UserType,
+                roles: this.roleManagementService.roles$
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) 
             {
-                debugger;
                 if(result.template)
                 {
                     if(result.template.id != null)
@@ -239,9 +239,9 @@ export class UserOrientationComponent implements OnInit {
                             templateId: result.template.id
                         };
 
-                        this.roles.push(role)
-                        this.roleService.createRole(role).subscribe(newRole => role = newRole);
-                        
+                        this.roleService.createRole(role).subscribe(newRole => {
+                            this.roleManagementService.addRole(newRole);
+                        });
                     }
                     else
                     {
@@ -261,13 +261,26 @@ export class UserOrientationComponent implements OnInit {
                                 templateId: template.id
                             };
 
-                            this.roles.push(role)
-                            this.roleService.createRole(role).subscribe(newRole => role = newRole);
-                            this.updateTemplateService.addItem(template);
+                            this.roleService.createRole(role).subscribe(newRole => {
+                                this.roleManagementService.addRole(newRole);
+                            });
+
+                            this.templateManagementService.addItem(template);
                         });
                     }
                 }
-                this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
+                else{
+                    var role: RoleModel = {
+                        name: result.name,
+                        userType: result.userType,
+                        teamId: result.teamId,
+                        rotationType: result.rotationType
+                    };
+
+                    this.roleService.createRole(role).subscribe(newRole => {
+                        this.roleManagementService.addRole(newRole);
+                    });
+                }
             }
         });
     }
@@ -281,7 +294,8 @@ export class UserOrientationComponent implements OnInit {
                 userType: role.userType,
                 teamId: role.teamId,
                 rotationType: role.rotationType,
-                shiftPatternType: role.shiftPatternType
+                shiftPatternType: role.shiftPatternType,
+                roles: this.roleManagementService.roles$
             }
         });
 
@@ -299,10 +313,11 @@ export class UserOrientationComponent implements OnInit {
 
                 if(result.template)
                 {
-                    if(result.template.id != null)
+                    if(result.template.id !== null && role.templateId !== result.template.id)
                     {
                         role.templateId = result.template.id;
                         this.roleService.updateRole(role);
+                        this.roleManagementService.updateRole(role);
                     }
                     else
                     {
@@ -311,19 +326,26 @@ export class UserOrientationComponent implements OnInit {
                             isHandover: false
                         };
                     
-                        this.templateService.addTemplate(newTemplate).subscribe(template => {
+                       /*  this.templateService.addTemplate(newTemplate).subscribe(template => {
                             role.templateId = template.id;
+
                             this.roleService.updateRole(role);
-                        });
+                            this.roleManagementService.updateRole(role);
+                        }); */
+
+                        this.templateService.addTemplate(newTemplate).pipe(
+                            map((createdTemplate) => role.templateId = createdTemplate.id) 
+                        );
+
+                        this.roleService.updateRole(role);
+                        this.roleManagementService.updateRole(role);
                     }
                 }
 
-                
-                let updateRole = this.roles.find(t=> t.id == role.id);
-                let index = this.roles.indexOf(updateRole);
-                this.roles[index] = role;
-
-                this.roles = this.roles.sort((a, b) => a.name.localeCompare(b.name));
+                else{
+                    this.roleService.updateRole(role);
+                    this.roleManagementService.updateRole(role);
+                }
             }
         });
     }
@@ -339,7 +361,7 @@ export class UserOrientationComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.roleService.deleteRole(role.id);
-                this.roles = this.roles.filter(r => r.id != role.id);
+                this.roleManagementService.deleteRole(result.teamId);
             }
         });
     }
