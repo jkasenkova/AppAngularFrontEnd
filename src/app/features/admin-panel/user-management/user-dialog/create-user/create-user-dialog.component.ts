@@ -1,18 +1,28 @@
-import { Component, Inject, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-import { UserModel } from "../../model/userModel";
-import { RoleModel } from "src/app/models/role";
-import { RoleService } from "src/app/services/roleService";
-import { RotationType } from "../../../../../models/rotationType";
+import { UserModel } from '../../model/userModel';
+import { RoleModel } from '@models/role';
+import { RoleService } from '@services/roleService';
+import { RotationType } from '@models/rotationType';
+import { AuthService } from '@services/auth/auth.service';
+import { AuthFacade } from '@services/auth/store/auth.facade';
+import { AddUserRequest } from '@models/addUserRequest';
+import { AddUserResponse } from '@models/addUserResponse';
+import { UserService } from '@services/userService';
+import { TeamService } from '@services/teamServices';
+import { LocationService } from '@services/locationService';
+import { UserModel as AddUserModel } from '@models/user';
+import { Team } from '@models/team';
+import { LocationModel } from '@models/locationModel';
 
 @Component({
     selector: 'create-user-dialog',
@@ -37,29 +47,56 @@ import { RotationType } from "../../../../../models/rotationType";
         NgbDatepickerModule
     ],
 })
-export class CreateUserDialogComponent {
+export class CreateUserDialogComponent implements OnInit {
     userForm: FormGroup;
-    rolesOfTeam: RoleModel[];
+    roles: RoleModel[];
     showPassword: boolean;
     showRecipient: boolean = false;
-    
+    accountId: string;
+    teamList: Team[] = [];
+    roleList: RoleModel[] = [];
+    locations: LocationModel[] = [];
+
     constructor(
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UserModel, private roleService: RoleService
+        private authService: AuthService,
+        private authFacade: AuthFacade,
+        private userService: UserService,
+        private teamService: TeamService,
+        private roleService: RoleService,
+        private locationService: LocationService,
+        @Inject(MAT_DIALOG_DATA) public data: UserModel
     ) {
+    }
 
+    ngOnInit(): void {
+        this.teamService.getTeams().subscribe(teams => {
+            this.teamList = teams
+        });
+
+        this.roleService.getRoles().subscribe(roles => {
+            this.roleList = roles
+        });
+
+        this.locationService.getLocations().subscribe(locations => {
+            this.locations = locations
+        });
+
+        this.authFacade.accountId$.subscribe(result => {
+            this.accountId = result;   
+        });
+
+        this.roles = this.data.roles;
         this.userForm = this.fb.group({
-            userName: ['', Validators.required],
-            userSurname: ['', Validators.required],
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required],
             email: ['', Validators.required, Validators.email],
-            lineManagers: [data.lineManagers, Validators.required],
-            roles: [data.roles, Validators.required],
-            teams: [data.teams, Validators.required],
+            lineManagers: [],
+            roles: [this.roles],
+            teams: [this.teamList],
             rotation: [''],
             template: [''],
-            companyId: ['', Validators.required],
-            contributors: [data.contributors],
             password: ['', Validators.compose([
                 Validators.required,
                 Validators.minLength(8),
@@ -80,12 +117,36 @@ export class CreateUserDialogComponent {
 
     onSave(): void {
         if (this.userForm.valid) {
+            const addUserRequest: AddUserRequest = {
+                email: this.userForm.value.email,
+                firstName: this.userForm.value.firstName,
+                lastName: this.userForm.value.lastName,
+                accountId: this.accountId,
+                password: this.userForm.value.password,
+                roleId: this.userForm.value.roleId
+            };
+
+            this.authService.addUser(addUserRequest).subscribe((response: AddUserResponse) => {
+                if (response.succeeded) {
+                    const user : AddUserModel = {
+                        userId: response.userId,
+                        firstName: this.userForm.value.firstName,
+                        lastName: this.userForm.value.lastName,
+                        email: this.userForm.value.email,
+                        roleId: this.userForm.value.roleId,
+                        companyId: this.accountId
+                    };
+    
+                    this.userService.createUser(user).subscribe();
+                }
+            });
+
             this.dialogRef.close(this.userForm.value);
         }
     }
 
     onSelectTeam(event: any){
-        this.rolesOfTeam = this.data.roles.filter(r => r.teamId.toString() == event.value.teamId.toString());
+        this.roles = this.data.roles.filter(r => r.teamId.toString() == event.value.teamId.toString());
     }
 
     onSelectRole(event: any){

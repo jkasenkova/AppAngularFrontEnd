@@ -111,7 +111,7 @@ export class MyHandoverComponent implements OnInit {
     loadData(): void {
       if(this.owner && this.owner.currentRotationId) 
        {
-            this.handoverService.getShiftById(this.owner.currentRotationId).subscribe(rotation =>
+            this.handoverService.getShiftById("ef8caa00-10f4-43f9-90df-582bdb09eb1b").subscribe(rotation =>
             {
                 this.handover = rotation;
                 this.handoverOut = rotation;

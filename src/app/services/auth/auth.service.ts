@@ -15,6 +15,8 @@ import { AuthFacade } from './store/auth.facade';
 import { JWTTokenService } from './token/jwt-token.service';
 import { SignUpResponse } from '@models/signUpResponse';
 import { SignUpData } from '@models/signUpData';
+import { AddUserRequest } from '@models/addUserRequest';
+import { AddUserResponse } from '@models/addUserResponse';
 
 export interface AccessData {
   token_type: 'Bearer';
@@ -99,6 +101,16 @@ export class AuthService {
     });
   }
 
+  addUser(request: AddUserRequest): Observable<AddUserResponse> {
+    const body = JSON.stringify(request);
+    return this.http.post<AddUserResponse>(`${this.hostUrl}/api/users`, body,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+  }
+
   login(userEmail: string, password: string): Observable<any> {
     const payload = { email: userEmail, password: password };
 
@@ -113,7 +125,7 @@ export class AuthService {
   }
 
   signUp(signUpData: SignUpData): Observable<SignUpResponse> {
-    let body = JSON.stringify(signUpData);
+    const body = JSON.stringify(signUpData);
     return this.http.post<SignUpResponse>(`${this.hostUrl}/api/accounts/sing-up`, body,
     {
       headers: {

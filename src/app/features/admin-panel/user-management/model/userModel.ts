@@ -1,7 +1,7 @@
-import { RoleModel } from "src/app/models/role";
-import { RotationType } from "src/app/models/rotationType";
-import { Team } from "src/app/models/team";
-import { UserType } from "src/app/models/userType";
+import { RoleModel } from '@models/role';
+import { RotationType } from '@models/rotationType';
+import { Team } from '@models/team';
+import { UserType } from '@models/userType';
 
 export interface UserModel {
     userId?: string;
