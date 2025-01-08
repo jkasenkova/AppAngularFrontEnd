@@ -25,7 +25,6 @@ import { Team } from '@models/team';
 import { LocationModel } from '@models/locationModel';
 import { TemplateService } from "@services/templateService";
 import { Observable } from "rxjs";
-import { UserService } from "@services/userService";
 
 @Component({
     selector: 'create-user-dialog',
@@ -68,7 +67,6 @@ export class CreateUserDialogComponent implements OnInit {
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
         private authService: AuthService,
         private authFacade: AuthFacade,
-        private userService: UserService,
         private teamService: TeamService,
         private roleService: RoleService,
         private locationService: LocationService,

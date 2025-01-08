@@ -71,8 +71,8 @@ export class HandoverRecipientDialogComponent implements OnInit {
     }
 
     getLettersIcon(user: UserModel): string {
-        if(Boolean(user.name) && Boolean(user.surname)){
-            var getLetters = [user.name[0] + user.surname[0]].join("");
+        if(Boolean(user.firstName) && Boolean(user.lastName)){
+            var getLetters = [user.firstName[0] + user.lastName[0]].join("");
             return getLetters;
         }
         return "";
@@ -80,6 +80,6 @@ export class HandoverRecipientDialogComponent implements OnInit {
 
     selectMember(teamMember: UserModel, index: number) {
         this.activeIndex = index;
-        this.recipientForm.get('recipientId').setValue(teamMember.id);
+        this.recipientForm.get('recipientId').setValue(teamMember.userId);
     }
 }

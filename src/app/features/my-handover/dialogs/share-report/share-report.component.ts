@@ -25,23 +25,20 @@ import { ShareReportModel } from "../../models/shareReportModel";
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        MatButtonModule,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatDialogModule,
-        MatGridListModule,
-        CommonModule,
-        MatSelectModule,
-        MatAutocompleteModule,
-        MatChipsModule
-    ]
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogClose,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatGridListModule,
+    CommonModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatChipsModule
+]
 })
 
 export class ShareReportDialogComponent implements OnInit {

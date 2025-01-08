@@ -145,7 +145,7 @@ handoverRecipientTmp: MyTeamModel = {
 
     initializeReportData(handover: Handover): pdfReportModel{
         
-        var shared = handover.shareUsers ? handover.shareUsers.flatMap(u => u.name)
+        var shared = handover.shareUsers ? handover.shareUsers.flatMap(u => u.firstName)
         .concat(handover.shareEmails).join(", "): handover.shareEmails.join(", ");
 
         var dataModel: pdfReportModel = {

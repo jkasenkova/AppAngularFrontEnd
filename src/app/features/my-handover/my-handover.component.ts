@@ -258,7 +258,7 @@ export class MyHandoverComponent implements OnInit {
         this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.name + user.surname.split(" ").map((n)=>n[0]).join("");
+                    return user.firstName + user.lastName.split(" ").map((n)=>n[0]).join("");
                 }
             ));
         return "";
@@ -268,7 +268,7 @@ export class MyHandoverComponent implements OnInit {
         this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.name;
+                    return user.firstName;
                 }
             ));
         return "";
@@ -301,7 +301,7 @@ export class MyHandoverComponent implements OnInit {
                     }); 
                     this.owner.curentRotationId = this.handover.handoverId; */
 
-                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.id);
+                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.userId);
                 } 
             }
         });
@@ -361,7 +361,7 @@ export class MyHandoverComponent implements OnInit {
         }
 
         if(this.handover.shareUsers){
-            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.name + u.surname));
+            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.firstName + u.lastName));
         }
 
         return title + arr.toString().split(",").join('\n');
