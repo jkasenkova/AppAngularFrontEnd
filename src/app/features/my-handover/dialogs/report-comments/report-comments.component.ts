@@ -117,7 +117,7 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     getNameUser(): string {
         if(this.authorizedUser){
-            return this.authorizedUser.firstName + this.authorizedUser.lastName;
+            return this.authorizedUser.name + this.authorizedUser.surname;
         }
         return "";
     }
@@ -125,7 +125,7 @@ export class ReportCommentsDialogComponent implements OnInit {
 
     getLettersIcon(): string {
         if(this.authorizedUser){
-            var getLetters = (this.authorizedUser.firstName[0] + this.authorizedUser.lastName[0])
+            var getLetters = (this.authorizedUser.name[0] + this.authorizedUser.surname[0])
             .split(" ")
             .join("");
 
@@ -144,7 +144,7 @@ export class ReportCommentsDialogComponent implements OnInit {
             comment: reportComment.comment,
             handoverId: reportComment.handoverId,
             commentId: reportComment.commentId,
-            ownerId: this.authorizedUser.userId,
+            ownerId: this.authorizedUser.id,
             createDate: reportComment.createDate,
             reportComments: this.data.reportComments,
          });

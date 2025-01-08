@@ -23,6 +23,9 @@ import { LocationService } from '@services/locationService';
 import { UserModel as AddUserModel } from '@models/user';
 import { Team } from '@models/team';
 import { LocationModel } from '@models/locationModel';
+import { TemplateService } from "@services/templateService";
+import { Observable } from "rxjs";
+import { UserService } from "@services/userService";
 
 @Component({
     selector: 'create-user-dialog',
@@ -56,9 +59,12 @@ export class CreateUserDialogComponent implements OnInit {
     teamList: Team[] = [];
     roleList: RoleModel[] = [];
     locations: LocationModel[] = [];
+    users$: Observable<UserModel[]>;
 
     constructor(
         private fb: FormBuilder,
+        private templateService: TemplateService,
+        private userService: UserService,
         public dialogRef: MatDialogRef<CreateUserDialogComponent>,
         private authService: AuthService,
         private authFacade: AuthFacade,
@@ -109,6 +115,8 @@ export class CreateUserDialogComponent implements OnInit {
             ])],
             recipients:[]
         });
+
+        
     }
 
     onNoClick(): void {
@@ -146,21 +154,24 @@ export class CreateUserDialogComponent implements OnInit {
     }
 
     onSelectTeam(event: any){
-        this.roles = this.data.roles.filter(r => r.teamId.toString() == event.value.teamId.toString());
+        this.roles = this.data.roles.filter(r => r.teamId == event.value.id);
     }
 
     onSelectRole(event: any){
-       var roleId = event.value.roleId;
+       var roleId = event.value.id;
 
        var role = this.data.roles.find(r => r.id == roleId);
 
         if(role){
             this.userForm.get('rotation').setValue(role.rotationType);
-            this.userForm.get('template').setValue("Template 1");// role.templateId get name from service
 
-            if(role.rotationType == RotationType.Shift){
-                this.showRecipient = true;
-            }
+            this.templateService.getTemplateById(role.templateId).subscribe(template =>{
+                this.userForm.get('template').setValue(template.name);
+
+                if(role.rotationType == RotationType.Shift){
+                    this.showRecipient = true;
+                }
+            })
         }
     }
 }
