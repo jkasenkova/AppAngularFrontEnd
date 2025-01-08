@@ -1,9 +1,9 @@
 <div class="container app-my-handover">
 
+  <!--   set by role -->
+  <!--   <view-user-panel [handoverOwner]="owner"></view-user-panel> -->
+
 @if(handover != null) {
-    @if(isAdmin){
-        <view-user-panel [handoverOwner]="owner"></view-user-panel>
-    }
 
     <div Id="templatePanel" class="panel panel-primary">
         <div class="panel-heading clearfix">
@@ -18,9 +18,12 @@
                         class="btn-circle btn btn-link col-lg-1 col-md-1 col-xs-1 no-padding" 
                         [matTooltip]="shareUserInfo()"
                         (click)="shareReport()">
-                        @if(handover.shareEmails.length > 0 || handover.shareUsers.length > 0){
-                            <div class="count">{{countShare}}</div>
+                        @if(handover.shareEmails){
+                            @if(handover.shareEmails.length > 0 || handover.shareUsers.length > 0){
+                                <div class="count">{{countShare}}</div>
+                            }
                         }
+                        
                     </div>
                     <button type="button" class="finish-rotation btn-circle btn btn-link tooltipster" 
                             matTooltip="Finish Report"

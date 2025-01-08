@@ -118,8 +118,8 @@ export class UserManagementComponent implements OnInit {
         });
 
         this.users$ = this.userService.getUsers().pipe(map(users => users.map(user => ({
-            firstName: user.firstName, 
-            lastName: user.lastName,  
+            firstName: user.name, 
+            lastName: user.surname,  
             email: user.email,
             //locationId: user.locationId, 
             teamId: user.teamId, 

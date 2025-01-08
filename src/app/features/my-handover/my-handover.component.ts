@@ -27,15 +27,13 @@ import { RotationReferenceService } from "src/app/services/rotationReferenceServ
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
-import { expand } from "rxjs";
+import { expand, Observable } from "rxjs";
 import { Router, RouterModule} from '@angular/router';
-import { ReportPDFPreviewComponent } from "./report-preview/report-pdf-component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
 import { RoleModel } from "src/app/models/role";
 import { AuthFacade } from "src/app/services/auth/store/auth.facade";
 import { RoleService } from "src/app/services/roleService";
-import { ShiftState } from "src/app/models/shiftState";
 import { HandoverService } from "src/app/services/handoverService";
 import { UserService } from "src/app/services/userService";
 import { UserModel } from "@models/user";
@@ -72,23 +70,13 @@ export class MyHandoverComponent implements OnInit {
     ownerRole: RoleModel;
     expandAll: boolean = false;
     countShare: number;
-    isAdmin: boolean;
-    
+    owner: UserModel;
+    owner$: Observable<UserModel>;
+
     readonly dialog = inject(MatDialog);
     @Output() handoverOwner: string;
     @Output() handoverOut: Handover;
     @Input() handoverAdmin: boolean; 
-
-    owner: UserModel = {
-        firstName: "Julia",
-        lastName: "Kasenkova",
-        email:  "jkasenkova@gmail.com",
-        roleId: '1cce436d-942c-41a7-92fb-e4d05bbc97ee',
-        userId: 'c3948278-c667-4d8b-8704-73884c20cfe3',
-        teamId: '90fdbdb9-16e4-4efe-a57b-92442e16e62c',
-        companyId: 'c3948278-c667-4d8b-8704-73884c20cfe3',
-        currentRotationId: 'c3948278-c667-4d8b-8704-73884c20cfe3'
-    };
 
     constructor(
         private authFacade: AuthFacade,
@@ -96,14 +84,17 @@ export class MyHandoverComponent implements OnInit {
         private handoverSectionService: HandoverSectionService, 
         private handoverService: HandoverService,
         private userService: UserService,
-        private templateService: TemplateService,
         private roleService: RoleService,
         private rotationTopicService: RotationTopicService,
         private rotationReferenceService: RotationReferenceService) {}
 
     ngOnInit(): void {
-        this.authFacade.isAdmin$.subscribe(isAdmin => this.isAdmin = isAdmin);
-        this.roleService.getRoleById(this.owner.roleId).subscribe(role =>  this.ownerRole = role);
+
+        this.authFacade.state.subscribe(data => {
+            this.userService.getUser(data.authUser.id).subscribe(user => {
+                this.owner = user;
+            });
+        });
 
         this.loadData();
     }
@@ -119,16 +110,6 @@ export class MyHandoverComponent implements OnInit {
             });
        }
 
-      if(this.ownerRole){
-        this.templateService.getTemplateById(this.ownerRole.templateId).subscribe(template =>{
-            this.template = template;
-            this.handover = this.initializeTemplateSection(this.template, this.handover);
-        });
-      }
-
-        this.userService.getUsers().subscribe(teams => {
-            this.teamMembers = teams;
-        }); 
     }
 
     initializeTemplateSection(template: Template, handover: Handover):Handover {
@@ -223,7 +204,7 @@ export class MyHandoverComponent implements OnInit {
         templateTopic.templateReferences.filter(t => t.enabled).forEach(reference => {
 
             var convertedReference = { 
-                id: '',//Guid.create(),
+                id: '',
                 rotationTopicId: templateTopic.id,
                 name: reference.name,
                 enabled: reference.enabled,
@@ -277,7 +258,7 @@ export class MyHandoverComponent implements OnInit {
         this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.firstName + user.lastName.split(" ").map((n)=>n[0]).join("");
+                    return user.name + user.surname.split(" ").map((n)=>n[0]).join("");
                 }
             ));
         return "";
@@ -287,7 +268,7 @@ export class MyHandoverComponent implements OnInit {
         this.userService.getUser(userId).pipe(
             expand(user => 
                 {
-                    return user.firstName;
+                    return user.name;
                 }
             ));
         return "";
@@ -320,7 +301,7 @@ export class MyHandoverComponent implements OnInit {
                     }); 
                     this.owner.curentRotationId = this.handover.handoverId; */
 
-                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.userId);
+                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.id);
                 } 
             }
         });
@@ -380,7 +361,7 @@ export class MyHandoverComponent implements OnInit {
         }
 
         if(this.handover.shareUsers){
-            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.firstName + u.lastName));
+            arr = arr.concat(this.handover.shareUsers.flatMap(u => u.name + u.surname));
         }
 
         return title + arr.toString().split(",").join('\n');
@@ -406,8 +387,13 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) 
             {
-                const dateTime = this.formatedDateTime(result.endDate, result.endTime);
-                this.handoverRecipient(this.ownerRole.templateId, dateTime);
+                this.roleService.getRoleById(this.owner.roleId).subscribe(role => 
+                {
+                    
+                    var templateId = role.templateId ? role.templateId : "d18e8b72-1756-4cc4-bbed-855153269071";
+                    const dateTime = this.formatedDateTime(result.endDate, result.endTime);
+                    this.handoverRecipient(templateId, dateTime);
+                });  
             }
         });
     }
@@ -430,12 +416,11 @@ export class MyHandoverComponent implements OnInit {
     createShift(templateId: string, endDateTime: string, recipientId: string, ownerId: any): Handover {
         var shift: Handover = {
             templateId: templateId,
-            ownerId: ownerId.value,
+            ownerId: ownerId,
             shiftRecipientId: recipientId,
             endDateTime: endDateTime,
             state: 1
         };
-        debugger;
         this.handoverService.addShift(shift);
         return shift;
     }
