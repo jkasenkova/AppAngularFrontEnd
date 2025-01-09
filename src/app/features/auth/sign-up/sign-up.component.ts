@@ -104,7 +104,7 @@ export class SignUpComponent implements OnInit{
                 this.accountService.createAccount(accountModel).subscribe();
 
                 const user : UserModel = {
-                    userId: response.userId,
+                    id: response.userId,
                     firstName: this.signUpForm.value.firstName,
                     lastName: this.signUpForm.value.lastName,
                     email: this.signUpForm.value.email,

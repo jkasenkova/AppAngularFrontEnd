@@ -28,8 +28,8 @@ export class UserService {
         return this.http.post<UserModel>(this.url, userModel, this.httpHeaders);
     }
 
-    updateUser(userModel: UserModel) {
-        this.http.put(this.url, userModel, this.httpHeaders).subscribe();
+    updateUser(userModel: UserModel): Observable<UserModel> {
+        return this.http.patch<UserModel>(this.url, userModel, this.httpHeaders);
     }
 
     deleteUser(userId: string): Observable<string> {

@@ -35,8 +35,9 @@ import { DatesModel } from "../../models/datesModel";
     ]
 })
 export class DateShiftDialogComponent {
-    datestForm: FormGroup;
+    datesForm: FormGroup;
     today: boolean = true; 
+
 
     options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -50,7 +51,7 @@ export class DateShiftDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: DatesModel
     ) { 
         const initialTime = (data && data.endTime) ? this.formatDateToTimeString(this.setTime(data.endTime)): null;
-        this.datestForm = this.fb.group({
+        this.datesForm = this.fb.group({
             endDate: [(data && data.endDate) ? data.endDate : new Date().toLocaleDateString(), Validators.required],
             endTime: [initialTime, Validators.required]
         });
@@ -82,8 +83,8 @@ export class DateShiftDialogComponent {
     }
 
     onSave(): void {
-        if (this.datestForm.valid) {
-            this.dialogRef.close(this.datestForm.value);
+        if (this.datesForm.valid) {
+            this.dialogRef.close(this.datesForm.value);
         }
     }
     
@@ -91,13 +92,13 @@ export class DateShiftDialogComponent {
         if(day == 'Today'){
             this.today = true;
             var endDate = new Date().toLocaleDateString();
-            this.datestForm.get('endDate').setValue(endDate);
+            this.datesForm.get('endDate').setValue(endDate);
         }
         else{
             this.today = false;
             const newDate = new Date();
             var endDate = new Date(newDate.setDate(newDate.getDate() + 1)).toLocaleDateString();
-            this.datestForm.get('endDate').setValue(endDate);
+            this.datesForm.get('endDate').setValue(endDate);
         }
         
     }

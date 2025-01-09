@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output} from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, OnChanges, ChangeDetectorRef} from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -15,7 +15,7 @@ import { HandoverSectionService } from "src/app/services/handoverSectionService"
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
 import { DateShiftDialogComponent } from "./dialogs/dates/date-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, DatePipe, formatDate } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
 import { ShareReportModel } from "./models/shareReportModel";
 import { Template } from "src/app/models/template";
@@ -27,7 +27,7 @@ import { RotationReferenceService } from "src/app/services/rotationReferenceServ
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
-import { expand, Observable } from "rxjs";
+import { expand, map, Observable } from "rxjs";
 import { Router, RouterModule} from '@angular/router';
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
@@ -37,6 +37,8 @@ import { RoleService } from "src/app/services/roleService";
 import { HandoverService } from "src/app/services/handoverService";
 import { UserService } from "src/app/services/userService";
 import { UserModel } from "@models/user";
+import { AuthState } from "@services/auth/store/auth.models";
+import { ShiftState } from "@models/shiftState";
 
 @Component({
     selector: 'app-my-handover',
@@ -60,11 +62,11 @@ import { UserModel } from "@models/user";
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './my-handover.component.html',
     styleUrls: ['./my-handover.component.less'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe] 
 })
 
 export class MyHandoverComponent implements OnInit {
-    handover: Handover;
     teamMembers: UserModel[] = [];
     template: Template;
     ownerRole: RoleModel;
@@ -75,7 +77,7 @@ export class MyHandoverComponent implements OnInit {
 
     readonly dialog = inject(MatDialog);
     @Output() handoverOwner: string;
-    @Output() handoverOut: Handover;
+    @Output() handover: Handover;
     @Input() handoverAdmin: boolean; 
 
     constructor(
@@ -86,40 +88,48 @@ export class MyHandoverComponent implements OnInit {
         private userService: UserService,
         private roleService: RoleService,
         private rotationTopicService: RotationTopicService,
-        private rotationReferenceService: RotationReferenceService) {}
+        private rotationReferenceService: RotationReferenceService,
+        private datePipe: DatePipe,
+        private cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
 
-        this.authFacade.state.subscribe(data => {
-            this.userService.getUser(data.authUser.id).subscribe(user => {
-                this.owner = user;
+        this.authFacade.state.subscribe(data => 
+        {
+            this.roleService.getRoleById(data.authUser.role.RoleId)
+            .pipe(
+                map(role => role.teamId)
+            )
+            .subscribe(teamId => {
+                this.userService.getUser(data.authUser.id).subscribe(owner =>{
+                    owner.teamId = teamId;
+                    this.owner = owner;
+                    this.loadData();
+                })
             });
-        });
-
-        this.loadData();
+        }); 
     }
 
     loadData(): void {
       if(this.owner && this.owner.currentRotationId) 
        {
-            this.handoverService.getShiftById("ef8caa00-10f4-43f9-90df-582bdb09eb1b").subscribe(rotation =>
+            this.handoverService.getShiftById(this.owner.currentRotationId).subscribe(rotation =>
             {
+                rotation.endDateTime = this.datePipe.transform(rotation.endDateTime, 'yyyy-MM-dd HH:mm');
                 this.handover = rotation;
-                this.handoverOut = rotation;
                 this.handover = this.setShareCounter(this.handover);
             });
        }
-
     }
 
-    initializeTemplateSection(template: Template, handover: Handover):Handover {
+    initializeTemplateSection(template: Template, handover: Handover): Handover {
 
         template.sections.forEach(section => {
 
             var convertedSection: HandoverSection = { 
                 sectionId: section.id,
                 sectionName: section.name,
-                handoverId: handover.handoverId,
+                handoverId: handover.id,
                 iHandoverSection: false,
                 sectionType: section.type,
                 sortType: section.sortTopicType,
@@ -290,8 +300,7 @@ export class MyHandoverComponent implements OnInit {
                 if(this.owner.currentRotationId && this.handover != null)
                 {
                     this.handover.shiftRecipientId = result.recipientId;
-                    this.handoverService.updateShift(result);
-                    //update user current handover id
+                    this.handoverService.updateShift(result).subscribe();
                 }
                 else
                 {
@@ -299,9 +308,9 @@ export class MyHandoverComponent implements OnInit {
                         this.template = template;
                         this.handover = this.initializeTemplateSection(this.template, this.handover);
                     }); 
-                    this.owner.curentRotationId = this.handover.handoverId; */
+                    this.owner.currentRotationId = this.handover.handoverId; */
 
-                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.userId);
+                    this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.id);
                 } 
             }
         });
@@ -333,7 +342,7 @@ export class MyHandoverComponent implements OnInit {
 
         let shareReportModel: ShareReportModel = {
             ownerId: this.handover.ownerId,
-            handoverId: this.handover.handoverId,
+            handoverId: this.handover.id,
             shareUsers: this.handover.shareUsers,
             shareEmails: this.handover.shareEmails
         };
@@ -391,14 +400,14 @@ export class MyHandoverComponent implements OnInit {
                 {
                     
                     var templateId = role.templateId ? role.templateId : "d18e8b72-1756-4cc4-bbed-855153269071";
-                    const dateTime = this.formatedDateTime(result.endDate, result.endTime);
+                    const dateTime = this.formattedDateTime(result.endDate, result.endTime);
                     this.handoverRecipient(templateId, dateTime);
                 });  
             }
         });
     }
 
-    formatedDateTime(date: string, time: string): string {
+    formattedDateTime(date: string, time: string): string {
         const [day, month, year] = date.split(".").map(Number);
         const [timePart, meridian] = time.split(" ");
         const [rawHours, minutes] = timePart.split(":").map(Number);
@@ -421,8 +430,13 @@ export class MyHandoverComponent implements OnInit {
             endDateTime: endDateTime,
             state: 1
         };
-        this.handoverService.addShift(shift);
-        return shift;
+
+        this.handoverService.addShift(shift).subscribe(shift => {
+            this.owner.currentRotationId = shift.id;
+            this.userService.updateUser(this.owner).subscribe();
+            this.cdr.detectChanges(); 
+        });
+        return this.handover = shift;
     }
 
     reportPreview(handover: Handover): void {
@@ -431,7 +445,7 @@ export class MyHandoverComponent implements OnInit {
             state: { data: handover }
         }); */
         const url = this.router.serializeUrl(
-            this.router.createUrlTree(['/pdf-preview'], { queryParams: { id: handover.handoverId.toString() } })
+            this.router.createUrlTree(['/pdf-preview'], { queryParams: { id: handover.id.toString() } })
         );
         
         window.open(url, '_blank');
@@ -443,11 +457,12 @@ export class MyHandoverComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.owner.currentRotationId = null;
-
-                this.handoverService.updateShift(handover);
-                this.userService.updateUser(this.owner);
+                handover.state = ShiftState.Finished;
+                this.handoverService.updateShift(handover).subscribe();
+                this.userService.updateUser(this.owner).subscribe();
 
                 this.handover = null;
+                this.cdr.detectChanges();
                //sent reports
             }
         });

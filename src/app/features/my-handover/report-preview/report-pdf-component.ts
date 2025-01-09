@@ -149,7 +149,7 @@ handoverRecipientTmp: MyTeamModel = {
         .concat(handover.shareEmails).join(", "): handover.shareEmails.join(", ");
 
         var dataModel: pdfReportModel = {
-            handoverId: handover.handoverId,
+            handoverId: handover.id,
             handoverDates: handover.startDateTime + " - " + handover.endDateTime,
             handoverType: handover.state == ShiftState.Confirmed ? "Draft Version" : "Final Version",
             handoverTimeZone: "(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius", //this.timeZoneReport,

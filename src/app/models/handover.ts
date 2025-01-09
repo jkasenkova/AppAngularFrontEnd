@@ -6,7 +6,7 @@ import { UserModel } from "./user";
 
 export class Handover {
     public templateId: string;
-    public handoverId?: string;
+    public id?: string;
     public ownerId: string;
     public shiftRecipientId: string;
     public startDateTime?: string;

@@ -135,7 +135,7 @@ export class CreateUserDialogComponent implements OnInit {
             this.authService.addUser(addUserRequest).subscribe((response: AddUserResponse) => {
                 if (response.succeeded) {
                     const user : AddUserModel = {
-                        userId: response.userId,
+                        id: response.userId,
                         firstName: this.userForm.value.firstName,
                         lastName: this.userForm.value.lastName,
                         email: this.userForm.value.email,

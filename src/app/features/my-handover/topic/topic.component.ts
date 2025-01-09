@@ -46,7 +46,7 @@ import { AddTopicComponent } from "../add-topic/add-topic.component";
 })
 
 export class TopicComponent implements OnInit {
-    @Input() handoverOut: Handover; 
+    @Input() handover: Handover; 
     topicForm: FormGroup;
     addTopicForm: FormGroup;
     readonly dialog = inject(MatDialog);
@@ -75,7 +75,7 @@ export class TopicComponent implements OnInit {
     createSectionDialog(): void {
         const dialogRef = this.dialog.open(CreateSectionDialogComponent, {
              data: { 
-                handoverId: this.handoverOut.handoverId 
+                handoverId: this.handover.id 
             },
              panelClass: 'section-dialog'
         });
@@ -83,8 +83,8 @@ export class TopicComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                var newSection: HandoverSection = {
-                    handoverId: this.handoverOut.handoverId,
-                    sectionId: '',//Guid.create(),
+                    handoverId: this.handover.id,
+                    sectionId: '',
                     sectionName: result.sectionName,
                     iHandoverSection: false,
                     sectionType: SectionType.Other,
@@ -96,9 +96,9 @@ export class TopicComponent implements OnInit {
                     sectionTopics: []
                };
               
-               this.handoverOut.sections.push(newSection);
+               this.handover.sections.push(newSection);
 
-               this.handoverOut.sections = this.handoverOut.sections.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
+               this.handover.sections = this.handover.sections.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
 
                this.handoverSectionService.createSection(newSection);
             }
@@ -117,9 +117,9 @@ export class TopicComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                let updateSection = this.handoverOut.sections.find(t => t.sectionId == result.sectionId);
-                let index = this.handoverOut.sections.indexOf(updateSection);
-                this.handoverOut.sections[index].sectionName = result.sectionName;
+                let updateSection = this.handover.sections.find(t => t.sectionId == result.sectionId);
+                let index = this.handover.sections.indexOf(updateSection);
+                this.handover.sections[index].sectionName = result.sectionName;
                 this.handoverSectionService.updateSection(result);
             }
         });
@@ -135,9 +135,9 @@ export class TopicComponent implements OnInit {
             if (result) {
                 this.handoverSectionService.deleteSection(result.sectionId);
 
-                const sectionDeleted = this.handoverOut.sections.findIndex(s => s.sectionId == result.sectionId);
+                const sectionDeleted = this.handover.sections.findIndex(s => s.sectionId == result.sectionId);
                 if (sectionDeleted > -1) {
-                    this.handoverOut.sections.splice(sectionDeleted, 1);
+                    this.handover.sections.splice(sectionDeleted, 1);
                 }
             }
         });

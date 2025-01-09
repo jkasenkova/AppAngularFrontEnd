@@ -20,16 +20,20 @@ export class HandoverService {
         return this.http.get<Handover[]>(this.url);
     }
 
-    addShift(handover: Handover): void {
-        this.http.post<Handover>(this.url, handover, this.httpHeaders).subscribe();
+    addShift(handover: Handover): Observable<Handover> {
+        return this.http.post<Handover>(this.url, handover, this.httpHeaders);
     }
 
     updateShift(handover: Handover): Observable<Handover> {
-        return this.http.put<Handover>(this.url, handover, this.httpHeaders);
+        return this.http.patch<Handover>(this.url, handover, this.httpHeaders);
     }
 
     deleteShiftById(id: string): Observable<string> {
         return this.http.delete<string>(this.url + '/' + id);
+    }
+
+    getShiftByOwnerId(id: string): Observable<Handover> {
+        return this.http.get<Handover>(this.url + '?ownerId=' + id);
     }
 
     getShiftById(id: string): Observable<Handover> {

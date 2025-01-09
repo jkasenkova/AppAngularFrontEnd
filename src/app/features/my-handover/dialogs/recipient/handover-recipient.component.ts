@@ -80,6 +80,6 @@ export class HandoverRecipientDialogComponent implements OnInit {
 
     selectMember(teamMember: UserModel, index: number) {
         this.activeIndex = index;
-        this.recipientForm.get('recipientId').setValue(teamMember.userId);
+        this.recipientForm.get('recipientId').setValue(teamMember.id);
     }
 }

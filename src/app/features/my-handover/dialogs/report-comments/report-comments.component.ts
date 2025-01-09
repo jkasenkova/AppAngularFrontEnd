@@ -50,7 +50,7 @@ export class ReportCommentsDialogComponent implements OnInit {
     ) {
         this.commentsForm = this.fb.group({
             commentId: null,
-            handoverId: data.handoverId,
+            handoverId: data.id,
             ownerId: null,
             createDate: null,
             comment: null,
@@ -98,7 +98,7 @@ export class ReportCommentsDialogComponent implements OnInit {
             const comment = Object.assign( new ReportCommentsModel(), {
                 owner: [],
                 comment: this.commentsForm.get('comment').value,
-                handoverId: this.data.handoverId,
+                handoverId: this.data.id,
                 createDate: this.currentTime,
                 commentId: ''//Guid.create()
             });
@@ -144,7 +144,7 @@ export class ReportCommentsDialogComponent implements OnInit {
             comment: reportComment.comment,
             handoverId: reportComment.handoverId,
             commentId: reportComment.commentId,
-            ownerId: this.authorizedUser.userId,
+            ownerId: this.authorizedUser.id,
             createDate: reportComment.createDate,
             reportComments: this.data.reportComments,
          });
