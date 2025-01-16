@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HandoverInfoComponent } from '../handover-info/handover-info.component';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'handover',
@@ -30,6 +31,7 @@ export class HandoverComponent implements OnInit {
     
     constructor(
         private cdr: ChangeDetectorRef,
+        private router: Router,
         private myTeamService: MyTeamService){}
 
     ngOnInit(): void {
@@ -75,5 +77,9 @@ export class HandoverComponent implements OnInit {
 
         return contributors.flatMap(c => c.ownerName).join('\n'); */
         return '';
+    }
+
+    goToRotation(teamRotation: MyTeamModel){
+        this.router.navigate(['/app-my-handover', teamRotation.userId]);
     }
 }

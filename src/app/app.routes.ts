@@ -23,7 +23,7 @@ const appRoutes: Routes =
         component: AppComponent
     },
     {
-        path: 'my-handover',
+        path: 'app-my-handover/:id',
         canActivate: [authGuard],
         component: MyHandoverComponent
     },

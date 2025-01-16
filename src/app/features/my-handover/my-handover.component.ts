@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, OnChanges, ChangeDetectorRef} from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, ChangeDetectorRef} from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -15,11 +15,10 @@ import { HandoverSectionService } from "src/app/services/handoverSectionService"
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
 import { DateShiftDialogComponent } from "./dialogs/dates/date-shift.component";
 import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
-import { CommonModule, DatePipe, formatDate } from '@angular/common';
+import { CommonModule, DatePipe, formatDate  } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
 import { ShareReportModel } from "./models/shareReportModel";
 import { Template } from "src/app/models/template";
-import { TemplateService } from "src/app/services/templateService";
 import { TemplateTopic } from "src/app/models/templateTopic";
 import { Section } from "src/app/models/section";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
@@ -27,8 +26,8 @@ import { RotationReferenceService } from "src/app/services/rotationReferenceServ
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
-import { expand, map, Observable } from "rxjs";
-import { Router, RouterModule} from '@angular/router';
+import { expand, map } from "rxjs";
+import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
 import { RoleModel } from "src/app/models/role";
@@ -37,7 +36,6 @@ import { RoleService } from "src/app/services/roleService";
 import { HandoverService } from "src/app/services/handoverService";
 import { UserService } from "src/app/services/userService";
 import { UserModel } from "@models/user";
-import { AuthState } from "@services/auth/store/auth.models";
 import { ShiftState } from "@models/shiftState";
 
 @Component({
@@ -72,11 +70,11 @@ export class MyHandoverComponent implements OnInit {
     ownerRole: RoleModel;
     expandAll: boolean = false;
     countShare: number;
+    viewPanel: boolean = false;
     owner: UserModel;
-    owner$: Observable<UserModel>;
 
     readonly dialog = inject(MatDialog);
-    @Output() handoverOwner: string;
+    @Output() viewerId: string;
     @Output() handover: Handover;
     @Input() handoverAdmin: boolean; 
 
@@ -90,12 +88,17 @@ export class MyHandoverComponent implements OnInit {
         private rotationTopicService: RotationTopicService,
         private rotationReferenceService: RotationReferenceService,
         private datePipe: DatePipe,
+        private route: ActivatedRoute,
         private cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
 
+        this.viewerId = this.route.snapshot.paramMap.get('id'); 
         this.authFacade.state.subscribe(data => 
         {
+            if(this.viewerId != null && this.viewerId !== data.authUser.id){
+                this.viewPanel = true;
+            }
             this.roleService.getRoleById(data.authUser.role.RoleId)
             .pipe(
                 map(role => role.teamId)
@@ -265,12 +268,19 @@ export class MyHandoverComponent implements OnInit {
     }
 
     getLettersIcon(userId: string): string {
-        this.userService.getUser(userId).pipe(
+
+        this.userService.getUser(userId).subscribe(user => {
+            debugger;
+            var getLetters = [user.firstName[0] + user.lastName[0]].join("");
+            return getLetters;
+        });
+
+        /* this.userService.getUser(userId).pipe(
             expand(user => 
                 {
                     return user.firstName + user.lastName.split(" ").map((n)=>n[0]).join("");
                 }
-            ));
+            )); */
         return "";
     }
 

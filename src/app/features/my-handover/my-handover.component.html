@@ -1,7 +1,9 @@
 <div class="container app-my-handover">
 
-  <!--   set by role -->
-  <!--   <view-user-panel [handoverOwner]="owner"></view-user-panel> -->
+    @if(viewPanel){
+        <view-user-panel [viewerId]="viewerId"></view-user-panel>
+    }
+    
 
 @if(handover != null) {
 

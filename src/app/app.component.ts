@@ -37,8 +37,6 @@ import { AuthUser } from './services/auth/store/auth.models';
     styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-    userName: string;
-    //readonly dialog = inject(MatDialog);
     isAdmin: boolean;
     user: AuthUser;
     isAuth: boolean;

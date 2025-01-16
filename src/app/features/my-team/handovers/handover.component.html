@@ -4,7 +4,8 @@
         @for (teamRotation of (teamRotations$ | async); track teamRotation) {
             <div class="col col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="row panels">
-                    <div class="col col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding padding-row">
+                    <div class="col col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding padding-row" 
+                        (click)="goToRotation(teamRotation)">
                         <div class="user-photo">
                             <div class="user-photo-img">
                                 @if(teamRotation.contributors != null){
@@ -17,7 +18,7 @@
                         </div>
                     </div>
                     <div class="user-data col col-lg-7 col-md-7 col-sm-7 col-xs-7 padding-row">
-                        <div class="row no-margin">
+                        <div class="row no-margin" (click)="goToRotation(teamRotation)">
                             <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                 <div class="row no-margin user-contact">
                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
@@ -37,7 +38,7 @@
                                 <div class="row no-margin user-contact">
                                     <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
                                         <div class="user-position">
-                                           <!--  {{teamRotation.ownerRole}} -->
+                                            {{teamRotation.ownerRole}}
                                         </div>
                                     </div>
                                 </div>

@@ -24,7 +24,9 @@ import { SessionStorageService } from '../../services/sessionStorageService';
 export class MyTeamComponent implements OnInit {
     selectedIndex = 1;
 
-    constructor(private sessionStorageService: SessionStorageService) {}
+    constructor(
+        private sessionStorageService: SessionStorageService
+    ) {}
 
     ngOnInit(): void {
         this.selectedIndex = this.sessionStorageService.getItem<number>('active-tab');
