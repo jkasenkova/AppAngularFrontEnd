@@ -84,6 +84,8 @@ export class AuthService {
     }
   }
 
+  auth() {}
+  
   signIn(userEmail: string, password: string): Observable<AccessData> {
     const payload = new HttpParams()
     .set('client_id', this.clientId)
@@ -103,7 +105,7 @@ export class AuthService {
 
   addUser(request: AddUserRequest): Observable<AddUserResponse> {
     const body = JSON.stringify(request);
-    return this.http.post<AddUserResponse>(`${this.hostUrl}/api/users`, body,
+    return this.http.post<AddUserResponse>(`${this.hostUrl}/api/users/addUser`, body,
     {
       headers: {
         'Content-Type': 'application/json',

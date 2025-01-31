@@ -1,19 +1,20 @@
 <div class="rowTopicData">
     <div class="divRow">
-        <div class="actions-body">
-            <div class="btn btn-circle draganddrop"></div>
-            <div class="btn btn-circle remove-btn" 
-                 matTooltip="Cancel"
-                (click)="closeNewLine()">
-                    <span class="glyphicon span"></span>
-            </div>
-        </div>
+       
 
         <form [formGroup]="addTopicForm" class="add-topic-form">
+            <div class="actions-body">
+                <div class="btn btn-circle draganddrop"></div>
+                <div class="btn btn-circle remove-btn" 
+                     matTooltip="Cancel"
+                    (click)="closeNewLine()">
+                        <span class="glyphicon span"></span>
+                </div>
+            </div>
             <div class="type-body">
             <mat-form-field class="example-full-width">
                 <mat-select formControlName="topic" placeholder="Select Topic" (selectionChange)="onSelectAddTopic($event)">
-                    @for (topic of sectionOut.sectionTopics; track topic) {
+                    @for (topic of section.topics; track topic) {
                         <mat-option [value]="topic">{{topic.name}}</mat-option>
                     }
                   </mat-select>

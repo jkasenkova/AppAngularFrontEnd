@@ -1,20 +1,16 @@
-import { Handover } from "./handover";
 import { SectionType } from "./sectionType";
 import { SortType } from "./sortType";
 import { RotationTopic } from "./rotationTopic";
 
-export class HandoverSection {
-    public sectionName: string;
-    public sectionId?: string;
-    public handoverId: string;
-    public handover?: Handover;
-    public iHandoverSection: boolean = false;
-    public sectionType: SectionType;
+export class RotationSection {
+    public name: string;
+    public id?: string;
+    public rotationId: string;
     public addBtnShow?: boolean = true;
-    public templateSection:boolean = false;
-    public sortType: SortType = 0;
+    public templateSection: boolean = false;
+    public sortTopicType: SortType = 0;
     public sortReferenceType: SortType = 0;
-    public sectionTopics?: RotationTopic[] = [];
-    public appendAddItemLine: boolean = false;
+    public type: SectionType;
+    public topics?: RotationTopic[] = [];
 }
   

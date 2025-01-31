@@ -120,7 +120,6 @@ export class TemplateComponent implements OnInit, OnChanges {
 
     getTemplateSections(template: Template): void{
       this.sections = this.sortSectionsByTypeAndName(template.sections);
-      
         this.sections.forEach(section => 
         {
           this.globalTemplateTopic = this.templateTopicManagementService.getData() as TemplateTopic[];

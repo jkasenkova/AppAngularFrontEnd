@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit, ViewEncapsulation } from "@angular/core";
-import { HandoverSection } from "src/app/models/handoverSection";
+import { RotationSection } from "src/app/models/handoverSection";
 
 @Component({
     selector: 'topic-model',
@@ -15,7 +15,7 @@ import { HandoverSection } from "src/app/models/handoverSection";
 })
 
 export class TopicModelComponent implements OnInit {
-    @Input() sectionsOut: HandoverSection[];
+    @Input() sectionsOut: RotationSection[];
 
     ngOnInit(): void {
     }

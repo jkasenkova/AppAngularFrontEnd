@@ -13,7 +13,7 @@ export class HandoverSectionService {
         private readonly configService: ConfigService) {
     }
 
-    private readonly url = this.configService.getRouterUrl() + '/section';
+    private readonly url = this.configService.getRouterUrl() + '/rotationSection';
     httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
     createSection(section: HandoverSection): Observable<HandoverSection> {

@@ -15,7 +15,7 @@ import { LocationService } from "src/app/services/locationService";
 @Component({
     selector: 'team-dialog',
     templateUrl: './create-team.component.html',
-    styleUrl: '/../../../../../styles/pop-up.less',
+    styleUrl: '../../../../../styles/pop-up.less',
     standalone: true,
     encapsulation: ViewEncapsulation.None,
     imports: [

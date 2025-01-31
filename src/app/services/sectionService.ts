@@ -33,7 +33,6 @@ export class SectionService {
     }
 
     getSectionById(id: string): Observable<Section> {
-        debugger;
         return this.http.get<Section>(this.url + '/' + id);
     }
 }

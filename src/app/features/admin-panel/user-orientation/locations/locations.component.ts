@@ -18,7 +18,7 @@ import { AsyncPipe } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./locations.component.less']
 })
-export class UserOrientationComponent implements OnInit {
+export class LocationsComponent implements OnInit {
     readonly dialog = inject(MatDialog);
     locations$: Observable<LocationModel[]>;
     teams: Team[] = [];

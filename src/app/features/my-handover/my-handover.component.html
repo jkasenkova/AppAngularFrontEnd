@@ -1,6 +1,6 @@
 <div class="container app-my-handover">
 
-    @if(viewPanel){
+    @if(this.viewerId){
         <view-user-panel [viewerId]="viewerId"></view-user-panel>
     }
     
@@ -57,12 +57,13 @@
                         {{handover.endDateTime}}
                     </div>
                     <div class="from-to-block">
-                        <div class="icon-container" [matTooltip]="getNameByUserId(handover.ownerId)">
-                            <div class="name"> {{ getLettersIcon(handover.ownerId) }}</div>
+                        <div class="icon-container" [matTooltip]="owner?.firstName + ' ' + owner?.lastName">
+                           <div class="name"> {{ getOwnerInitials() }}</div>
                         </div>
+
                         <div class="arrow-left">&#10230;</div>
-                         <div class="icon-container" [matTooltip]="getNameByUserId(handover.shiftRecipientId)">
-                            <div class="name"> {{ getLettersIcon(handover.shiftRecipientId) }}</div>
+                         <div class="icon-container" [matTooltip]="recipient?.firstName + ' ' + recipient?.lastName">
+                            <div class="name">{{ userInitials }}</div>
                         </div>
                     </div>
                     <div class="recipient-block" matTooltip="Edit Recipient" (click)="handoverRecipient()"></div>
@@ -83,7 +84,9 @@
 
             </div>
         </div>
-        <topic [handover]="handover"></topic>
+        <ng-container *ngIf="sections">
+            <topic  [handover]="handover" [sections]="sections" [expandAll]="expandAll"></topic>
+          </ng-container>
         }
         @else{
             <div class="message-block font-weight">

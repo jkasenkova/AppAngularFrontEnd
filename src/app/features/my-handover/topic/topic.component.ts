@@ -1,11 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChildren, ViewEncapsulation } from "@angular/core";
+import { AfterContentInit, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HandoverSection } from "src/app/models/handoverSection";
+import { RotationSection } from "src/app/models/handoverSection";
 import { RotationReferenceService } from "src/app/services/rotationReferenceService";
 import { RotationTopicService } from "src/app/services/rotationTopicService";
 import { CreateSectionDialogComponent } from "../dialogs/sections/create-section/create-section.component";
 import { MatDialog } from "@angular/material/dialog";
-import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { EditSectionDialogComponent } from "../dialogs/sections/edit-section/edit-section.component";
 import { DeleteSectionDialogComponent } from "../dialogs/sections/delete-section/delete-section.component";
 import { RotationTopic } from "src/app/models/rotationTopic";
@@ -22,6 +21,8 @@ import { Handover } from "src/app/models/handover";
 import { ClickOutsideDirective } from '../../../shared/clickoutside.directive';
 import { SectionType } from "src/app/models/sectionType";
 import { AddTopicComponent } from "../add-topic/add-topic.component";
+import { catchError, defaultIfEmpty, forkJoin, lastValueFrom, map, Observable, of, switchMap, tap } from "rxjs";
+import { RotationSectionService } from "@services/rotationSectionService";
 
 @Component({
     selector: 'topic',
@@ -45,21 +46,25 @@ import { AddTopicComponent } from "../add-topic/add-topic.component";
     encapsulation: ViewEncapsulation.None
 })
 
-export class TopicComponent implements OnInit {
+export class TopicComponent implements OnInit, OnChanges  {
     @Input() handover: Handover; 
+    sections$: Observable<HandoverSection[]>;
+    topics$: Observable<RotationTopic[]>;
     topicForm: FormGroup;
     addTopicForm: FormGroup;
     readonly dialog = inject(MatDialog);
     @ViewChildren("addRowElement") addRowElement: QueryList<ElementRef>;
-    references: RotationReference[];
 
-    @Output() sectionOut: HandoverSection;
+    @Input() sections: RotationSection[] = [];
+    @Input() expandAll: boolean = false;
+    displayedSections: RotationSection[] = [];
 
     constructor(
         private rotationTopicService: RotationTopicService,
         private rotationReferenceService: RotationReferenceService,
-        private handoverSectionService: HandoverSectionService, 
-        private fb: FormBuilder) 
+        private handoverSectionService: RotationSectionService, 
+        private fb: FormBuilder,
+        private cdr: ChangeDetectorRef) 
     {
             this.topicForm = this.fb.group({
                 topicName: new FormControl(),
@@ -69,7 +74,94 @@ export class TopicComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.displayedSections = [...this.sections];
     }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['sections'] && changes['sections'].currentValue) {
+          this.displayedSections = [...changes['sections'].currentValue];
+
+          if(this.handover){
+            this.processSections(this.handover.id);
+          }
+        }
+        if (changes['expandAll']) {
+           this.expandAll = changes['expandAll'].currentValue;
+        }
+    }
+
+    onSectionUpdated(updatedSection: any, index: number) {
+        this.sections[index] = updatedSection;
+      }
+
+    private processSections(handoverId: string): void {
+        this.handoverSectionService.getSections(handoverId).pipe(
+          tap((sections: RotationSection[]) => {
+            this.displayedSections = sections
+          }),
+          switchMap((sections: RotationSection[]) => {
+            const sectionRequests = sections.map((section) =>
+              this.processSection(section)
+            );
+            return forkJoin(sectionRequests);
+          })
+        ).subscribe({
+          next: (updatedSections: RotationSection[]) => {
+            this.displayedSections = updatedSections;
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error processing sections:', err);
+          },
+        });
+      }
+    
+      private processSection(section: RotationSection): Observable<RotationSection> {
+        return this.rotationTopicService.getTopicsBySectionId(section.id).pipe(
+          switchMap((topics: RotationTopic[]) => {
+            const otherTopicExists = topics.some((topic) => topic.name === 'Other');
+            if (otherTopicExists == false) {
+              const newTopic: RotationTopic = 
+              { 
+                name: 'Other', 
+                sectionId: section.id, 
+                enabled: false,
+                index: 0,
+                isPinned: false,
+                editing: false,
+                isExpand: false,
+                whitePin: false,
+                checked: false,
+            };
+              return this.rotationTopicService.addRotationTopic(newTopic).pipe(
+                map((savedTopic: RotationTopic) => [...topics, savedTopic])
+              );
+            }
+            return of(topics);
+          }),
+          switchMap((topicsWithOther: RotationTopic[]) => {
+            const topicsWithReferences$ = topicsWithOther.map((topic) =>
+              this.rotationReferenceService.getRotationReferences(topic.id).pipe(
+                map((rotationReferences: RotationReference[]) => ({
+                  ...topic,
+                  rotationReferences,
+                }))
+              )
+            );
+    
+            return forkJoin(topicsWithReferences$).pipe(
+              map((topicsWithReferences) => ({
+                ...section,
+                topics: topicsWithReferences, 
+              }))
+            );
+          }),
+          catchError((error) => {
+            console.error(`Error processing section ${section.id}:`, error);
+            return of(section);
+          })
+        );
+      }
     //----------------------Section Dialogs--------------------------
 
     createSectionDialog(): void {
@@ -82,52 +174,97 @@ export class TopicComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-               var newSection: HandoverSection = {
-                    handoverId: this.handover.id,
-                    sectionId: '',
-                    sectionName: result.sectionName,
-                    iHandoverSection: false,
-                    sectionType: SectionType.Other,
-                    addBtnShow:true,
-                    sortReferenceType: SortType.alphabetically,
-                    sortType: SortType.alphabetically,
-                    templateSection: false,
-                    appendAddItemLine: false,
-                    sectionTopics: []
-               };
-              
-               this.handover.sections.push(newSection);
-
-               this.handover.sections = this.handover.sections.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
-
-               this.handoverSectionService.createSection(newSection);
+                this.createRotationSection(result);
             }
         });
     }
 
-    editSectionDialog(section: HandoverSection): void {
+    createRotationSection(result: any): void {
+        const newSection: RotationSection = {
+            rotationId: this.handover.id,
+            id: '',
+            templateSection: false,
+            name: result.sectionName,
+            addBtnShow: true,
+            type: SectionType.Other,
+            sortReferenceType: SortType.alphabetically,
+            sortTopicType: SortType.alphabetically,
+            topics: []
+        };
+        this.addRotationSectionWithTopic(newSection);
+    }
 
+    addRotationSectionWithTopic(newSection: RotationSection): void {
+        this.handoverSectionService.createSection(newSection).subscribe({
+          next: (createdSection: RotationSection) => {
+            const otherTopic: RotationTopic = 
+            { 
+              name: 'Other', 
+              sectionId: createdSection.id, 
+              enabled: false,
+              index: 0,
+              isPinned: false,
+              editing: false,
+              isExpand: false,
+              whitePin: false,
+              checked: false,
+          };
+    
+            this.rotationTopicService.addRotationTopic(otherTopic).subscribe({
+              next: (createdTopic: RotationTopic) => {
+                if (!createdSection.topics) {
+                  createdSection.topics = [];
+                }
+                createdSection.topics.push(createdTopic);
+                this.displayedSections.push(createdSection);
+                this.cdr.detectChanges();
+              },
+              error: (err) => {
+                console.error('Error creating topic "Other":', err);
+              }
+            });
+          },
+          error: (err) => {
+            console.error('Error creating section:', err);
+          }
+        });
+    }
+
+    editSectionDialog(section: RotationSection): void {
         const dialogRef = this.dialog.open(EditSectionDialogComponent, {
             data: { 
-                sectionId: section.sectionId, 
-                sectionName: section.sectionName 
+                sectionId: section.id, 
+                sectionName: section.name 
             },
              panelClass: 'section-dialog'
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                let updateSection = this.handover.sections.find(t => t.sectionId == result.sectionId);
-                let index = this.handover.sections.indexOf(updateSection);
-                this.handover.sections[index].sectionName = result.sectionName;
-                this.handoverSectionService.updateSection(result);
+                let updateSection = this.displayedSections.find(t => t.id == result.sectionId);
+                let index = this.displayedSections.indexOf(updateSection);
+                this.displayedSections[index].name = result.sectionName;
+                this.cdr.detectChanges();
+
+                const newSection: RotationSection = {
+                    rotationId: this.handover.id,
+                    id: result.sectionId,
+                    name: result.sectionName,
+                    templateSection: false,
+                    addBtnShow: true,
+                    type: SectionType.Other,
+                    sortReferenceType: SortType.alphabetically,
+                    sortTopicType: SortType.alphabetically,
+                    topics: []
+                };
+                this.handoverSectionService.updateSection(newSection).subscribe();
             }
         });
     }
 
-    deleteSectionDialog(section: HandoverSection): void {
+    deleteSectionDialog(section: RotationSection): void {
         const dialogRef = this.dialog.open(DeleteSectionDialogComponent, {
-            data: { sectionId: section.sectionId, sectionName: section.sectionName },
+            data: { sectionId: section.id, sectionName: section.name },
              panelClass: 'section-dialog'
         });
 
@@ -135,16 +272,20 @@ export class TopicComponent implements OnInit {
             if (result) {
                 this.handoverSectionService.deleteSection(result.sectionId);
 
-                const sectionDeleted = this.handover.sections.findIndex(s => s.sectionId == result.sectionId);
+                const sectionDeleted = this.displayedSections.findIndex(s => s.id == result.sectionId);
                 if (sectionDeleted > -1) {
-                    this.handover.sections.splice(sectionDeleted, 1);
+                    this.displayedSections.splice(sectionDeleted, 1);
+                    this.cdr.detectChanges();
                 }
             }
         });
     }
 
-
     //-----------------------------Topics--------------------------------
+
+    expandTopic(topic: RotationTopic): void {
+        topic.isExpand = !topic.isExpand;
+    }
 
     editTopic(topic: RotationTopic): void{
         topic.editing = !topic.editing;
@@ -152,11 +293,11 @@ export class TopicComponent implements OnInit {
         this.topicForm.get('topicName').setValue(topic.name);
     }
 
-    toggleDiv(show: boolean, section: HandoverSection, index: number): void {
+    toggleDiv(section: RotationSection, index: number): void {
        this.addHideRowTopicForm(section, index);
     }
 
-    addHideRowTopicForm(section: HandoverSection, index: number): void{
+    addHideRowTopicForm(section: RotationSection, index: number): void{
         let nativeElement = this.addRowElement.toArray()[index].nativeElement;
         
         nativeElement.style.display =
@@ -172,14 +313,14 @@ export class TopicComponent implements OnInit {
     }
 
     getCountReferences(topic: RotationTopic): number {
-        return topic.references != null ? topic.references.filter(t => t.enabled).length : 0;
+        return topic.rotationReferences != null ? topic.rotationReferences.filter(t => t.enabled).length : 0;
     }
     
     expanded(topic: RotationTopic): boolean {
-        return topic.references != null ? topic.references.filter(t => t.enabled).length > 0 : false;
+        return topic.rotationReferences != null ? topic.rotationReferences.filter(t => t.enabled).length > 0 : false;
     }
 
-    dropTopic(event: CdkDragDrop<RotationTopic[]>, topics: RotationTopic[], section: HandoverSection): void {
+    dropTopic(event: CdkDragDrop<RotationTopic[]>, topics: RotationTopic[], section: RotationSection): void {
    
         moveItemInArray(topics, event.previousIndex, event.currentIndex);
     
@@ -187,51 +328,138 @@ export class TopicComponent implements OnInit {
           x.index = index
         });
     
-        if(section.sortType == SortType.alphabetically){
-            section.sortType = SortType.index;
+        if(section.sortTopicType == SortType.alphabetically){
+            section.sortTopicType = SortType.index;
             this.handoverSectionService.updateSection(section);
         }
 
         //update index for topics
     }
     
-    updateTopic(topic: RotationTopic, section: HandoverSection){
+    updateTopic(topic: RotationTopic, section: RotationSection){
         topic.editing = !topic.editing;
-
+        topic.isExpand = true;
         topic.name = this.topicForm.get('topicName').value;
         this.updateTopicInArray(topic, section);
     }
 
-    checkedTopic(topic: RotationTopic, section: HandoverSection){
+    async checkedTopic(topic: RotationTopic, section: RotationSection): Promise<void>{
         topic.checked = !topic.checked;
+
+        if (topic.rotationReferences && topic.rotationReferences.length > 0) {
+            topic.rotationReferences.forEach(ref => (ref.checked = topic.checked));
+      
+            const updateRequests = topic.rotationReferences.map(ref =>
+              this.rotationReferenceService.updateRotationReference(ref).pipe(
+                catchError(error => {
+                  console.error('Error during update rotationReference:', error);
+                  return of(null); 
+                })
+              )
+            );
+      
+            try {
+              const results = await forkJoin(updateRequests).toPromise();
+    
+              const failedUpdates = results.filter(result => result === null).length;
+              if (failedUpdates > 0) {
+                console.warn(`Failed to update ${failedUpdates} rotationReferences.`);
+              } 
+            } catch (error) {
+              console.error('Error while executing queries:', error);
+            }
+        }
 
         this.updateTopicInArray(topic, section);
     }
 
-    updateTopicInArray(topic: RotationTopic, section: HandoverSection){
-        let updateTopic = section.sectionTopics.find(t=> t.id == topic.id);
-        let index = section.sectionTopics.indexOf(updateTopic);
-        section.sectionTopics[index] = topic;
-
-        this.rotationTopicService.updateTopic(topic);
+    updateTopicInArray(topic: RotationTopic, section: RotationSection): void {
+        try {
+          const index = section.topics.findIndex(t => t.id === topic.id);
+      
+          if (index !== -1) {
+            section.topics = [
+              ...section.topics.slice(0, index),
+              topic,
+              ...section.topics.slice(index + 1)
+            ];
+      
+            this.rotationTopicService.updateTopic(topic).subscribe();
+          } else {
+            console.warn('Topic not fined:', topic.id);
+          }
+        } catch (error) {
+          console.error('Error updating topic:', error);
+        }
     }
 
-    topicPinned(topic: RotationTopic, section: HandoverSection): void{
+    async topicPinned(topic: RotationTopic, section: RotationSection): Promise<void>{
         topic.isPinned = !topic.isPinned;
+
+        if (topic.rotationReferences && topic.rotationReferences.length > 0) {
+            topic.rotationReferences.forEach(ref => (ref.isPinned = topic.isPinned));
+      
+            const updateRequests = topic.rotationReferences.map(ref =>
+              this.rotationReferenceService.updateRotationReference(ref).pipe(
+                catchError(error => {
+                  console.error('Error during update rotationReference:', error);
+                  return of(null); 
+                })
+              )
+            );
+      
+            try {
+              const results = await forkJoin(updateRequests).toPromise();
+    
+              const failedUpdates = results.filter(result => result === null).length;
+              if (failedUpdates > 0) {
+                console.warn(`Failed to update ${failedUpdates} rotationReferences.`);
+              } 
+            } catch (error) {
+              console.error('Error while executing queries:', error);
+            }
+        }
 
        this.updateTopicInArray(topic, section);
     }
 
-    removeTopic(topic: RotationTopic,  section: HandoverSection){
+    async removeTopic(topic: RotationTopic,  section: RotationSection): Promise<void>{
         topic.enabled = false;
+
+        if (topic.rotationReferences && topic.rotationReferences.length > 0) {
+            topic.rotationReferences.forEach(ref => (ref.enabled = topic.enabled));
+      
+            const updateRequests = topic.rotationReferences.map(ref =>
+              this.rotationReferenceService.updateRotationReference(ref).pipe(
+                catchError(error => {
+                  console.error('Error during update rotationReference:', error);
+                  return of(null); 
+                })
+              )
+            );
+      
+            try {
+              const results = await forkJoin(updateRequests).toPromise();
+    
+              const failedUpdates = results.filter(result => result === null).length;
+              if (failedUpdates > 0) {
+                console.warn(`Failed to update ${failedUpdates} rotationReferences.`);
+              } 
+            } catch (error) {
+              console.error('Error while executing queries:', error);
+            }
+        }
 
         this.updateTopicInArray(topic, section);
     }
 
     //----------------References--------------------
 
-    removeReference(reference:RotationReference, topic: RotationTopic){
+    removeReference(reference:RotationReference, topic: RotationTopic, section: RotationSection){
         reference.enabled = false;
+        if(topic.rotationReferences.length == 1){
+            this.removeTopic(topic, section);
+        }
         this.updateReferenceInArray(reference, topic);
     }
 
@@ -253,20 +481,35 @@ export class TopicComponent implements OnInit {
     }
 
     updateReferenceInArray(reference: RotationReference, topic: RotationTopic){
-        let updateReference = topic.references.find(t=> t.id == reference.id);
-        let index = topic.references.indexOf(updateReference);
-        topic.references[index] = reference;
+        const index = topic.rotationReferences.findIndex(ref => ref.id === reference.id);
 
-        this.rotationReferenceService.updateRotationReference(reference);
+        if (index !== -1) {
+          topic.rotationReferences = [
+            ...topic.rotationReferences.slice(0, index),
+            reference,
+            ...topic.rotationReferences.slice(index + 1),
+          ];
+ 
+          this.rotationReferenceService.updateRotationReference(reference)
+            .pipe(
+              catchError(error => {
+                console.error('Error during update reference:', error);
+                return of(null);
+              })
+            ).subscribe();
+        }
+        topic.rotationReferences = this.sortRotationReferences(topic.rotationReferences);
     }
 
     pinnedReference(reference: RotationReference, topic: RotationTopic){
         reference.isPinned = !reference.isPinned;
+
         this.updateReferenceInArray(reference, topic);
     }
 
     checkedReference(reference: RotationReference, topic: RotationTopic){
         reference.checked = !reference.checked;
+
         this.updateReferenceInArray(reference, topic);
     }
 
@@ -282,7 +525,7 @@ export class TopicComponent implements OnInit {
         return reference ? reference.name : undefined;
     }
 
-    dropReference(event: CdkDragDrop<RotationReference[]>, references: RotationReference[], section: HandoverSection): void {
+    dropReference(event: CdkDragDrop<RotationReference[]>, references: RotationReference[], section: RotationSection): void {
     
         moveItemInArray(references, event.previousIndex, event.currentIndex);
     
@@ -308,4 +551,27 @@ export class TopicComponent implements OnInit {
         this.updateReference(reference, topic);
         this.updateReferenceInArray(reference, topic);
     }
+
+    sortRotationReferences(references: RotationReference[]): RotationReference[] {
+        return references.sort((a, b) => {
+          if (a.whitePin !== b.whitePin) {
+            return a.whitePin ? -1 : 1;
+          }
+          return a.name.localeCompare(b.name);
+        });
+    }
+
+    sortTopics(topics: RotationTopic[]): RotationTopic[] {
+        if(topics){
+            return topics.sort((a, b) => {
+                if (a.whitePin !== b.whitePin) {
+                  return a.whitePin ? -1 : 1;
+                }
+                return a.name.localeCompare(b.name);
+              });
+        }
+        else{
+            return [];
+        }
+      }
 }

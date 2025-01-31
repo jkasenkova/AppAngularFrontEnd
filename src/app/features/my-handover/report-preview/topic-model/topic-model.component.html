@@ -1,11 +1,11 @@
 <div class="modules">
     @for (section of sectionsOut; track section) {
         <div class="module-block">
-            <span class="module-title">{{section.sectionName}}</span>
+            <span class="module-title">{{section.name}}</span>
             <div class="row no-margin">
-                @for (topic of section.sectionTopics; track topic)
+                @for (topic of section.topics; track topic)
                 {
-                    @for(reference of topic.references; track reference)
+                    @for(reference of topic.rotationReferences; track reference)
                     {
                         <div class="topic-body">
                             <div class="action">
@@ -15,7 +15,7 @@
                                }
                                @else
                                {
-                                   @if (topic.templateTopic)
+                                   @if (topic.whitePin)
                                    {
                                        <div 
                                            [ngClass]="topic.checked ? 'topic-icon checked-topic' : 'topic-icon white-pin'" 

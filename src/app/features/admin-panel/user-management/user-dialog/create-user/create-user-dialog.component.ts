@@ -59,6 +59,7 @@ export class CreateUserDialogComponent implements OnInit {
     roleList: RoleModel[] = [];
     locations: LocationModel[] = [];
     users$: Observable<UserModel[]>;
+    selectedRole: string;
 
     constructor(
         private fb: FormBuilder,
@@ -122,14 +123,14 @@ export class CreateUserDialogComponent implements OnInit {
     }
 
     onSave(): void {
-        if (this.userForm.valid) {
+        //if (this.userForm.valid) {
             const addUserRequest: AddUserRequest = {
                 email: this.userForm.value.email,
                 firstName: this.userForm.value.firstName,
                 lastName: this.userForm.value.lastName,
                 accountId: this.accountId,
                 password: this.userForm.value.password,
-                roleId: this.userForm.value.roleId
+                roleId: this.selectedRole
             };
 
             this.authService.addUser(addUserRequest).subscribe((response: AddUserResponse) => {
@@ -139,7 +140,7 @@ export class CreateUserDialogComponent implements OnInit {
                         firstName: this.userForm.value.firstName,
                         lastName: this.userForm.value.lastName,
                         email: this.userForm.value.email,
-                        roleId: this.userForm.value.roleId,
+                        roleId: this.selectedRole,
                         companyId: this.accountId
                     };
     
@@ -148,7 +149,7 @@ export class CreateUserDialogComponent implements OnInit {
             });
 
             this.dialogRef.close(this.userForm.value);
-        }
+        //}
     }
 
     onSelectTeam(event: any){
@@ -156,9 +157,9 @@ export class CreateUserDialogComponent implements OnInit {
     }
 
     onSelectRole(event: any){
-       var roleId = event.value.id;
-
-       var role = this.data.roles.find(r => r.id == roleId);
+        const roleId = event.value.id;
+        this.selectedRole = roleId;
+       /* var role = this.data.roles.find(r => r.id == roleId);
 
         if(role){
             this.userForm.get('rotation').setValue(role.rotationType);
@@ -170,6 +171,6 @@ export class CreateUserDialogComponent implements OnInit {
                     this.showRecipient = true;
                 }
             })
-        }
+        } */
     }
 }

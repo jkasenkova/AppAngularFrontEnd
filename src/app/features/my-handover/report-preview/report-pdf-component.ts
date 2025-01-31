@@ -6,7 +6,6 @@ import { MyTeamModel } from "src/app/models/myTeamModel";
 import { MyTeamService } from "src/app/services/myTeamService";
 import { CommonModule } from "@angular/common";
 import { LocationService } from "src/app/services/locationService";
-import { HandoverSection } from "src/app/models/handoverSection";
 import { TopicModelComponent } from "./topic-model/topic-model.component";
 import html2canvas from "html2canvas";
 import { ReportCommentsModel } from "src/app/models/reportCommentsModel";
@@ -15,6 +14,7 @@ import { HandoverService } from "src/app/services/handoverService";
 import { ActivatedRoute } from "@angular/router";
 import { DataService } from "src/app/services/data.service";
 import { ShiftState } from "src/app/models/shiftState";
+import { RotationSection } from "@models/handoverSection";
 
 @Component({
     selector: 'pdf-preview',
@@ -40,7 +40,7 @@ export class ReportPDFPreviewComponent implements OnInit {
     timeZoneReport: string;
     receivedData: any;
 
-    @Output() sectionsOut: HandoverSection[];
+    @Output() sectionsOut: RotationSection[];
     @Output() reportComments: ReportCommentsModel[];
     @Input() handoverOut: Handover; 
     data: any;

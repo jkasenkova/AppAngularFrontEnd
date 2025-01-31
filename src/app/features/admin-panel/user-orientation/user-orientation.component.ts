@@ -5,13 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { CreateLocationDialogComponent } from "./location-dialog/create-location/create-location.component";
 import { EditLocationDialogComponent } from "./location-dialog/edit-location/edit-location.component";
 import { DeleteLocationDialogComponent } from "./location-dialog/delete-location/delete-location.component";
-import { Team } from "src/app/models/team";
+import { Team } from '@models/team';
 import { EditTeamDialogComponent } from "./team-dialog/edit-team/edit-team.component";
 import { DeleteTeamDialogComponent } from "./team-dialog/delete-team/delete-team.component";
 import { CreateTeamDialogComponent } from "./team-dialog/create-team/create-team.component";
 import { CreateRoleDialogComponent } from "./role-dialog/create-role/create-role.component";
-import { UserType } from "src/app/models/userType";
-import { RoleModel } from "src/app/models/role";
+import { UserType } from '@models/userType';
+import { RoleModel } from '@models/role';
 import { EditRoleDialogComponent } from "./role-dialog/edit-role/edit-role.component";
 import { DeleteRoleDialogComponent } from "./role-dialog/delete-role/delete-role.component";
 import { LocationService } from "src/app/services/locationService";
@@ -44,13 +44,12 @@ import { AsyncPipe } from '@angular/common';
 export class UserOrientationComponent implements OnInit, OnChanges {
     readonly dialog = inject(MatDialog);
     locations$: Observable<Location[]>;
-    teams$: Observable<Team[]>;
     selectedLocation: Location;
     selectedTeam: Team;
     
     //locations$ = this.locationManagementService.locations$;
     roles$ = this.roleManagementService.roles$; 
-    //teams$ = this.teamManagementService.teams$; 
+    teams$ = this.teamManagementService.teams$; 
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -73,7 +72,6 @@ export class UserOrientationComponent implements OnInit, OnChanges {
 
     selectLocation(location: Location): void {
         this.selectedLocation = location;
-        this.teams$ = this.locationService.getTeamsByLocationId(location.id);
         this.roles$ = of([]);
         this.teams$ = this.locationService.getTeamsByLocationId(location.id).pipe(
             map((teams: Team[]) =>
@@ -177,16 +175,14 @@ export class UserOrientationComponent implements OnInit, OnChanges {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 var team: Team = {
-                    id: '',
                     name: result.teamName,
                     locationId: locationId
                 };
-                this.teamService.createTeam(team);
-                this.teams$.pipe(map(x => x.push(team)));
-                this.teams$ = this.teams$.pipe(map(x => x.sort((a, b) => a.name.localeCompare(b.name))));
                 this.teamService.createTeam(team).subscribe(team => {
                     this.teamManagementService.addTeam(team);
                 });
+                this.teams$ = this.teamManagementService.getTeams();
+                //this.teams$ = this.teams$.pipe(map(x => x.sort((a, b) => a.name.localeCompare(b.name))));
             }
         });
     }

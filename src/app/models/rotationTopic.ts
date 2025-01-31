@@ -10,11 +10,11 @@ export class RotationTopic {
     public enabled: boolean;
     public index: number;
     public isExpand: boolean = false;
-    public templateTopic: boolean = false;
+    public whitePin: boolean = false;
     public parentTopicId?: string;
     public parentTopic?: RotationTopic;
     public childTopics?: RotationTopic[] = [];
-    public references?: RotationReference[] = [];
+    public rotationReferences?: RotationReference[] = [];
     public checked: boolean = false;
     public editing: boolean = false;
 }

@@ -75,19 +75,15 @@ export class HandoverTemplatesComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        debugger;
         if (changes['selectedTemplate']) {
           this.selectedTemplate = changes['selectedTemplate'].currentValue;
-          debugger;
         }
       }
-
 
 
     ngAfterViewChecked() {
         this.cdRef.detectChanges();
     }
-
 
     getTemplateById(id: string): void {
         this.templateService.getTemplates().pipe(

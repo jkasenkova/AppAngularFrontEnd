@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Team } from 'src/app/models/team';
 
 @Injectable({
@@ -43,5 +43,9 @@ export class TeamManagementService {
   setData(data: Team[]): Team[] {
     this.teamsSubject.next(data);
     return this.teamsSubject.value;
+  }
+
+  getTeams(): Observable<Team[]> {
+    return of(this.teamsSubject.value);
   }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Handover } from '../models/handover';
 import { ConfigService } from './config.service';
+import { Section } from '@models/section';
 
 @Injectable({
     providedIn: 'root'
@@ -37,7 +38,7 @@ export class HandoverService {
     }
 
     getShiftById(id: string): Observable<Handover> {
-        return this.http.get<Handover>(this.url + '/' + id);
+        return this.http.get<Handover>(this.url + '?ownerId=' + id);
     }
 }
 

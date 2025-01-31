@@ -1,5 +1,5 @@
-import { HandoverSection } from "./handoverSection";
-import { MyTeamModel } from "./myTeamModel";
+
+import { RotationSection } from "./handoverSection";
 import { ReportCommentsModel } from "./reportCommentsModel";
 import { ShiftState } from "./shiftState";
 import { UserModel } from "./user";
@@ -14,6 +14,6 @@ export class Handover {
     public state: ShiftState;
     public shareUsers?: UserModel[] = [];
     public shareEmails?: string[] = [];
-    public sections?: HandoverSection[] = []
+    public sections?: RotationSection[] = []
     public reportComments?: ReportCommentsModel[] = [];
 }

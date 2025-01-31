@@ -14,6 +14,7 @@ export class RotationReference {
     public childReferences?: RotationReference[];
     public isPinned: boolean = false;
     public checked: boolean = false;
+    public whitePin: boolean = false;
     public editing: boolean = false;
     public expand: boolean = false;
 }

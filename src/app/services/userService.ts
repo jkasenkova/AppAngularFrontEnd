@@ -36,7 +36,7 @@ export class UserService {
         return this.http.delete<string>(this.url + '/' + userId);
     }
 
-    getUser(userId: string): Observable<UserModel> {
+    getUserById(userId: string): Observable<UserModel> {
         return this.http.get<UserModel>(this.url + '/' + userId);
     }
 

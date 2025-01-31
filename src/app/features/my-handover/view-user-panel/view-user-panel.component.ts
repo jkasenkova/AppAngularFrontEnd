@@ -27,7 +27,7 @@ export class ViewUserPanelComponent implements OnInit{
         private userService: UserService) {}
 
     ngOnInit(): void {
-        this.user$ = this.userService.getUser(this.viewerId);
+        this.user$ = this.userService.getUserById(this.viewerId);
     }
 
     goBack(): void {

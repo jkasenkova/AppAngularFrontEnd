@@ -51,6 +51,6 @@ export class LocationService {
     }
 
     getTeamsByLocationId(locationId: string): Observable<Team[]> {
-        return this.http.get<Team[]>(this.url  + '/'+ locationId + '/teams?locationId='+ locationId);
+        return this.http.get<Team[]>(this.url  + '/'+ locationId + '/teams');
     }
 }

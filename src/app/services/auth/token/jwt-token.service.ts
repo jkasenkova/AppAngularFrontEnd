@@ -50,7 +50,7 @@ export class JWTTokenService {
 
     getLastName(): string {
         this.decodeToken();
-        return this.decodedToken ? this.decodedToken['LastName'] : null;
+        return this.decodedToken ? this.decodedToken['lastName'] : null;
     }
 
     getUserId(): string {
@@ -60,17 +60,17 @@ export class JWTTokenService {
 
     getAccountId(): string {
         this.decodeToken();
-        return this.decodedToken ? this.decodedToken['AccountId'] : null;
+        return this.decodedToken ? this.decodedToken['accountId'] : null;
     }
 
     getFirstName(): string {
       this.decodeToken();
-      return this.decodedToken ? this.decodedToken['FirstName'] : null;
+      return this.decodedToken ? this.decodedToken['firstName'] : null;
     }
 
     getTimeZone(): string {
       this.decodeToken();
-      return this.decodedToken ? this.decodedToken['TimeZone'] : null;
+      return this.decodedToken ? this.decodedToken['timeZone'] : null;
     }
 
     isTokenExpired(): boolean {

@@ -12,7 +12,7 @@ export class RotationReferenceService {
     private http: HttpClient,
     private readonly configService: ConfigService) { }
 
-  url = this.configService.getRouterUrl() + '/reference';
+  url = this.configService.getRouterUrl() + '/rotationReference';
   httpHeaders = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }) };
 
   getRotationReferences(topicId: string): Observable<RotationReference[]> {
@@ -24,7 +24,7 @@ export class RotationReferenceService {
   }
 
   updateRotationReference(reference: RotationReference): Observable<RotationReference> {
-    return this.http.post<RotationReference>(this.url + '/updateReference', reference, this.httpHeaders);
+    return this.http.patch<RotationReference>(this.url, reference, this.httpHeaders);
   }
 
   deleteRotationReferenceById(referenceId: string): Observable<string> {

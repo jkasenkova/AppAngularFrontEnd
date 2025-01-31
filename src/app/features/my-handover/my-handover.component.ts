@@ -1,32 +1,26 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, ViewEncapsulation, Output, ChangeDetectorRef} from "@angular/core";
+import { CommonModule, DatePipe, formatDate } from '@angular/common';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from "@angular/material/dialog";
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
-import { Handover } from "src/app/models/handover";
-import { RotationTopic } from "src/app/models/rotationTopic";
+import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { HandoverSection } from "src/app/models/handoverSection";
+import { RotationSection } from "src/app/models/handoverSection";
 import { RotationReference } from "src/app/models/rotationReference";
-import { HandoverSectionService } from "src/app/services/handoverSectionService";
 import { HandoverRecipientDialogComponent } from "./dialogs/recipient/handover-recipient.component";
-import { DateShiftDialogComponent } from "./dialogs/dates/date-shift.component";
-import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
-import { CommonModule, DatePipe, formatDate  } from '@angular/common';
 import { ReportCommentsDialogComponent } from "./dialogs/report-comments/report-comments.component";
+import { ShareReportDialogComponent } from "./dialogs/share-report/share-report.component";
+import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
 import { ShareReportModel } from "./models/shareReportModel";
-import { Template } from "src/app/models/template";
-import { TemplateTopic } from "src/app/models/templateTopic";
-import { Section } from "src/app/models/section";
-import { RotationTopicService } from "src/app/services/rotationTopicService";
-import { RotationReferenceService } from "src/app/services/rotationReferenceService";
-import { MatExpansionModule } from '@angular/material/expansion';
+import { TopicComponent } from "./topic/topic.component";
 import { ViewUserPanelComponent } from "./view-user-panel/view-user-panel.component";
 import { TopicComponent } from "./topic/topic.component";
-import { expand, map } from "rxjs";
+import { expand, filter, forkJoin, map, Observable, switchMap, tap } from "rxjs";
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { MatTabsModule } from "@angular/material/tabs";
 import { FinishRotationDialogComponent } from "./finish-rotation/finish-rotation.component";
@@ -37,6 +31,12 @@ import { HandoverService } from "src/app/services/handoverService";
 import { UserService } from "src/app/services/userService";
 import { UserModel } from "@models/user";
 import { ShiftState } from "@models/shiftState";
+import { TemplateService } from "@services/templateService";
+import { TemplateTopicService } from "@services/templateTopicService";
+import { RotationSectionService } from "@services/rotationSectionService";
+import { Reference } from "@models/reference";
+import { TemplateReferenceService } from "@services/templateReferenceService";
+import { SectionService } from "@services/sectionService";
 
 @Component({
     selector: 'app-my-handover',
@@ -66,22 +66,24 @@ import { ShiftState } from "@models/shiftState";
 
 export class MyHandoverComponent implements OnInit {
     teamMembers: UserModel[] = [];
-    template: Template;
-    ownerRole: RoleModel;
-    expandAll: boolean = false;
+    recipient: UserModel;
     countShare: number;
-    viewPanel: boolean = false;
     owner: UserModel;
-
+    userInitials: string = '';
     readonly dialog = inject(MatDialog);
+
     @Output() viewerId: string;
     @Output() handover: Handover;
-    @Input() handoverAdmin: boolean; 
+    @Output() expandAll: boolean = false;
+    @Output() sections: RotationSection[] = [];
 
     constructor(
         private authFacade: AuthFacade,
         private router: Router,
-        private handoverSectionService: HandoverSectionService, 
+        private templateService: TemplateService,
+        private templateTopicService: TemplateTopicService,
+        private handoverSectionService: RotationSectionService, 
+        private templateReferenceService: TemplateReferenceService,
         private handoverService: HandoverService,
         private userService: UserService,
         private roleService: RoleService,
@@ -92,150 +94,193 @@ export class MyHandoverComponent implements OnInit {
         private cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-
         this.viewerId = this.route.snapshot.paramMap.get('id'); 
-        this.authFacade.state.subscribe(data => 
-        {
-            if(this.viewerId != null && this.viewerId !== data.authUser.id){
-                this.viewPanel = true;
+        this.authFacade.state
+        .pipe(
+          switchMap((data) => {
+            const userId = this.viewerId != null && this.viewerId !== data.authUser.id
+              ? this.viewerId
+              : data.authUser.id;
+  
+            if (!userId) {
+              console.error('viewerId condition not met or userId is null');
+              return [];
             }
-            this.roleService.getRoleById(data.authUser.role.RoleId)
-            .pipe(
-                map(role => role.teamId)
-            )
-            .subscribe(teamId => {
-                this.userService.getUser(data.authUser.id).subscribe(owner =>{
-                    owner.teamId = teamId;
-                    this.owner = owner;
-                    this.loadData();
-                })
+  
+            return this.userService.getUserById(userId);
+          }),
+          tap((user: UserModel) => {
+            this.owner = user;
+          }),
+          filter((user: UserModel) => !!user.currentRotationId),
+          tap((user: UserModel) => this.initializeRotation(user.currentRotationId))
+        )
+        .subscribe({
+          error: (err) => console.error('Error processing auth or user:', err)
+        });
+    }
+
+
+    initializeRotation(rotationId: string): void {
+        this.handoverService
+          .getShiftById(rotationId)
+            .subscribe((handover: Handover) => {
+                this.handover = this.setShareCounter(handover);
+                this.handover.endDateTime = this.datePipe.transform(handover.endDateTime, 'yyyy-MM-dd HH:mm');
+                this.getUser(handover.shiftRecipientId);
+                this.handover = handover;
+                this.cdr.detectChanges();
             });
-        }); 
     }
 
-    loadData(): void {
-      if(this.owner && this.owner.currentRotationId) 
-       {
-            this.handoverService.getShiftById(this.owner.currentRotationId).subscribe(rotation =>
-            {
-                rotation.endDateTime = this.datePipe.transform(rotation.endDateTime, 'yyyy-MM-dd HH:mm');
-                this.handover = rotation;
-                this.handover = this.setShareCounter(this.handover);
+    getTemplateSectionsAndTransform(templateId: string, rotationId: string): Observable<RotationSection[]> {
+        return new Observable<RotationSection[]>((observer) => {
+            this.templateService.getTemplateById(templateId).subscribe({
+                next: (template: Template) => {
+                  const sectionRequests = template.sections.map((templateSection) =>
+                    this.transformAndSaveSection(templateSection, rotationId)
+                  );
+                  forkJoin(sectionRequests).subscribe({
+                    next: (rotationSections: RotationSection[]) => {
+
+                    setTimeout(() => {
+                        observer.next(rotationSections);
+                        observer.complete();
+                    }, 500);
+                    },
+                    error: (err) => {
+                      observer.error(err);
+                    },
+                  });
+                },
+                error: (err) => {
+                  observer.error(err);
+                },
             });
-       }
-    }
-
-    initializeTemplateSection(template: Template, handover: Handover): Handover {
-
-        template.sections.forEach(section => {
-
-            var convertedSection: HandoverSection = { 
-                sectionId: section.id,
-                sectionName: section.name,
-                handoverId: handover.id,
-                iHandoverSection: false,
-                sectionType: section.type,
-                sortType: section.sortTopicType,
-                addBtnShow: true,
-                sortReferenceType: section.sortReferenceType,
-                templateSection: true,
-                appendAddItemLine: false,
-                sectionTopics: this.initializeRotationTopics(section)
-            };
-
-            handover.sections.push(convertedSection);
-
-            this.handoverSectionService.createSection(convertedSection);
         });
-
-        //section sort
-
-        this.addOtherTopicForEachSectionTopics(this.handover);
-
-        return handover;
     }
-
-    initializeRotationTopics(sectionTemplate: Section): RotationTopic[] {
-
-        let rotationTopics: RotationTopic[] = [];
-        sectionTemplate.sectionTopics.filter(t => t.enabled).forEach(templateTopic => {
-
-            var convertedTopic = { 
-                sectionId: sectionTemplate.id,
-                isPinned: false,
-                id: templateTopic.id,
-                name: templateTopic.name,
-                enabled: templateTopic.enabled,
-                index: templateTopic.index,
-                editing: templateTopic.editing,
-                isExpand: templateTopic.isExpand,
-                templateTopic: true,
-                checked: false,
-                references: this.initializeRotationReferences(templateTopic)
-            };
-
-            rotationTopics.push(convertedTopic);
-            this.rotationTopicService.addRotationTopic(convertedTopic);
+    
+    private transformAndSaveSection(templateSection: Section, rotationId: string): Observable<RotationSection> {
+        const rotationSection: RotationSection = this.convertToRotationSection(templateSection, rotationId);
+    
+        return new Observable<RotationSection>((observer) => {
+            this.handoverSectionService.createSection(rotationSection).subscribe({
+            next: (savedSection) => {
+              this.templateTopicService.getTemplateTopicsBySectionId(templateSection.id).subscribe({
+                next: (templateTopics: TemplateTopic[]) => {
+                  const topicRequests = templateTopics.map((templateTopic) => 
+                    this.transformAndSaveTopic(templateTopic, savedSection.id)
+                  );
+                  forkJoin(topicRequests).subscribe({
+                    next: (topics: RotationTopic[]) => {
+                      savedSection.topics = topics;
+                      observer.next(savedSection);
+                      observer.complete();
+                    },
+                    error: (err) => {
+                      console.error('Error saving topics:', err);
+                      observer.error(err);
+                    },
+                  });
+                },
+                error: (err) => {
+                  console.error('Error fetching template topics:', err);
+                  observer.error(err);
+                },
+              });
+            },
+            error: (err) => {
+              console.error('Error saving rotation section:', err);
+              observer.error(err);
+            },
+          });
         });
-
-       return rotationTopics;
     }
+    
+    private transformAndSaveTopic(templateTopic: TemplateTopic, rotationSectionId: string): Observable<RotationTopic> {
+        const rotationTopic: RotationTopic = this.transformToRotationTopic(templateTopic, rotationSectionId);
 
-    addOtherTopicForEachSectionTopics(handover: Handover): void{
-
-        handover.sections.forEach(section => {
-            if(section.sectionTopics.find(t => t.name == "Other") == null){
-                section.sectionTopics.push(this.addOtherTopic());
-            }
+       return new Observable<RotationTopic>((observer) => {
+        this.rotationTopicService.addRotationTopic(rotationTopic).subscribe({
+          next: (savedTopic) => {
+            this.templateReferenceService.geTemplateReferences(templateTopic.id).subscribe({
+              next: (templateReferences: Reference[]) => {
+                const referenceRequests = templateReferences.map((templateReference) =>
+                  this.transformAndSaveReference(templateReference, savedTopic.id)
+                );
+                forkJoin(referenceRequests).subscribe({
+                  next: (references: RotationReference[]) => {
+                    savedTopic.rotationReferences.push(...references);
+                    observer.next(savedTopic);
+                    observer.complete();
+                  },
+                  error: (err) => {
+                    console.error('Error saving references:', err);
+                    observer.error(err);
+                  },
+                });
+              },
+              error: (err) => {
+                console.error('Error fetching template references:', err);
+                observer.error(err);
+              },
+            });
+          },
+          error: (err) => {
+            console.error('Error saving rotation topic:', err);
+            observer.error(err);
+          },
         });
-        
+      });
     }
 
-    addOtherTopic(): RotationTopic{
-        var references: RotationReference[] = [];
-        
-        var otherTopic = { 
-            id: '',//Guid.create(),
-            isPinned: false,
-            name: "Other",
-            enabled: false,
-            index: 0,
-            editing: false,
-            isExpand: false,
-            templateTopic: false,
-            checked: false,
-            references: references
+    private transformAndSaveReference(templateReference: Reference, rotationTopicId: string): Observable<RotationReference> {
+        const rotationReference: RotationReference = this.convertToRotationReference(templateReference, rotationTopicId);
+        return this.rotationReferenceService.addRotationReference(rotationReference);
+    }
+
+    private convertToRotationSection(templateSection: Section, handoverId: string): RotationSection {
+        return {
+            name: templateSection.name,
+            rotationId: handoverId,
+            type: templateSection.type,
+            sortTopicType: templateSection.sortTopicType,
+            addBtnShow: true,
+            templateSection: true,
+            sortReferenceType: templateSection.sortReferenceType,
+            topics: []
         };
-
-        this.rotationTopicService.addRotationTopic(otherTopic);
-        return  otherTopic;
     }
 
-    initializeRotationReferences(templateTopic: TemplateTopic): RotationReference[]{
+    private convertToRotationReference(templateReference: Reference, rotationTopicId: string): RotationReference {
+        return {
+            name: templateReference.name,
+            rotationTopicId: rotationTopicId,
+            enabled: true,
+            index: 0,
+            templateReference: false,
+            templateDescription: templateReference.description,
+            isPinned: false,
+            whitePin: true,
+            checked: false,
+            editing: false,
+            expand: false
+        };
+    }
 
-        let rotationReferences: RotationReference[] = [];
-        templateTopic.templateReferences.filter(t => t.enabled).forEach(reference => {
-
-            var convertedReference = { 
-                id: '',
-                rotationTopicId: templateTopic.id,
-                name: reference.name,
-                enabled: reference.enabled,
-                index: reference.index,
-                editing: reference.editing,
-                templateReference: true,
-                templateDescription: reference.description,
-                isPinned: false,
-                checked: false,
-                expand:false
-            };
-
-            rotationReferences.push(convertedReference);
-
-            this.rotationReferenceService.addRotationReference(convertedReference);
-        });
-
-        return rotationReferences;
+    private transformToRotationTopic(templateTopic: TemplateTopic, sectionId: string): RotationTopic {
+        return {
+            sectionId: sectionId,
+            isPinned: false,
+            id: templateTopic.id,
+            name: templateTopic.name,
+            enabled: true,
+            index: templateTopic.index,
+            editing: templateTopic.editing,
+            isExpand: templateTopic.isExpand,
+            whitePin: true,
+            checked: false,
+        };
     }
 
     setShareCounter(handover: Handover): Handover {
@@ -261,37 +306,30 @@ export class MyHandoverComponent implements OnInit {
             this.expandAll = true;
             event.target.textContent  = "Collapse All";
         }
-
-       this.handover.sections.flatMap(s => s.sectionTopics).forEach(topic =>{
-            topic.isExpand = this.expandAll;
-        });
     }
 
-    getLettersIcon(userId: string): string {
-
-        this.userService.getUser(userId).subscribe(user => {
-            debugger;
-            var getLetters = [user.firstName[0] + user.lastName[0]].join("");
-            return getLetters;
-        });
-
-        /* this.userService.getUser(userId).pipe(
-            expand(user => 
-                {
-                    return user.firstName + user.lastName.split(" ").map((n)=>n[0]).join("");
-                }
-            )); */
-        return "";
+    getOwnerInitials(): string {
+        const firstNameInitial = this.owner.firstName ? this.owner.firstName[0].toUpperCase() : '';
+        const lastNameInitial = this.owner.lastName ? this.owner.lastName[0].toUpperCase() : '';
+        return `${firstNameInitial}${lastNameInitial}`;
     }
 
-    getNameByUserId(userId: string): string {
-        this.userService.getUser(userId).pipe(
-            expand(user => 
-                {
-                    return user.firstName;
-                }
-            ));
-        return "";
+    getUser(userId: string): void {
+        this.userService.getUserById(userId).subscribe({
+          next: (user: UserModel) => {
+            this.recipient = user;
+            this.userInitials = this.getInitials(user.firstName, user.lastName);
+          },
+          error: (err) => {
+            console.error('Error fetching user:', err);
+          },
+        });
+    }
+    
+    getInitials(firstName: string, lastName: string): string {
+        const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : '';
+        const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
+        return `${firstInitial}${lastInitial}`;
     }
 
     handoverRecipient(templateId?: string, endDateTime?: string): void {
@@ -307,6 +345,7 @@ export class MyHandoverComponent implements OnInit {
         {
             if (result) 
             {
+                this.getUser(result.recipientId);
                 if(this.owner.currentRotationId && this.handover != null)
                 {
                     this.handover.shiftRecipientId = result.recipientId;
@@ -314,12 +353,6 @@ export class MyHandoverComponent implements OnInit {
                 }
                 else
                 {
-                   /*  this.templateService.getTemplateById(this.handover.templateId).subscribe(template => {
-                        this.template = template;
-                        this.handover = this.initializeTemplateSection(this.template, this.handover);
-                    }); 
-                    this.owner.currentRotationId = this.handover.handoverId; */
-
                     this.handover = this.createShift(result.templateId, result.endDateTime, result.recipientId, this.owner.id);
                 } 
             }
@@ -432,17 +465,32 @@ export class MyHandoverComponent implements OnInit {
         return formatDate(dateObject, 'yyyy-MM-dd HH:mm:ss', 'en-US');
     }
 
-    createShift(templateId: string, endDateTime: string, recipientId: string, ownerId: any): Handover {
+    createShift(templateId: string, endDateTime: string, recipientId: string, ownerId: string): Handover {
         var shift: Handover = {
             templateId: templateId,
             ownerId: ownerId,
             shiftRecipientId: recipientId,
             endDateTime: endDateTime,
-            state: 1
+            state: 1,
+            sections: []
         };
+
 
         this.handoverService.addShift(shift).subscribe(shift => {
             this.owner.currentRotationId = shift.id;
+            shift.endDateTime = this.datePipe.transform(shift.endDateTime, 'yyyy-MM-dd HH:mm');
+            this.handover = shift;
+            this.cdr.detectChanges(); 
+            this.getTemplateSectionsAndTransform(templateId, shift.id).subscribe({
+                next: (sections: RotationSection[]) => {
+                  this.sections = [...sections];
+                  this.cdr.detectChanges();
+                },
+                error: (err) => {
+                    console.error('Error fetching user:', err);
+                  },
+              });
+
             this.userService.updateUser(this.owner).subscribe();
             this.cdr.detectChanges(); 
         });
